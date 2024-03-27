@@ -1,30 +1,57 @@
 <script>
-    export let time = 0;
-    const totalTime = 10;
+	import Progress from './Progress.svelte';
 
-    let progress1 = 0;
-    let progress2 = 0;
-    let progress3 = 0;
-    let progress4 = 0;
-    let progress5 = 0;
+	export let time = 0;
+	let startTime = 5;
+	let endTime = 15;
+	let reversed = false;
 
+	let progress1 = 0;
+	let progress2 = 0;
+	let progress3 = 0;
+	let progress4 = 0;
+	let progress5 = 0;
 
-    function updateProgBars(){
-        let currentProgress = time/totalTime;
-        
-        
-    }
+	$: if (time >= startTime && time <= endTime) {
+		let pct = (time - startTime) / (endTime - startTime);
+		progress1 = Math.max(Math.min(1, pct / 0.125), 0);
+		progress2 = Math.max(Math.min(1, (pct - 0.125) / 0.25), 0);
+		progress3 = Math.max(Math.min(1, (pct - 0.375) / 0.25), 0);
+		progress4 = Math.max(Math.min(1, (pct - 0.625) / 0.25), 0);
+		progress5 = Math.max(Math.min(1, (pct - 0.875) / 0.125), 0);
+	} else if (time == 0) {
+		progress1 = 0;
+		progress2 = 0;
+		progress3 = 0;
+		progress4 = 0;
+		progress5 = 0;
+		startTime = 5;
+		endTime = 15;
+		reversed = false;
+	}
 
-
+	$: if (startTime === 5 && time > 15) {
+		startTime = 15;
+		endTime = 20;
+		reversed = true;
+	}
 </script>
 
-
 <div class="parent-container">
-	<div class="cd1"></div>
-	<div class="cd2"></div>
-	<div class="cd3"></div>
-	<div class="cd4"></div>
-	<div class="cd5"></div>
+	{#if !reversed}
+		<Progress progress={progress1} reverse={reversed} order={1} />
+		<Progress progress={progress2} reverse={reversed} order={2} />
+		<Progress progress={progress3} reverse={reversed} order={3} />
+		<Progress progress={progress4} reverse={reversed} order={4} />
+		<Progress progress={progress5} reverse={reversed} order={5} />
+	{:else}
+		<Progress progress={progress5} reverse={reversed} order={1} />
+		<Progress progress={progress4} reverse={reversed} order={2} />
+		<Progress progress={progress3} reverse={reversed} order={3} />
+		<Progress progress={progress2} reverse={reversed} order={4} />
+		<Progress progress={progress1} reverse={reversed} order={5} />
+	{/if}
+
 	<img
 		class="centerimg"
 		src="https://fastly.picsum.photos/id/398/500/500.jpg?hmac=Uz9jAqx6NJza9-FM-mGl8N6eAvbfGnajh3wQA0Iml7U"
@@ -42,51 +69,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-        position: relative;
+		position: relative;
 		width: 512px;
 		height: 512px;
 		color: aliceblue;
-	}
-
-	.cd1 {
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 50%;
-		height: 6px;
-		background-color: #333;
-	}
-
-	.cd5 {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 50%;
-		height: 6px;
-		background-color: blueviolet; /* just to make it visible */
-	}
-
-	.cd2 {
-		position: absolute;
-		right: 0;
-		height: 100%;
-		width: 6px;
-		background-color: lightpink; /* just to make it visible */
-	}
-
-	.cd3 {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		height: 6px;
-		background-color: peru; /* just to make it visible */
-	}
-
-	.cd4 {
-		position: absolute;
-		left: 0;
-		height: 100%;
-		width: 6px;
-		background-color: rgb(193, 35, 61); /* just to make it visible */
 	}
 </style>
