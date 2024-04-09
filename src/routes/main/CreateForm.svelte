@@ -14,14 +14,12 @@
 	} from '$lib/jshelp/fetchwo.js';
 	import { goto } from '$app/navigation';
 	import { preloadImages } from '$lib/jshelp/preloader.js';
-	import { storedWorkout } from '$lib/stores/workout.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
 
 	export let formType = 'Regular';
 	export let workoutID = '';
 	export let token = '';
-
-	console.log(token);
 
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
@@ -42,13 +40,9 @@
 	let loading = true;
 
 	onMount(async () => {
-		console.log('uuugh');
 		error = await getUser(token);
 		loading = false;
-		console.log(userData);
-		console.log(error);
 
-		console.log('ugh');
 		if (userData) {
 			minutes = Math.round(100 * userData.LastMinutes) / 100;
 			if (formType === 'Regular') {
@@ -87,7 +81,6 @@
 	};
 
 	const submitWO = async () => {
-        console.log("WHYYYYYYY????????")
 		loading = true;
 		if (
 			showAdvanced &&
@@ -123,17 +116,19 @@
 
 			if (formType === 'Regular') {
 				workout = await fetchWorkout(token, minutes, diff);
+				unravelWO(workout);
 			} else if (formType === 'Stretch') {
 				workout = await fetchStretchWorkout(token, minutes);
+				unravelstretchWO(workout);
 			} else if (formType === 'Adapt') {
 				workout = await fetchAdaptWorkout(token, diff, asnew, workoutID);
+				unravelWO(workout);
 			} else {
 				workout = await fetchIntroWorkout(token, minutes);
+				unravelWO(workout);
 			}
 
 			preloadImages(extractImageList(workout));
-			storedWorkout.set(workout);
-			console.log(workout);
 			setTimeout(() => {
 				loading = false;
 				goto('./workout');

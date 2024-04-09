@@ -8,6 +8,7 @@
 	export let backendID = '';
 	export let type = 'exercise';
 	export let size = 'mid';
+	export let sampleID = '';
 	const cdn = import.meta.env.VITE_CDN_URL;
 
 	let interval = null;
@@ -74,8 +75,12 @@
 
 	onMount(async () => {
 		try {
-			sampleObj = await fetchSampleByExt(backendID, type);
-			console.log(sampleObj);
+			if (sampleID === ''){
+				sampleObj = await fetchSampleByExt(backendID, type);
+			} else {
+				sampleObj = await fetchSample(sampleID);
+			}
+			
 			preloadSampleImages(sampleObj.Reps.Positions, size);
             processTimes();
             title = sampleObj.Name;

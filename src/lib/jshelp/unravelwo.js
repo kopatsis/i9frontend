@@ -1,5 +1,10 @@
+// @ts-nocheck
 // @ts-ignore
-function unravelstretchWO(response) {
+
+import {storedWorkout, strSampleIDSt, genTimesSt, timescriptSt, scriptSt, workoutRoundsSt, workoutType } from "$lib/stores/workout";
+
+export function unravelstretchWO(response) {
+
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -84,10 +89,17 @@ function unravelstretchWO(response) {
 	}
 
 	genTimes.end = runningtime;
+
+	strSampleIDSt.set(strSampleIDs);
+	genTimesSt.set(genTimes);
+	scriptSt.set(script);
+	timescriptSt.set(timescript);
+	storedWorkout.set(response);
+	workoutType.set("Stretch");
 }
 
 // @ts-ignore
-function unravelWO(response) {
+export function unravelWO(response) {
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -107,7 +119,7 @@ function unravelWO(response) {
 	}
 	const strSampleIDs = { static: workout.StaticSamples, dynamic: workout.DynamicSamples };
 	const genTimes = { dynamic: 0, exercises: 0, static: 0, end: 0 };
-	const workourRounds = [];
+	const workoutRounds = [];
 	const script = [];
 	const timescript = [];
 
@@ -155,7 +167,7 @@ function unravelWO(response) {
 	for (let h = 0; h < exerRounds.length; h++) {
 		const round = exerRounds[h];
 
-		workourRounds.push({
+		workoutRounds.push({
 			round: h + 1,
 			type: round.Type,
 			samples: round.SampleIDs,
@@ -270,4 +282,12 @@ function unravelWO(response) {
 	}
 
 	genTimes.end = runningtime;
+
+	strSampleIDSt.set(strSampleIDs);
+	genTimesSt.set(genTimes);
+	scriptSt.set(script);
+	timescriptSt.set(timescript);
+	workoutRoundsSt.set(workoutRounds);
+	storedWorkout.set(response);
+	workoutType.set("Regular");
 }
