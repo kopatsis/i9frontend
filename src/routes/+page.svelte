@@ -1,13 +1,26 @@
 <script>
-// @ts-nocheck
+	import { goto } from '$app/navigation';
+	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
+	import { onMount } from 'svelte';
+	import Logout from './Logout.svelte';
 
-	import Imgframe from "../components/Imgframe.svelte";
-import Stopwatch from "../components/Stopwatch.svelte";
+	// @ts-nocheck
 
-    let time;
+	let token = '';
 
+	onMount(() => {
+		if (!getLoginState()) {
+			goto('./login');
+		}
+
+		token = getLoginToken();
+		console.log(token);
+		console.log(getLoginState());
+	});
 </script>
+
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<Stopwatch bind:time={time}/>
-<Imgframe time={time}/>
+<button on:click={() => goto('./main')}>Form</button>
+<button on:click={() => goto('./workout')}>Sample</button>
+<Logout />
