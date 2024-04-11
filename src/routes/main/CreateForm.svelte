@@ -131,7 +131,7 @@
 			preloadImages(extractImageList(workout));
 			setTimeout(() => {
 				loading = false;
-				goto('./workout');
+				goto('./review');
 			}, 1000);
 		} catch (error) {
 			loading = false;
