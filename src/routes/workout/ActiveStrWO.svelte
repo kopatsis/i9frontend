@@ -1,32 +1,63 @@
 <script>
 	// @ts-nocheck
-
-	import { fetchSampleByExt } from '$lib/jshelp/fetchsample';
-	import { preloadSampleImages } from '$lib/jshelp/preloader';
+	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt } from '$lib/stores/workout.js';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Sample from '../Sample.svelte';
+	import Imgframe from '../../components/Imgframe.svelte';
 
-	export let backendID = '';
-	export let type = 'exercise';
 	export let size = 'mid';
-	export let sampleID = '';
 	const cdn = import.meta.env.VITE_CDN_URL;
 
+	// Variables in presentation section
 	let interval = null;
 	let time = 0;
 	let loading = true;
 	let error = false;
 
-	let sampleObj = null;
-	let i = 0;
-	let nextTime = 0;
-	let fullTime = 10;
+	let status = 'Dynamic';
 
+	let picIter = 0;
 	let src = '';
-	let title = '';
-	let desc = '';
+	let set = 0;
+	let activeTitle = '';
+	let picEndTime = 0;
 	let angle = '02';
-    let realTimes = [];
 
+	let scriptIter = 0;
+	let scriptStartTime = 0;
+	let scriptEndTime = 0;
+	let scriptRest = false;
+
+	// Subscriptions section
+	let timescript;
+	const unsubscribeTimeScript = timescriptSt.subscribe((timescriptSt) => {
+		timescript = timescriptSt;
+	});
+
+	let script;
+	const unsubscribeScript = scriptSt.subscribe((scriptSt) => {
+		script = scriptSt;
+	});
+
+	let strRounds;
+	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
+		strRounds = strRoundsSt;
+	});
+
+	let getTimes;
+	const unsubscribeGen = genTimesSt.subscribe((genTimesSt) => {
+		getTimes = genTimesSt;
+	});
+
+	onDestroy(() => {
+		unsubscribeTimeScript();
+		unsubscribeScript();
+		unsubscribeSt();
+		unsubscribeGen();
+	});
+
+	// Timing functions
 	function startStopwatch() {
 		if (interval === null) {
 			interval = setInterval(() => {
@@ -35,70 +66,66 @@
 		}
 	}
 
-	function setImg() {
-		i++;
-		src = cdn + '/' + sampleObj.Reps.Positions[i] + angle + '-' + size + '.webp';
-		if (i + 1 >= realTimes.length) {
-			nextTime = sampleObj.Reps.FullTime + 0.1;
-		} else {
-			nextTime = realTimes[i];
-		}
+	function pauseStopwatch() {
+		clearInterval(interval);
+		interval = null;
 	}
 
-	function setImgInit() {
-		if (sampleObj) {
-			fullTime = sampleObj.Reps.FullTime;
-			i = -1;
-			setImg();
-			loading = false;
-		}
+	function resetStopwatch() {
+		clearInterval(interval);
+		time = 0;
+		interval = null;
 	}
 
+	function formatTime() {
+		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
+	}
+
+	// Other interactive functions
 	function changeAngle(newAngle) {
 		if (angle !== newAngle) {
 			angle = newAngle;
-			src = cdn + '/' + sampleObj.Reps.Positions[i] + angle + '-' + size + '.webp';
+			src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
 		}
 	}
 
-    function processTimes(){
-        if (sampleObj){
-            for (let i = 0; i < sampleObj.Reps.Times.length; i ++){
-                if (i == 0){
-                    realTimes.push(sampleObj.Reps.Times[i]);
-                } else{
-                    realTimes.push(sampleObj.Reps.Times[i] + realTimes[i-1]);
-                }
-            }
-        }
-    }
-
-	onMount(async () => {
-		try {
-			if (sampleID === ''){
-				sampleObj = await fetchSampleByExt(backendID, type);
-			} else {
-				sampleObj = await fetchSample(sampleID);
-			}
-			
-			preloadSampleImages(sampleObj.Reps.Positions, size);
-            processTimes();
-            title = sampleObj.Name;
-            desc = sampleObj.Description;
-			setImgInit();
-			startStopwatch();
-		} catch (error) {
-			error = error;
-			loading = false;
+	let currentSampleID = '';
+	const showCurrentSample = (sampleID) => {
+		if (currentSampleID !== sampleID) {
+			currentSampleID = sampleID;
 		}
+	};
+
+	function quit() {
+		clearInterval(interval);
+		interval = null;
+		goto('./');
+	}
+
+	// Start funcs
+	onMount(() => {
+		loading = false;
+		startStopwatch();
 	});
 
-	$: if (time > fullTime) {
-		time = 0;
-        i = -1;
-		setImg();
-	} else if (time > nextTime && sampleObj) {
-		setImg();
+	// Reactive statements on time change
+	$: if (time > scriptEndTime && scriptIter + 1 < timescript.length) {
+		scriptStartTime = scriptEndTime;
+		scriptRest = timescript[scriptIter].isrest;
+		scriptIter++;
+		scriptEndTime = timescript[scriptIter].time;
+	}
+
+	$: if (time > picEndTime && picIter + 1 < script.length) {
+		src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
+		activeTitle = script[picIter].names[0]; // Have it so it's just one title in unravel lol
+		set = script[picIter].set;
+		picIter++;
+		picEndTime = script[picIter].time;
+	}
+
+	$: if (status === "Dynamic" && time > genTimes.static){
+		status = "Static";
 	}
 </script>
 
@@ -107,32 +134,80 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-    <div>{time}</div>
-	<h1>{title}</h1>
+	<button on:click={pauseStopwatch}>Pause</button>
+	<button on:click={resetStopwatch}>Restart</button>
+	<button on:click={quit}>Quit</button>
+	<div>{formatTime()}</div>
+
+	{#if status === 'Dynamic'}
+		<div>Dynamic Stretches:</div>
+		<div>
+			<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+			<span>{activeTitle}</span>
+			<button
+				on:click={() => {
+					showCurrentSample(strRounds.dynamic.samples[set - 1]);
+				}}>&#x2139;</button
+			>
+			{#if currentSampleID === strRounds.dynamic.samples[set - 1]}
+				<Sample sampleID={currentSampleID} />
+			{/if}
+		</div>
+	{:else if status === 'Static'}
+		<div>Static Stretches:</div>
+		<div>
+			<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
+			<span>{activeTitle}</span>
+			<button
+				on:click={() => {
+					showCurrentSample(strRounds.static.samples[set - 1]);
+				}}>&#x2139;</button
+			>
+			{#if currentSampleID === strRounds.static.samples[set - 1]}
+				<Sample sampleID={currentSampleID} />
+			{/if}
+		</div>
+	{/if}
+
 	<br />
-	<img {src} alt={title} />
+	<Imgframe
+		{time}
+		endTime={scriptEndTime}
+		startTime={scriptStartTime}
+		reversed={scriptRest}
+		{src}
+		alt={activeTitle}
+	/>
 	<br />
-	<div>
-		{@html desc}
-	</div>
+
 	<button
 		on:click={() => {
 			changeAngle('01');
 		}}>Left</button
 	>
-	<button on:click={() => {
-        changeAngle('02');
-    }}>Half Left</button>
-	<button on:click={() => {
-        changeAngle('03');
-    }}>Front</button>
-	<button on:click={() => {
-        changeAngle('04');
-    }}>Half Right</button>
-	<button on:click={() => {
-        changeAngle('05');
-    }}>Right</button>
-	<button on:click={() => {
-        changeAngle('06');
-    }}>Top</button>
+	<button
+		on:click={() => {
+			changeAngle('02');
+		}}>Half Left</button
+	>
+	<button
+		on:click={() => {
+			changeAngle('03');
+		}}>Front</button
+	>
+	<button
+		on:click={() => {
+			changeAngle('04');
+		}}>Half Right</button
+	>
+	<button
+		on:click={() => {
+			changeAngle('05');
+		}}>Right</button
+	>
+	<button
+		on:click={() => {
+			changeAngle('06');
+		}}>Top</button
+	>
 {/if}

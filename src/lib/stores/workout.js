@@ -7,3 +7,4 @@ export const scriptSt = writable(null);
 export const timescriptSt = writable(null);
 export const workoutRoundsSt = writable(null);
 export const workoutType = writable(null);
+export const time = writable(0);

@@ -107,7 +107,6 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-    <div>{time}</div>
 	<h1>{title}</h1>
 	<br />
 	<img {src} alt={title} />
