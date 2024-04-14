@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import { fetchSampleByExt } from '$lib/jshelp/fetchsample';
+	import { fetchSampleByExt, fetchSample } from '$lib/jshelp/fetchsample';
 	import { preloadSampleImages } from '$lib/jshelp/preloader';
 	import { onMount } from 'svelte';
 
@@ -73,13 +73,17 @@
         }
     }
 
-	onMount(async () => {
+	const reset = async (sampleID, backendID) => {
 		try {
 			if (sampleID === ''){
 				sampleObj = await fetchSampleByExt(backendID, type);
 			} else {
 				sampleObj = await fetchSample(sampleID);
 			}
+
+			console.log(sampleObj);
+			interval = null;
+			time = 0;
 			
 			preloadSampleImages(sampleObj.Reps.Positions, size);
             processTimes();
@@ -88,9 +92,14 @@
 			setImgInit();
 			startStopwatch();
 		} catch (error) {
+			console.error(error);
 			error = error;
 			loading = false;
 		}
+	}
+
+	onMount(async () => {
+		await reset(sampleID, backendID)
 	});
 
 	$: if (time > fullTime) {
