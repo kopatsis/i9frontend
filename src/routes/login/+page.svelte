@@ -40,3 +40,4 @@
 </script>
 
 <button on:click={login}>Login</button>
+<button on:click={() => {goto('./auth')}}>Auth</button>
