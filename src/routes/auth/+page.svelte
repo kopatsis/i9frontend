@@ -1,6 +1,8 @@
 <script>
 // @ts-nocheck
 
+	import { postNewUser } from '$lib/jshelp/user';
+
     import { auth } from '../../auth/firebase';
     import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
   
@@ -12,7 +14,9 @@
       try {
         console.log("em", email);
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log('Signed up:', userCredential.user);
+        const name = userCredential.user.email ? userCredential.user.email : "New User Name";
+        const result = await postNewUser(userCredential.user.accessToken, name);
+        console.log(result);
       } catch (error) {
         errorMessage = error.message;
       }
