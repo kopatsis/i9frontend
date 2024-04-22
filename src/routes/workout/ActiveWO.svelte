@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt } from '$lib/stores/workout.js';
+	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
@@ -31,6 +31,11 @@
 	let scriptEndTime = 0;
 	let scriptRest = false;
 
+	let lastCalled = 0;
+	let exitMessage = false;
+	let resetMessage = false;
+	let paused = false;
+
 	// Subscriptions section
 	let timescript;
 	const unsubscribeTimeScript = timescriptSt.subscribe((timescriptSt) => {
@@ -57,16 +62,9 @@
 		woRounds = workoutRoundsSt;
 	});
 
-	onDestroy(() => {
-		unsubscribeTimeScript();
-		unsubscribeScript();
-		unsubscribeSt();
-		unsubscribeGen();
-		unsubscribeWO();
-	});
-
 	// Timing functions
 	function startStopwatch() {
+		paused = false;
 		if (interval === null) {
 			interval = setInterval(() => {
 				time += 0.05;
@@ -75,6 +73,7 @@
 	}
 
 	function pauseStopwatch() {
+		paused = true;
 		clearInterval(interval);
 		interval = null;
 	}
@@ -84,6 +83,16 @@
 		time = 0;
 		interval = null;
 	}
+
+	onDestroy(() => {
+		unsubscribeTimeScript();
+		unsubscribeScript();
+		unsubscribeSt();
+		unsubscribeGen();
+		unsubscribeWO();
+		clearInterval(interval);
+	});
+
 
 	function formatTime() {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
@@ -104,10 +113,31 @@
 		}
 	};
 
-	function quit(status="Paused") {
+	function quit(destination="./rate") {
 		clearInterval(interval);
 		interval = null;
-		goto('./');
+		updateTime(time, "", "Paused", true);
+		goto(destination);
+	}
+
+	function resetQuestion(){
+		pauseStopwatch();
+		resetMessage = true;
+	}
+
+	function exitQuestion(){
+		pauseStopwatch();
+		exitMessage = true;
+	}
+
+	function returnNoReset(){
+		resetMessage = false;
+		startStopwatch();
+	}
+
+	function returnNoExit(){
+		exitMessage = false;
+		startStopwatch();
 	}
 
 	// Start funcs
@@ -134,6 +164,7 @@
 
     $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
         round = woRounds[roundIter];
+		rounds.set(round);
         roundIter++;
     }
 
@@ -142,7 +173,12 @@
 	} else if (status === 'Exercise' && time > genTimes.static){
         status = 'Static'
     } else if (status === 'Static' && time > getTimes.end){
+		quit();
+	}
 
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1){
+		lastCalled = Math.floor(time);
+		updateTime(time);
 	}
 </script>
 
@@ -151,9 +187,23 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-	<button on:click={pauseStopwatch}>Pause</button>
-	<button on:click={resetStopwatch}>Restart</button>
-	<button on:click={quit}>Quit</button>
+	{#if exitMessage}
+		<div>Are you sure you want to exit?</div>
+		<button on:click={returnNoExit}>Back to Workout</button>
+		<button on:click={quit}>Exit and Rate</button>
+		<button on:click={() => quit("./")}>Exit and Don't Rate</button>
+	{:else if resetMessage}
+		<div>Are you sure you want restart?</div>
+		<button on:click={returnNoReset}>No, go back</button>
+		<button on:click={resetStopwatch}>Yes, restart</button>
+	{/if}
+	{#if paused}
+		<button on:click={startStopwatch}>Start</button>
+	{:else}
+		<button on:click={pauseStopwatch}>Pause</button>
+	{/if}
+	<button on:click={resetQuestion}>Restart</button>
+	<button on:click={exitQuestion}>Quit</button>
 	<div>{formatTime()}</div>
 
 	{#if status === 'Dynamic'}

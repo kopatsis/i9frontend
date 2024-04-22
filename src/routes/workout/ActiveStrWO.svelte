@@ -1,6 +1,12 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt } from '$lib/stores/workout.js';
+	import {
+		timescriptSt,
+		scriptSt,
+		strRoundsSt,
+		genTimesSt,
+		updateTime
+	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
@@ -29,6 +35,11 @@
 	let scriptEndTime = 0;
 	let scriptRest = false;
 
+	let lastCalled = 0;
+	let exitMessage = false;
+	let resetMessage = false;
+	let paused = false;
+
 	// Subscriptions section
 	let timescript;
 	const unsubscribeTimeScript = timescriptSt.subscribe((timescriptSt) => {
@@ -50,13 +61,6 @@
 		getTimes = genTimesSt;
 	});
 
-	onDestroy(() => {
-		unsubscribeTimeScript();
-		unsubscribeScript();
-		unsubscribeSt();
-		unsubscribeGen();
-	});
-
 	// Timing functions
 	function startStopwatch() {
 		if (interval === null) {
@@ -76,6 +80,14 @@
 		time = 0;
 		interval = null;
 	}
+
+	onDestroy(() => {
+		unsubscribeTimeScript();
+		unsubscribeScript();
+		unsubscribeSt();
+		unsubscribeGen();
+		clearInterval(interval);
+	});
 
 	function formatTime() {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
@@ -99,7 +111,28 @@
 	function quit() {
 		clearInterval(interval);
 		interval = null;
+		updateTime(time, 'stretch', 'Paused', true);
 		goto('./');
+	}
+
+	function resetQuestion() {
+		pauseStopwatch();
+		resetMessage = true;
+	}
+
+	function exitQuestion() {
+		pauseStopwatch();
+		exitMessage = true;
+	}
+
+	function returnNoReset() {
+		resetMessage = false;
+		startStopwatch();
+	}
+
+	function returnNoExit() {
+		exitMessage = false;
+		startStopwatch();
 	}
 
 	// Start funcs
@@ -124,8 +157,15 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (status === "Dynamic" && time > genTimes.static){
-		status = "Static";
+	$: if (status === 'Dynamic' && time > genTimes.static) {
+		status = 'Static';
+	} else if (status === 'Static' && time > getTimes.end) {
+		quit();
+	}
+
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1) {
+		lastCalled = Math.floor(time);
+		updateTime(time, 'stretch');
 	}
 </script>
 
@@ -134,9 +174,22 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-	<button on:click={pauseStopwatch}>Pause</button>
-	<button on:click={resetStopwatch}>Restart</button>
-	<button on:click={quit}>Quit</button>
+	{#if exitMessage}
+		<div>Are you sure you want to exit?</div>
+		<button on:click={returnNoExit}>Back to Workout</button>
+		<button on:click={quit}>Exit</button>
+	{:else if resetMessage}
+		<div>Are you sure you want restart?</div>
+		<button on:click={returnNoReset}>No, go back</button>
+		<button on:click={resetStopwatch}>Yes, restart</button>
+	{/if}
+	{#if paused}
+		<button on:click={startStopwatch}>Start</button>
+	{:else}
+		<button on:click={pauseStopwatch}>Pause</button>
+	{/if}
+	<button on:click={resetQuestion}>Restart</button>
+	<button on:click={exitQuestion}>Quit</button>
 	<div>{formatTime()}</div>
 
 	{#if status === 'Dynamic'}
