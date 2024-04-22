@@ -69,8 +69,8 @@
 	function startStopwatch() {
 		if (interval === null) {
 			interval = setInterval(() => {
-				time += 0.01;
-			}, 10);
+				time += 0.05;
+			}, 50);
 		}
 	}
 
@@ -104,7 +104,7 @@
 		}
 	};
 
-	function quit() {
+	function quit(status="Paused") {
 		clearInterval(interval);
 		interval = null;
 		goto('./');
@@ -141,7 +141,9 @@
 		status = 'Exercise';
 	} else if (status === 'Exercise' && time > genTimes.static){
         status = 'Static'
-    }
+    } else if (status === 'Static' && time > getTimes.end){
+
+	}
 </script>
 
 {#if loading}

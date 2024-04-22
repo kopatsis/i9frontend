@@ -30,8 +30,8 @@
 	function startStopwatch() {
 		if (interval === null) {
 			interval = setInterval(() => {
-				time += 0.01;
-			}, 10);
+				time += 0.05;
+			}, 50);
 		}
 	}
 
