@@ -2,8 +2,11 @@
 	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
-	import { rounds, workoutRoundsSt } from '$lib/stores/workout.js';
+	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { postRating } from '$lib/jshelp/postwo';
+	import { rounds, workoutRoundsSt, id } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let loading = true;
 	let retVals = [];
@@ -44,6 +47,13 @@
             favVals.push(3);
         }
 	});
+
+    async function postAndExit(){
+        const token = getLoginToken();
+        const woID = get(id);
+        await postRating(token, woID, retVals, favVals);
+        goto('./');
+    }
 </script>
 
 {#if loading}
@@ -51,7 +61,9 @@
 {:else if roundsComplete < 1}
 	<div on:load={countDown}>No rounds to display, routing to home page in {transitionTime}</div>
 {:else}
-<button>Close</button>
+<button on:click={postAndExit}>Close</button>
+    <h1>Nice Job :)</h1>
+    <img src="https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-high.webp" alt="thumbs up standing with smile" />
 	{#each woRounds.slice(0, roundsComplete) as round, i}
 		<div>
 			<div>Round {round.round}: {round.sets} Sets</div>
@@ -84,5 +96,5 @@
 			<input type="number" min="1" max="5" step="0.1" bind:value={favVals[i]} />
         </div>
 	{/each}
-    <button>Submit</button>
+    <button on:click={postAndExit}>Submit</button>
 {/if}
