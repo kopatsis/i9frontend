@@ -9,12 +9,12 @@ export const scriptSt = writable(null);
 export const timescriptSt = writable(null);
 export const workoutRoundsSt = writable(null);
 export const workoutType = writable(null);
-export const time = writable(0);
+export const currenttime = writable(0);
 export const id = writable("");
 export const rounds = writable(0);
 
 export const updateTime = async (/** @type {number} */ seconds, type="", status="Progressing", autopush=false) => {
-    time.set(seconds)
+    currenttime.set(seconds)
     if (autopush || Math.round(seconds) % 10 === 0 || Math.round(seconds) % 10 === 1) {
         const token = getLoginToken();
         const woID = get(id)

@@ -1,8 +1,9 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime } from '$lib/stores/workout.js';
+	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import {get} from 'svelte/store';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 
@@ -35,6 +36,8 @@
 	let exitMessage = false;
 	let resetMessage = false;
 	let paused = false;
+	let timeMessage = false;
+	let existingTime = 0;
 
 	// Subscriptions section
 	let timescript;
@@ -142,9 +145,33 @@
 
 	// Start funcs
 	onMount(() => {
+		const oldTime = get(currenttime)
+		if (oldTime !== 0){
+			timeMessage = true;
+			existingTime = oldTime
+		} else {
+			loading = false;
+			startStopwatch();
+		}
+	});
+
+	function startAnew(){
+		timeMessage = false;
+		time = 0;
 		loading = false;
 		startStopwatch();
-	});
+	}
+
+	function startAtOld(){
+		time = 0;
+		while (time < existingTime){
+			time += 0.05;
+		}
+		timeMessage = false;
+		time = workingTime;
+		loading = false;
+		startStopwatch();
+	}
 
 	// Reactive statements on time change
 	$: if (time > scriptEndTime && scriptIter + 1 < timescript.length) {
@@ -176,13 +203,16 @@
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1){
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1 && !timeMessage){
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
 </script>
-
-{#if loading}
+{#if timeMessage}
+	<div>Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(existingTime % 60)} sec?</div>
+	<button on:click={startAtOld}>Yes</button>
+	<button on:click={startAnew}>No</button>
+{:else if loading}
 	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>

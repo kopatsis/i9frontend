@@ -1,7 +1,7 @@
 // @ts-nocheck
 // @ts-ignore
 
-import { storedWorkout, strRoundsSt, genTimesSt, timescriptSt, scriptSt, workoutRoundsSt, workoutType } from "$lib/stores/workout";
+import { storedWorkout, strRoundsSt, genTimesSt, timescriptSt, scriptSt, workoutRoundsSt, workoutType, currenttime } from "$lib/stores/workout";
 
 export function unravelstretchWO(response) {
 
@@ -91,6 +91,10 @@ export function unravelstretchWO(response) {
 	}
 
 	genTimes.end = runningtime;
+
+	if (response.Minutes !== 0){
+		currenttime.set(response.Minutes);
+	}
 
 	strRoundsSt.set(strRounds);
 	genTimesSt.set(genTimes);
@@ -297,6 +301,10 @@ export function unravelWO(response) {
 	}
 
 	genTimes.end = runningtime;
+
+	if (response.Minutes !== 0){
+		currenttime.set(response.Minutes);
+	}
 
 	strRoundsSt.set(strRounds);
 	genTimesSt.set(genTimes);
