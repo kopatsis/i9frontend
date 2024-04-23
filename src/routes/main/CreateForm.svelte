@@ -115,13 +115,13 @@
 			let workout;
 
 			if (formType === 'Regular') {
-				workout = await fetchWorkout(token, minutes, diff);
+				workout = await fetchWorkout(token, minutes, Number(diff));
 				unravelWO(workout);
 			} else if (formType === 'Stretch') {
 				workout = await fetchStretchWorkout(token, minutes);
 				unravelstretchWO(workout);
 			} else if (formType === 'Adapt') {
-				workout = await fetchAdaptWorkout(token, diff, asnew, workoutID);
+				workout = await fetchAdaptWorkout(token, Number(diff), asnew, workoutID);
 				unravelWO(workout);
 			} else {
 				workout = await fetchIntroWorkout(token, minutes);
@@ -169,16 +169,17 @@
 		{/if}
 
 		{#if formType == 'Adapt' || formType == 'Regular'}
-			<label for="difficulty">Difficulty (1 - 6):</label>
-			<input
-				type="number"
-				id="difficulty"
-				name="difficulty input"
-				min="1"
-				max="6"
-				step="1"
-				bind:value={diff}
-			/>
+			<label for="difficulty">Difficulty Type:</label>
+			<select id="difficulty" bind:value={diff}>
+				<option value="1">Low Cortisol*</option>
+				<option value="2">Simple**</option>
+				<option value="3">Easy</option>
+				<option value="4">Medium</option>
+				<option value="5">Hard</option>
+				<option value="6">Extreme</option>
+			  </select>
+			<div>*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving</div>
+			<div>**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones</div>
 			<br />
 		{/if}
 
