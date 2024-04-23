@@ -12,6 +12,7 @@ export const workoutType = writable(null);
 export const currenttime = writable(0);
 export const id = writable("");
 export const rounds = writable(0);
+export const afterWOMessage = writable(false);
 
 export const updateTime = async (/** @type {number} */ seconds, type="", status="Progressing", autopush=false) => {
     currenttime.set(seconds)

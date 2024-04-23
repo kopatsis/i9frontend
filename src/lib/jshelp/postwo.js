@@ -69,3 +69,34 @@ export async function postRating(token, id, ratings, faves) {
 		throw new Error('Error fetching the response: ' + error);
 	}
 }
+
+/**
+ * Makes a POST request to the server for a workout status update
+ *
+ * @param {string} token - The token
+ * @param {number} rounds - The rounds complete
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function postIntroRating(token, rounds) {
+    
+    const url = `${import.meta.env.VITE_BACKEND_URL}/workouts/intro/rate`;
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+		body: JSON.stringify({rounds: rounds})
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json()
+			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}

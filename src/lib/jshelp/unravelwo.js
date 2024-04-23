@@ -105,7 +105,7 @@ export function unravelstretchWO(response) {
 }
 
 // @ts-ignore
-export function unravelWO(response) {
+export function unravelWO(response, type="Regular") {
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -312,5 +312,5 @@ export function unravelWO(response) {
 	timescriptSt.set(timescript);
 	workoutRoundsSt.set(workoutRounds);
 	storedWorkout.set(response);
-	workoutType.set("Regular");
+	workoutType.set(type);
 }

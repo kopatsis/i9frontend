@@ -1,19 +1,12 @@
 <script>
 	// @ts-nocheck
-	import {
-		timescriptSt,
-		scriptSt,
-		strRoundsSt,
-		genTimesSt,
-		updateTime,
-
-		afterWOMessage
-
-	} from '$lib/stores/workout.js';
+	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt, afterWOMessage } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import {get} from 'svelte/store';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
+	import { postIntroRating } from '$lib/jshelp/postwo';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -25,6 +18,8 @@
 	let error = false;
 
 	let status = 'Dynamic';
+    let round = null;
+    let roundIter = 0;
 
 	let picIter = 0;
 	let src = '';
@@ -42,8 +37,6 @@
 	let exitMessage = false;
 	let resetMessage = false;
 	let paused = false;
-	let timeMessage = false;
-	let existingTime = 0;
 
 	// Subscriptions section
 	let timescript;
@@ -66,16 +59,23 @@
 		getTimes = genTimesSt;
 	});
 
+	let woRounds;
+	const unsubscribeWO = workoutRoundsSt.subscribe((workoutRoundsSt) => {
+		woRounds = workoutRoundsSt;
+	});
+
 	// Timing functions
 	function startStopwatch() {
+		paused = false;
 		if (interval === null) {
 			interval = setInterval(() => {
-				time += 0.01;
-			}, 10);
+				time += 0.05;
+			}, 50);
 		}
 	}
 
 	function pauseStopwatch() {
+		paused = true;
 		clearInterval(interval);
 		interval = null;
 	}
@@ -91,8 +91,10 @@
 		unsubscribeScript();
 		unsubscribeSt();
 		unsubscribeGen();
+		unsubscribeWO();
 		clearInterval(interval);
 	});
+
 
 	function formatTime() {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
@@ -114,63 +116,42 @@
 	};
 
 	async function quit() {
-		clearInterval(interval);
-		interval = null;
 		loading = true;
-		await updateTime(time, 'stretch', 'Paused', true);
+		if (roundIter === 0){
+			roundIter = 1
+		}
+		const finalRound = roundIter + Math.min(Math.max((time - woRounds[roundIter-1].start) / (woRounds[roundIter-1].end - time),0),1) - 1
+		const token = getLoginToken();
+		await postIntroRating(token, finalRound);
 		afterWOMessage.set(true);
 		goto('./');
 	}
 
-	function resetQuestion() {
+	function resetQuestion(){
 		pauseStopwatch();
 		resetMessage = true;
 	}
 
-	function exitQuestion() {
+	function exitQuestion(){
 		pauseStopwatch();
 		exitMessage = true;
 	}
 
-	function returnNoReset() {
+	function returnNoReset(){
 		resetMessage = false;
 		startStopwatch();
 	}
 
-	function returnNoExit() {
+	function returnNoExit(){
 		exitMessage = false;
 		startStopwatch();
 	}
 
 	// Start funcs
 	onMount(() => {
-		const oldTime = get(currenttime)
-		if (oldTime !== 0){
-			timeMessage = true;
-			existingTime = oldTime
-		} else {
-			loading = false;
-			startStopwatch();
-		}
+		loading = false;
+		startStopwatch();
 	});
-
-	function startAnew(){
-		timeMessage = false;
-		time = 0;
-		loading = false;
-		startStopwatch();
-	}
-
-	function startAtOld(){
-		time = 0;
-		timeMessage = false;
-		while (time < existingTime){
-			time += 0.05;
-		}
-		time = workingTime;
-		loading = false;
-		startStopwatch();
-	}
 
 	// Reactive statements on time change
 	$: if (time > scriptEndTime && scriptIter + 1 < timescript.length) {
@@ -188,31 +169,34 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (status === 'Dynamic' && time > genTimes.static) {
-		status = 'Static';
-	} else if (status === 'Static' && time > getTimes.end) {
+    $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
+        round = woRounds[roundIter];
+		rounds.set(roundIter);
+        roundIter++;
+    }
+
+	$: if (status === 'Dynamic' && time > genTimes.exercises) {
+		status = 'Exercise';
+	} else if (status === 'Exercise' && time > genTimes.static){
+        status = 'Static'
+    } else if (status === 'Static' && time > getTimes.end){
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1 && !loading){
 		lastCalled = Math.floor(time);
-		updateTime(time, 'stretch');
+		updateTime(time);
 	}
 </script>
-
-{#if timeMessage}
-	<div>Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(existingTime % 60)} sec?</div>
-	<button on:click={startAtOld}>Yes</button>
-	<button on:click={startAnew}>No</button>
-{:else if loading}
+{#if loading}
 	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
 {:else}
 	{#if exitMessage}
-		<div>Are you sure you want to exit?</div>
+		<div>Are you done with this workout or do you want to keep going?</div>
 		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={quit}>Exit</button>
+		<button on:click={quit}>Done</button>
 	{:else if resetMessage}
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
@@ -228,7 +212,7 @@
 	<div>{formatTime()}</div>
 
 	{#if status === 'Dynamic'}
-		<div>Dynamic Stretches:</div>
+		<div>Dynamic Stretches Warmup:</div>
 		<div>
 			<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
 			<span>{activeTitle}</span>
@@ -242,7 +226,7 @@
 			{/if}
 		</div>
 	{:else if status === 'Static'}
-		<div>Static Stretches:</div>
+		<div>Static Stretches Cooldown:</div>
 		<div>
 			<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
 			<span>{activeTitle}</span>
@@ -255,6 +239,35 @@
 				<Sample sampleID={currentSampleID} />
 			{/if}
 		</div>
+	{:else}
+    <div>
+		<div>Round {round.round}: {round.sets} Sets</div>
+        <div>Start: {Math.floor(round.start/60)}m {Math.round(round.start%60)}s</div>
+		<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+		<div>Type: {round.type}</div>
+		{#if round.type !== 'Combo'}
+			<span
+				>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
+			>
+		{/if}
+		{#each round.samples as sample, j}
+			<div>
+				{#if round.type === 'Combo'}
+					<span>{round.reps[j]}x &nbsp;</span>
+				{/if}
+				<span>{round.titles[j]}</span>
+				<button
+					on:click={() => {
+						showCurrentSample(sample);
+					}}>&#x2139;</button
+				>
+				{#if currentSampleID === sample}
+					<Sample sampleID={currentSampleID} />
+				{/if}
+			</div>
+		{/each}
+		<div>Rest before next round: {Math.round(round.roundrest)}</div>
+	</div>
 	{/if}
 
 	<br />

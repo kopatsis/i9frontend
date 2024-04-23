@@ -125,7 +125,7 @@
 				unravelWO(workout);
 			} else {
 				workout = await fetchIntroWorkout(token, minutes);
-				unravelWO(workout);
+				unravelWO(workout, "Intro");
 			}
 
 			preloadImages(extractImageList(workout));

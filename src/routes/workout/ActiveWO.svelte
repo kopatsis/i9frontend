@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt } from '$lib/stores/workout.js';
+	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt, afterWOMessage } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import {get} from 'svelte/store';
@@ -116,10 +116,12 @@
 		}
 	};
 
-	function quit(destination="./rate") {
+	async function quit(destination="./rate") {
 		clearInterval(interval);
 		interval = null;
-		updateTime(time, "", "Paused", true);
+		loading = true;
+		await updateTime(time, "", "Paused", true);
+		afterWOMessage.set(true);
 		goto(destination);
 	}
 
@@ -164,10 +166,10 @@
 
 	function startAtOld(){
 		time = 0;
+		timeMessage = false;
 		while (time < existingTime){
 			time += 0.05;
 		}
-		timeMessage = false;
 		time = workingTime;
 		loading = false;
 		startStopwatch();
@@ -191,7 +193,7 @@
 
     $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
         round = woRounds[roundIter];
-		rounds.set(round);
+		rounds.set(roundIter);
         roundIter++;
     }
 
@@ -203,7 +205,7 @@
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1 && !timeMessage){
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1 && !loading){
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
