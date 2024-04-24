@@ -46,7 +46,11 @@
 		<Progress progress={progress1} reverse={reversed} order={5} />
 	{/if}
 
-	<img class="centerimg" {src} {alt} />
+	{#if src === ''}
+		<div class="centerimg"></div>
+	{:else}
+		<img class="centerimg" src="{src}" alt="{alt}" />
+	{/if}
 
 	<div class="timepres">{Math.floor(endTime - time)}</div>
 </div>

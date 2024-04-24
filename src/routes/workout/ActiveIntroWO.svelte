@@ -81,8 +81,26 @@
 	}
 
 	function resetStopwatch() {
+		paused = true;
 		clearInterval(interval);
 		time = 0;
+		
+		status = 'Dynamic';
+    	round = null;
+    	roundIter = 0;
+
+		picIter = 0;
+		src = '';
+		set = 0;
+		activeTitle = '';
+		picEndTime = 0;
+
+		scriptIter = 0;
+		scriptStartTime = 0;
+		scriptEndTime = 0;
+		scriptRest = false;
+
+		lastCalled = 0;
 		interval = null;
 	}
 
