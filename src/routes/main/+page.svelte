@@ -15,6 +15,7 @@
 		}
 
 		token = getLoginToken();
+
 		console.log(token);
 		loading = false;
 	});
