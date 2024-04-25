@@ -8,6 +8,7 @@
 
 	export let entry;
 	export let bodyP;
+    export let sampleID;
 	let editstat = false;
 
 	let blocked;
@@ -77,12 +78,21 @@
 
 <div>Name: {entry.Name}</div>
 <div>Parent: {entry.Parent}</div>
-{#each entry.BodyParts as p, i (p)}
-	<span
-		>{bodyP[p]}
-		{#if i !== entry.BodyParts.length - 1},{/if}</span
-	>
-{/each}
+<div>
+	Body Parts Used: {#each entry.BodyParts as p, i (p)}
+		<span
+			>{bodyP[p]}
+			{#if i !== entry.BodyParts.length - 1},{/if}</span
+		>
+	{/each}
+</div>
+
+<button
+	on:click={() => {
+		sampleID = entry.ID;
+	}}>&#x2139;</button
+>
+
 <div>Blocked: {entry.Blocked}</div>
 <div>Favoritism Value: {Math.round(entry.Favoritism * 100) / 100}</div>
 <button on:click={() => (editstat = true)}>Edit</button>

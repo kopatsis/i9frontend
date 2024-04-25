@@ -1,9 +1,11 @@
 <script>
 	// @ts-nocheck
 
+    import Sample from "../Sample.svelte";
     import ExerEntry from "./ExerEntry.svelte"
 
 	export let library = null;
+    let sampleID = '';
 
 	const bodyP = [
 		null,
@@ -31,5 +33,10 @@
 </script>
 
 {#each library as entry (entry.ID)}
-	<ExerEntry entry={entry} bodyP={bodyP}/>
+	<ExerEntry entry={entry} bodyP={bodyP} bind:sampleID={sampleID}/>
 {/each}
+
+{#if sampleID && sampleID !== ''}
+    <button on:click={() => sampleID = ''}>&times;</button>
+    <Sample backendID={sampleID}/>
+{/if}
