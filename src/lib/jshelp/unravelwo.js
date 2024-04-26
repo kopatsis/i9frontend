@@ -92,8 +92,8 @@ export function unravelstretchWO(response) {
 
 	genTimes.end = runningtime;
 
-	if (response.Minutes !== 0){
-		currenttime.set(response.Minutes);
+	if (response.PausedTime !== 0){
+		currenttime.set(response.PausedTime);
 	}
 
 	strRoundsSt.set(strRounds);
@@ -302,8 +302,8 @@ export function unravelWO(response, type="Regular") {
 
 	genTimes.end = runningtime;
 
-	if (response.Minutes !== 0){
-		currenttime.set(response.Minutes);
+	if (response.PausedTime !== 0){
+		currenttime.set(response.PausedTime);
 	}
 
 	strRoundsSt.set(strRounds);

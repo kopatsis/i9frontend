@@ -3,7 +3,7 @@
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
-	import { fetchWorkout } from '$lib/jshelp/fetchwo';
+	import { cloneWorkoutById, getWorkoutById } from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType } from '$lib/stores/creation';
 
 	export let entry = null;
@@ -71,10 +71,8 @@
 	async function toReview() {
 		loading = true;
 		try {
-			let workout;
 			const token = getLoginToken();
-
-			// workout = await getWorkoutByID DEVELOP!
+			const workout = await getWorkoutById(token, entry.ID);
 			unravelWO(workout);
 
 			preloadImages(extractImageList(workout));
@@ -87,14 +85,11 @@
 		}
 	}
 
-	function toRestart() {
+	async function toRestart() {
 		loading = true;
 		try {
-			let workout;
 			const token = getLoginToken();
-
-			// workout = await getWorkoutByID DEVELOP!
-			// workout.PausedTime = 0, .status = Paused
+			const workout = await cloneWorkoutById(token, entry.ID);
 			unravelWO(workout);
 
 			preloadImages(extractImageList(workout));

@@ -171,3 +171,125 @@ export function extractImageList(response) {
 		return [];
 	}
 }
+
+/**
+ * Makes a GET request to the server and returns the full response object.
+ *
+ * @param {string} token - The token
+ * @param {string} id - The workout id
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function getWorkoutById(token, id) {
+	const baseUrl = import.meta.env.VITE_BACKEND_URL;
+	const url = baseUrl + '/workouts/' +id + '?script=true';
+	const options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json()
+			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
+
+/**
+ * Makes a GET request to the server and returns the full response object.
+ *
+ * @param {string} token - The token
+ * @param {string} id - The workout id
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function getStretchWorkoutById(token, id) {
+	const baseUrl = import.meta.env.VITE_BACKEND_URL;
+	const url = baseUrl + '/workouts/stretch/' +id + '?script=true';
+	const options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json()
+			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
+
+/**
+ * Makes a POST request to the server and returns the full response object.
+ *
+ * @param {string} token - The token
+ * @param {string} id - The workout id
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function cloneWorkoutById(token, id) {
+	const baseUrl = import.meta.env.VITE_BACKEND_URL;
+	const url = baseUrl + '/workouts/clone/' +id;
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json()
+			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
+
+/**
+ * Makes a POST request to the server and returns the full response object.
+ *
+ * @param {string} token - The token
+ * @param {string} id - The workout id
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function cloneStretchWorkoutById(token, id) {
+	const baseUrl = import.meta.env.VITE_BACKEND_URL;
+	const url = baseUrl + '/workouts/stretch/clone/' +id;
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json()
+			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
+
+
