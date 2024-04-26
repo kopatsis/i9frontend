@@ -24,6 +24,10 @@ export function getLocalToken(){
 }
 
 export function getLoginState(){
+    const user = get(userStore);
+	if (user) {
+		return true;
+	}
     const encryptedState = localStorage.getItem('DgFmTmmfMe');
     return encryptedState === null ? false : decryption(encryptedState) === "TRUE";
 }
