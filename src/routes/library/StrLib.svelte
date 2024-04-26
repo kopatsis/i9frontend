@@ -1,11 +1,11 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
-	import Sample from "../Sample.svelte";
-import StrEntry from "./StrEntry.svelte";
+	import Sample from '../Sample.svelte';
+	import StrEntry from './StrEntry.svelte';
 
 	export let library = null;
-    let sampleID = '';
+	let sampleID = '';
 
 	const bodyP = [
 		null,
@@ -33,10 +33,10 @@ import StrEntry from "./StrEntry.svelte";
 </script>
 
 {#each library as entry (entry.ID)}
-	<StrEntry entry={entry} bodyP={bodyP} bind:sampleID={sampleID}/>
+	<StrEntry {entry} {bodyP} bind:sampleID />
 {/each}
 
 {#if sampleID && sampleID !== ''}
-    <button on:click={() => sampleID = ''}>&times;</button>
-    <Sample backendID={sampleID}/>
+	<button on:click={() => (sampleID = '')}>&times;</button>
+	<Sample backendID={sampleID} />
 {/if}
