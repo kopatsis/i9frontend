@@ -2,7 +2,6 @@
 	// @ts-nocheck
 
 	export let entry = null;
-	export let sampleID;
 	let expanded = false;
 
 	function formatDateString(isoDateString) {
@@ -90,6 +89,9 @@
         <div>
             {round.ExerciseIDs.join(', ')}
         </div>
+		{#if round.Rating > 0}
+			<div>Rating: {Math.round(round.Rating)}</div>
+		{/if}
     {/each}
 
     <div>Static Cooldown:</div>

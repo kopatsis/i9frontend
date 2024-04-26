@@ -5,6 +5,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import Logout from '../Logout.svelte';
+	import WorkoutHist from './WorkoutHist.svelte';
+	import StrWorkoutHist from './StrWorkoutHist.svelte';
 
 	let current = 'Workout';
 	let loading = true;
@@ -59,9 +61,9 @@
 	>
 
 	{#if current === 'Workout'}
-		<div>Workout</div>
+		<WorkoutHist history={wos} />
 	{:else}
-		<div>Stretch Workout</div>
+		<StrWorkoutHist history={strwos} />
 	{/if}
 {/if}
 <Logout />
