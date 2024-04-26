@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
 	import { goto } from '$app/navigation';
 	import { getLocalToken, setLoginState, setLoginToken } from '$lib/jshelp/localtoken';
 

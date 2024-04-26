@@ -1,11 +1,12 @@
 <script>
 	// @ts-nocheck
 
-    import Sample from "../Sample.svelte";
-    import ExerEntry from "./ExerEntry.svelte"
+	import Sample from '../Sample.svelte';
+	import ExerEntry from './ExerEntry.svelte';
 
 	export let library = null;
-    let sampleID = '';
+	let sampleID = '';
+	let filter = '';
 
 	const bodyP = [
 		null,
@@ -30,13 +31,34 @@
 		'Left Hip',
 		'Right Hip'
 	];
+
+	const exercises = [
+		'Pushups',
+		'Squats',
+		'Burpees',
+		'Jumps',
+		'Lunges',
+		'Mountain Climbers',
+		'Abs',
+		'Bridges',
+		'Kicks',
+		'Planks',
+		'Supermans'
+	];
 </script>
 
-{#each library as entry (entry.ID)}
-	<ExerEntry entry={entry} bodyP={bodyP} bind:sampleID={sampleID}/>
+<select bind:value={filter}>
+	<option value="">All</option>
+	{#each exercises as exercise}
+		<option value={exercise}>{exercise}</option>
+	{/each}
+</select>
+
+{#each library.filter((entry) => filter === '' || entry.Parent === filter) as entry (entry.ID)}
+	<ExerEntry {entry} {bodyP} bind:sampleID />
 {/each}
 
 {#if sampleID && sampleID !== ''}
-    <button on:click={() => sampleID = ''}>&times;</button>
-    <Sample backendID={sampleID}/>
+	<button on:click={() => (sampleID = '')}>&times;</button>
+	<Sample backendID={sampleID} />
 {/if}

@@ -6,6 +6,7 @@
 
 	export let library = null;
 	let sampleID = '';
+	let filter = '';
 
 	const bodyP = [
 		null,
@@ -30,9 +31,21 @@
 		'Left Hip',
 		'Right Hip'
 	];
+
+	const types = [
+		'Dynamic',
+		'Static',
+	];
 </script>
 
-{#each library as entry (entry.ID)}
+<select bind:value={filter}>
+	<option value="">All</option>
+	{#each types as type}
+		<option value={type}>{type}</option>
+	{/each}
+</select>
+
+{#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
 	<StrEntry {entry} {bodyP} bind:sampleID />
 {/each}
 
