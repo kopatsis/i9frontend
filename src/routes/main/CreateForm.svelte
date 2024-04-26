@@ -19,7 +19,6 @@
 
 	export let formType = 'Regular';
 	export let workoutID = '';
-	export let token = '';
 
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
@@ -40,6 +39,7 @@
 	let loading = true;
 
 	onMount(async () => {
+		const token = getLoginToken();
 		error = await getUser(token);
 		loading = false;
 
@@ -82,6 +82,7 @@
 
 	const submitWO = async () => {
 		loading = true;
+		const token = getLoginToken();
 		if (
 			showAdvanced &&
 			(plyo !== userData.PlyoTolerance ||
@@ -108,9 +109,6 @@
 			}
 		}
 		try {
-			if (token === '') {
-				token = getLoginToken();
-			}
 
 			let workout;
 

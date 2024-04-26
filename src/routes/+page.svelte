@@ -8,6 +8,7 @@
 	import { afterWOMessage } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from './UserUpdateForm.svelte';
+	import { creationType } from '$lib/stores/creation';
 
 	// @ts-nocheck
 
@@ -24,6 +25,11 @@
 	const unsubscribeUser = user.subscribe((user) => {
 		userObj = user;
 	});
+
+	function workoutGen(type){
+		creationType.set(type);
+		goto('./main');
+	}
 
 	onMount(() => {
 		if (!getLoginState()) {
@@ -57,6 +63,7 @@
 	<UserUpdateForm token={token} bind:exists={showForm}/>
 {/if}
 
-<button on:click={() => goto('./main')}>Form</button>
-<button on:click={() => goto('./review')}>Sample</button>
+<button on:click={() => workoutGen('Regular')}>Generate Workout</button>
+<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
+<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
 <Logout />

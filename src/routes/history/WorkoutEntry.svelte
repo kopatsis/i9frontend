@@ -1,7 +1,14 @@
 <script>
 	// @ts-nocheck
+	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { preloadImages } from '$lib/jshelp/preloader.js';
+	import { unravelWO } from '$lib/jshelp/unravelwo';
+	import { fetchWorkout } from '$lib/jshelp/fetchwo';
+	import { adaptID, creationType } from '$lib/stores/creation';
 
 	export let entry = null;
+	let loading = false;
+	let error = '';
 	let expanded = false;
 
 	function formatDateString(isoDateString) {
@@ -27,10 +34,14 @@
 
 	function averageRating() {
 		let rating = 0;
+		let i = 0;
 		entry.Exercises.array.forEach((element) => {
-			rating += element.Rating;
+			if (element.Rating > 0) {
+				rating += element.Rating;
+				i++;
+			}
 		});
-		return rating;
+		return rating / Math.max(1, i);
 	}
 
 	function getFirst3(strings) {
@@ -57,46 +68,111 @@
 		return uniqueStrings.join(', ') + '...';
 	}
 
+	async function toReview() {
+		loading = true;
+		try {
+			let workout;
+			const token = getLoginToken();
+
+			// workout = await getWorkoutByID DEVELOP!
+			unravelWO(workout);
+
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (error) {
+			loading = false;
+			error = error;
+			console.log(error);
+		}
+	}
+
+	function toRestart() {
+		loading = true;
+		try {
+			let workout;
+			const token = getLoginToken();
+
+			// workout = await getWorkoutByID DEVELOP!
+			// workout.PausedTime = 0, .status = Paused
+			unravelWO(workout);
+
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (error) {
+			loading = false;
+			error = error;
+			console.log(error);
+		}
+	}
+
+	function toAdapt() {
+		adaptID.set(entry.ID);
+		creationType.set("Adapt");
+	}
+
 	const options = [null, 'Low Cortisol', 'Simple', 'Easy', 'Medium', 'Hard', 'Extreme'];
 </script>
 
-<div>Date: {formatDateString(entry.Date)}</div>
-<div>Name: {entry.Name}</div>
-<div>Status: {entry.Status}</div>
-<div>Difficulty: {options[entry.Difficulty]}</div>
-<div>
-	Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
-			entry.Minutes
-		)}{/if} / {timeString(entry.Minutes)}
-</div>
-{#if !expanded}
-	{#if entry.Status === 'Rated'}
-		<div>Average Rating: {averageRating}</div>
-	{/if}
-	<div>Dynamic Stretches: {getFirst3(entry.Dynamics)}</div>
-	<div>Exercises: {getFirstExers()}</div>
-	<div>Static Stretches: {getFirst3(entry.Statics)}</div>
-	<button on:click={() => (expanded = true)}>Expand</button>
+{#if loading}
+	<div>loading...</div>
+{:else if error !== ''}
+	<div>F: {error}</div>
 {:else}
-	<div>Dynamic Warmup:</div>
-    {#each entry.Dynamics as name, i (i)}
-        <div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
-    {/each}
-
-    {#each entry.Exercises as round, i (i)}
-        <div>Round {i}: {round.Status}</div>
-        <div>{Math.round(round.Times.ExercisePerSet)}s on / {Math.round(round.Times.RestPerSet)}s off</div>
-        <div>
-            {round.ExerciseIDs.join(', ')}
-        </div>
-		{#if round.Rating > 0}
-			<div>Rating: {Math.round(round.Rating)}</div>
+	<div>Date: {formatDateString(entry.Date)}</div>
+	<div>Name: {entry.Name}</div>
+	<div>Status: {entry.Status}</div>
+	<div>Difficulty: {options[entry.Difficulty]}</div>
+	<div>
+		Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
+				entry.Minutes
+			)}{/if} / {timeString(entry.Minutes)}
+	</div>
+	{#if !expanded}
+		{#if entry.Status === 'Rated' && averageRating() > 0}
+			<div>Average Rating: {averageRating()}</div>
 		{/if}
-    {/each}
+		<div>Dynamic Stretches: {getFirst3(entry.Dynamics)}</div>
+		<div>Exercises: {getFirstExers()}</div>
+		<div>Static Stretches: {getFirst3(entry.Statics)}</div>
+		<button on:click={() => (expanded = true)}>Expand</button>
+	{:else}
+		<div>Dynamic Warmup:</div>
+		{#each entry.Dynamics as name, i (i)}
+			<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
+		{/each}
 
-    <div>Static Cooldown:</div>
-    {#each entry.Statics as name, i (i)}
-        <div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
-    {/each}
-	<button on:click={() => (expanded = false)}>Collapse</button>
+		{#each entry.Exercises as round, i (i)}
+			<div>Round {i}: {round.Status}</div>
+			<div>
+				{Math.round(round.Times.ExercisePerSet)}s on / {Math.round(round.Times.RestPerSet)}s off
+			</div>
+			<div>
+				{round.ExerciseIDs.join(', ')}
+			</div>
+			{#if round.Rating > 0}
+				<div>Rating: {Math.round(round.Rating)}</div>
+			{/if}
+		{/each}
+
+		<div>Static Cooldown:</div>
+		{#each entry.Statics as name, i (i)}
+			<div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
+		{/each}
+		<button on:click={() => (expanded = false)}>Collapse</button>
+	{/if}
+
+	{#if entry.Status === 'Unstarted'}
+		<button on:click={toReview}>Start</button>
+	{:else if entry.Status === 'Progressing' || entry.Status === 'Paused'}
+		<button on:click={toReview}>Resume</button>
+	{:else}
+		<button on:click={toRestart}>Restart</button>
+		<button on:click={toAdapt}>Adapt*</button>
+		<div>
+			*Adapt means the times and exercises/stretches will be the same, but the reps will be
+			re-calculated to your current level.
+		</div>
+	{/if}
 {/if}

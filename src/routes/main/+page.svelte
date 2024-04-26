@@ -1,22 +1,33 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
-	import { onMount } from 'svelte';
+	import { getLoginState } from '$lib/jshelp/localtoken';
+	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../Logout.svelte';
 	import CreateForm from './CreateForm.svelte';
+	import { adaptID, creationType } from '$lib/stores/creation';
 
-	let token = '';
 	let loading = true;
+
 	let type = 'Regular';
+	const unsubscribeType = creationType.subscribe((creationType) => {
+		type = creationType;
+	});
+
+	let id;
+	const unsubscribeID = adaptID.subscribe((adaptID) => {
+		id = adaptID;
+	});
+
+	onDestroy(() => {
+		unsubscribeType();
+		unsubscribeID();
+	});
 
 	onMount(() => {
 		if (!getLoginState()) {
 			goto('./login');
 		}
 
-		token = getLoginToken();
-
-		console.log(token);
 		loading = false;
 	});
 </script>
@@ -26,7 +37,7 @@
 {#if loading}
 	<div>loading...</div>
 {:else}
-	<button
+	<!-- <button
 		on:click={() => {
 			if (type !== 'Regular') {
 				type = 'Regular';
@@ -46,7 +57,11 @@
 				type = 'Intro';
 			}
 		}}>Intro</button
-	>
+	> -->
 
-	<CreateForm {token} formType={type} />
+	{#if adaptID}
+		<CreateForm formType={type} />
+	{:else}
+		<CreateForm formType={type} workoutID={adaptID} />
+	{/if}
 {/if}

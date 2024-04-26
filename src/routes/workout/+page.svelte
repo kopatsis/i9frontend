@@ -12,8 +12,6 @@
 	});
 	onDestroy(unsubscribe);
 
-
-
 </script>
 
 {#if type === 'Stretch'}
