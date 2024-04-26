@@ -1,8 +1,21 @@
 // @ts-nocheck
 import CryptoJS from 'crypto-js';
+import { get } from 'svelte/store';
+import { userStore } from '$lib/stores/firebaseuser';
+import { getIdToken } from 'firebase/auth';
 
 export function getLoginToken(){
-    return getLocalToken();
+    const user = get(userStore);
+	if (user) {
+		getIdToken(user)
+			.then((token) => {
+				return token;
+			})
+			.catch((error) => {
+				console.error('Failed to retrieve ID token:', error);
+			});
+	}
+	return getLocalToken();
 }
 
 export function getLocalToken(){

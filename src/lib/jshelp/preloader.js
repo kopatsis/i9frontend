@@ -2,6 +2,7 @@
  * @param {string[]} urls
  */
 export function preloadImages(urls) {
+	// @ts-ignore
 	const cdn = import.meta.env.VITE_CDN_URL;
 	const sizes = ['-low', '-mid', '-high', '-OG'];
 	const angles = ['01', '02', '03', '04', '05', '06'];
@@ -24,6 +25,7 @@ export function preloadImages(urls) {
  * @param {string} size
  */
 export function preloadSampleImages(urls, size) {
+	// @ts-ignore
 	const cdn = import.meta.env.VITE_CDN_URL;
 	const angles = ['01', '02', '03', '04', '05', '06'];
 
