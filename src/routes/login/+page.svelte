@@ -1,8 +1,12 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
 	import { getLocalToken, setLoginState, setLoginToken } from '$lib/jshelp/localtoken';
+	import Signin from './Signin.svelte';
+	import Signup from './Signup.svelte';
+
+	let signInForm = true;
 
 	async function createLocalUser() {
 		const url = `${import.meta.env.VITE_BACKEND_URL}/users/local`;
@@ -26,19 +30,28 @@
 		}
 	}
 
-	const login = async () => {
+	const localLogin = async () => {
 		if (getLocalToken() === '') {
-            try{
-                const token = await createLocalUser();
+			try {
+				const token = await createLocalUser();
 				console.log(token.Token);
-                setLoginToken(token.Token);
-            } catch(error){
-                setLoginToken("")
-            }
+				setLoginToken(token.Token);
+			} catch (error) {
+				setLoginToken('');
+			}
 		}
 		setLoginState(true);
 		goto('./');
 	};
 </script>
 
-<button on:click={login}>Login</button>
+<button on:click={() => (signInForm = true)}>Existing Account</button>
+<button on:click={() => (signInForm = false)}>New Account</button>
+
+{#if signInForm}
+	<Signin />
+{:else}
+	<Signup />
+{/if}
+
+<button on:click={localLogin}>Use without account</button>
