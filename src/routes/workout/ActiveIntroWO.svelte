@@ -3,10 +3,10 @@
 	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt, afterWOMessage } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import {get} from 'svelte/store';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 	import { postIntroRating } from '$lib/jshelp/postwo';
+	import Audio from '../Audio.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -37,6 +37,8 @@
 	let exitMessage = false;
 	let resetMessage = false;
 	let paused = false;
+
+	let audioDisp = false;
 
 	// Subscriptions section
 	let timescript;
@@ -329,4 +331,7 @@
 			changeAngle('06');
 		}}>Top</button
 	>
+
+	<button on:click={() => audioDisp = true}>Show music</button>
+	<Audio bind:display={audioDisp}/>
 {/if}

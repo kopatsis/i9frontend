@@ -14,6 +14,7 @@
 	import { onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
+	import Audio from '../Audio.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -44,6 +45,8 @@
 	let paused = false;
 	let timeMessage = false;
 	let existingTime = 0;
+
+	let audioDisp = false;
 
 	// Subscriptions section
 	let timescript;
@@ -313,4 +316,7 @@
 			changeAngle('06');
 		}}>Top</button
 	>
+
+	<button on:click={() => audioDisp = true}>Show music</button>
+	<Audio bind:display={audioDisp}/>
 {/if}
