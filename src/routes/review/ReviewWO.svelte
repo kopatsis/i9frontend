@@ -1,10 +1,13 @@
 <script>
 	// @ts-nocheck
 
-	import { strRoundsSt, workoutRoundsSt } from '$lib/stores/workout.js';
-	import { onDestroy } from 'svelte';
+	import { strRoundsSt, strRoundsStSession, workoutRoundsSt, workoutRoundsStSession } from '$lib/stores/workout.js';
+	import { onDestroy, onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
+	import { goto } from '$app/navigation';
 
+
+	let error;
 	let strRounds;
 	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
 		strRounds = strRoundsSt;
@@ -20,6 +23,17 @@
 		unsubscribeWO();
 	});
 
+	onMount(() => {
+		workoutRoundsStSession();
+		if (!woRounds) {
+			error = 'No workout existing';
+		}
+		strRoundsStSession();
+		if(!strRounds){
+			error = 'No workout existing';
+		}
+	});
+
 	let currentSampleID = '';
 	const showCurrentSample = (sampleID) => {
 		if (currentSampleID !== sampleID) {
@@ -28,6 +42,10 @@
 	};
 </script>
 
+{#if error}
+	<div>F: {error}</div>
+	<button on:click={() => goto('./')}>Go Home</button>
+{:else}
 <div>Dynamic Stretch Warmup:</div>
 {#each strRounds.dynamic.times as time, i}
 	<div>
@@ -94,6 +112,7 @@
 		{/if}
 	</div>
 {/each}
+{/if}
 
 <div>AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
     AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD 

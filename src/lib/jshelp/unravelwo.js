@@ -1,7 +1,7 @@
 // @ts-nocheck
 // @ts-ignore
 
-import { storedWorkout, strRoundsSt, genTimesSt, timescriptSt, scriptSt, workoutRoundsSt, workoutType, currenttime } from "$lib/stores/workout";
+import { currenttime, strRoundsStSet, genTimesStSet, scriptStSet, timescriptStSet, storedWorkoutSet, workoutTypeSet, workoutRoundsStSet } from "$lib/stores/workout";
 
 export function unravelstretchWO(response) {
 
@@ -96,12 +96,13 @@ export function unravelstretchWO(response) {
 		currenttime.set(response.PausedTime);
 	}
 
-	strRoundsSt.set(strRounds);
-	genTimesSt.set(genTimes);
-	scriptSt.set(script);
-	timescriptSt.set(timescript);
-	storedWorkout.set(response);
-	workoutType.set("Stretch");
+	strRoundsStSet(strRounds);
+	genTimesStSet(genTimes);
+	scriptStSet(script);
+	timescriptStSet(timescript);
+	storedWorkoutSet(response);
+	workoutTypeSet("Stretch");
+	
 }
 
 // @ts-ignore
@@ -306,11 +307,11 @@ export function unravelWO(response, type="Regular") {
 		currenttime.set(response.PausedTime);
 	}
 
-	strRoundsSt.set(strRounds);
-	genTimesSt.set(genTimes);
-	scriptSt.set(script);
-	timescriptSt.set(timescript);
-	workoutRoundsSt.set(workoutRounds);
-	storedWorkout.set(response);
-	workoutType.set(type);
+	strRoundsStSet(strRounds);
+	genTimesStSet(genTimes);
+	scriptStSet(script);
+	timescriptStSet(timescript);
+	workoutRoundsStSet(workoutRounds);
+	storedWorkoutSet(response);
+	workoutTypeSet("Stretch");
 }
