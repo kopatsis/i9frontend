@@ -3,10 +3,11 @@
 
 	import { workouts, strworkouts, getHistory } from '$lib/stores/library';
 	import { onDestroy, onMount } from 'svelte';
-	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
 	import Logout from '../Logout.svelte';
 	import WorkoutHist from './WorkoutHist.svelte';
 	import StrWorkoutHist from './StrWorkoutHist.svelte';
+	import { goto } from '$app/navigation';
 
 	let current = 'Workout';
 	let loading = true;
@@ -28,6 +29,9 @@
 	});
 
 	onMount(async () => {
+		if(!getLoginState()){
+			goto('./login');
+		}
 		try {
 			const token = getLoginToken();
 			await getHistory(token);

@@ -42,10 +42,14 @@
 	}
 
 	onMount(() => {
+		if(!getLoginState()){
+			goto('./login');
+		}
         for (let i = 0; i < roundsComplete; i++){
             retVals.push(5);
             favVals.push(3);
         }
+		loading = false;
 	});
 
     async function postAndExit(){

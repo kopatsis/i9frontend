@@ -28,6 +28,9 @@
 	});
 
 	onMount(async () => {
+		if(!getLoginState()){
+			goto('./login');
+		}
 		try {
 			const token = getLoginToken();
 			await getLibrary(token)

@@ -18,6 +18,9 @@
 	onDestroy(unsubscribe);
 
 	onMount(async () => {
+		if(!getLoginState()){
+			goto('./login');
+		}
 		try {
 			let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
 			if (!retset) {
