@@ -8,7 +8,7 @@ export const genTimesSt = writable(null);
 export const scriptSt = writable(null);
 export const timescriptSt = writable(null);
 export const workoutRoundsSt = writable(null);
-export const workoutType = writable(null);
+export const workoutType = writable('');
 export const currenttime = writable(0);
 export const id = writable("");
 export const rounds = writable(0);
@@ -16,12 +16,44 @@ export const afterWOMessage = writable(false);
 
 export const updateTime = async (/** @type {number} */ seconds, type="", status="Progressing", autopush=false) => {
     currenttime.set(seconds)
+    sessionStorage.setItem("currenttime", String(seconds));
     if (autopush || Math.round(seconds) % 10 === 0 || Math.round(seconds) % 10 === 1) {
         const token = getLoginToken();
         const woID = get(id)
         await patchWorkout(token, woID, seconds, status, type);
     }
 }
+
+export const wipeWorkout = () => {
+    storedWorkout.set(null);
+    strRoundsSt.set(null);
+    genTimesSt.set(null);
+    scriptSt.set(null);
+    timescriptSt.set(null);
+    workoutRoundsSt.set(null);
+    workoutType.set('');
+    rounds.set(0);
+    sessionStorage.removeItem('storedWorkout');
+    sessionStorage.removeItem('strRoundsSt');
+    sessionStorage.removeItem('genTimesSt');
+    sessionStorage.removeItem('scriptSt');
+    sessionStorage.removeItem('timescriptSt');
+    sessionStorage.removeItem('workoutRoundsSt');
+    sessionStorage.removeItem('workoutType');
+    sessionStorage.removeItem('rounds');
+}
+
+export const roundsSession = () => {
+    if (get(rounds) === 0){
+        const value = sessionStorage.getItem("rounds")
+        if (!value){
+            return
+        }
+        const check = Number(value)
+        rounds.set(check)
+    }
+}
+
 
 export const storedWorkoutSession = () => {
     if (!get(storedWorkout)){
@@ -90,13 +122,22 @@ export const workoutRoundsStSession = () => {
 }
 
 export const workoutTypeSession = () => {
-    if (!get(workoutType)){
+    if (get(workoutType) === ''){
         const value = sessionStorage.getItem("workoutType")
         if (!value){
             return
         }
-        const check = JSON.parse(value)
-        workoutType.set(check)
+        workoutType.set(value)
+    }
+}
+
+export const currenttimeSession = () => {
+    if (get(currenttime) === 0){
+        const value = sessionStorage.getItem("currenttime")
+        if (!value){
+            return
+        }
+        currenttime.set(Number(value))
     }
 }
 
@@ -132,5 +173,10 @@ export const workoutRoundsStSet = (/** @type {any} */ item) => {
 
 export const workoutTypeSet = (/** @type {any} */ item) => {
     workoutType.set(item);
-	sessionStorage.setItem("workoutType", JSON.stringify(item));
+	sessionStorage.setItem("workoutType", item);
+}
+
+export const roundsSet = (/** @type {any} */ item) => {
+    rounds.set(item);
+	sessionStorage.setItem("rounds", String(item));
 }

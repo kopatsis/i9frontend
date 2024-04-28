@@ -16,6 +16,7 @@
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
+	import { workoutTypeSet } from '$lib/stores/workout';
 
 	export let formType = 'Regular';
 	export let workoutID = '';
@@ -124,6 +125,7 @@
 			} else {
 				workout = await fetchIntroWorkout(token, minutes);
 				unravelWO(workout, "Intro");
+				workoutTypeSet("Intro");
 			}
 
 			preloadImages(extractImageList(workout));

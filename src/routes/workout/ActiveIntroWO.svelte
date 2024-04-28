@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt, afterWOMessage } from '$lib/stores/workout.js';
+	import { currenttimeSession, timescriptSt, scriptSt, strRoundsSt, genTimesSt, updateTime, workoutRoundsSt, afterWOMessage, timescriptStSession, scriptStSession, strRoundsStSession, genTimesStSession, workoutRoundsStSession, roundsSet, wipeWorkout } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
@@ -15,7 +15,7 @@
 	let interval = null;
 	let time = 0;
 	let loading = true;
-	let error = false;
+	let error = '';
 
 	let status = 'Dynamic';
     let round = null;
@@ -36,7 +36,9 @@
 	let lastCalled = 0;
 	let exitMessage = false;
 	let resetMessage = false;
-	let paused = false;
+	let paused = true;
+	let timeMessage = false;
+	let existingTime = 0;
 
 	let audioDisp = false;
 
@@ -143,6 +145,7 @@
 		const finalRound = roundIter + Math.min(Math.max((time - woRounds[roundIter-1].start) / (woRounds[roundIter-1].end - time),0),1) - 1
 		const token = getLoginToken();
 		await postIntroRating(token, finalRound);
+		wipeWorkout();
 		afterWOMessage.set(true);
 		goto('./');
 	}
@@ -167,10 +170,56 @@
 		startStopwatch();
 	}
 
-	// Start funcs
-	onMount(() => {
+	function startAnew(){
+		timeMessage = false;
+		time = 0;
 		loading = false;
 		startStopwatch();
+	}
+
+	function startAtOld(){
+		time = 0;
+		timeMessage = false;
+		while (time < existingTime){
+			time += 0.05;
+		}
+		time = workingTime;
+		loading = false;
+		startStopwatch();
+	}
+
+	// Start funcs
+	onMount(() => {
+		currenttimeSession();
+		const oldTime = get(currenttime)
+
+		timescriptStSession()
+		if (!timescript){
+			error = "Error loading workout"
+		}
+		scriptStSession();
+		if (!script){
+			error = "Error loading workout"
+		}
+		strRoundsStSession();
+		if (!strRounds){
+			error = "Error loading workout"
+		}
+		genTimesStSession();
+		if (!getTimes){
+			error = "Error loading workout"
+		}
+		workoutRoundsStSession();
+		if (!woRounds){
+			error = "Error loading workout"
+		}
+
+		if (oldTime !== 0){
+			timeMessage = true;
+			existingTime = oldTime
+		} else {
+			loading = false;
+		}
 	});
 
 	// Reactive statements on time change
@@ -191,7 +240,7 @@
 
     $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
         round = woRounds[roundIter];
-		rounds.set(roundIter);
+		roundsSet(roundIter);
         roundIter++;
     }
 
@@ -208,8 +257,11 @@
 		updateTime(time);
 	}
 </script>
-{#if loading}
-	<div>loading...</div>
+{#if timeMessage}
+	<div>Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(existingTime % 60)} sec?</div>
+	<button on:click={startAtOld}>Yes</button>
+	<button on:click={startAnew}>No</button>
+{:else if loading}	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
 {:else}

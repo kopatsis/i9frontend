@@ -6,7 +6,10 @@
 		strRoundsSt,
 		genTimesSt,
 		updateTime,
-
+		timescriptStSession, 
+		scriptStSession, 
+		strRoundsStSession,
+		genTimesStSession,
 		afterWOMessage
 
 	} from '$lib/stores/workout.js';
@@ -163,6 +166,24 @@
 	// Start funcs
 	onMount(() => {
 		const oldTime = get(currenttime)
+
+		timescriptStSession()
+		if (!timescript){
+			error = "Error loading workout"
+		}
+		scriptStSession();
+		if (!script){
+			error = "Error loading workout"
+		}
+		strRoundsStSession();
+		if (!strRounds){
+			error = "Error loading workout"
+		}
+		genTimesStSession();
+		if (!getTimes){
+			error = "Error loading workout"
+		}
+
 		if (oldTime !== 0){
 			timeMessage = true;
 			existingTime = oldTime
@@ -226,6 +247,7 @@
 	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
+	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
 	{#if exitMessage}
 		<div>Are you sure you want to exit?</div>

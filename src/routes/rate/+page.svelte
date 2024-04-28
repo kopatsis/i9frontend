@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { postRating } from '$lib/jshelp/postwo';
-	import { rounds, workoutRoundsSt, id } from '$lib/stores/workout.js';
+	import { rounds, workoutRoundsSt, id, workoutRoundsStSession, roundsSession, wipeWorkout } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -49,13 +49,21 @@
             retVals.push(5);
             favVals.push(3);
         }
+		roundsSession();
+		workoutRoundsStSession();
+		if(!woRounds){
+			roundsComplete = 0;
+		}
+
 		loading = false;
 	});
 
     async function postAndExit(){
+		loading = true;
         const token = getLoginToken();
         const woID = get(id);
         await postRating(token, woID, retVals, favVals);
+		wipeWorkout();
         goto('./');
     }
 </script>

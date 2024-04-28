@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { timescriptSt, scriptSt, strRoundsSt, genTimesSt, rounds, updateTime, currenttime, workoutRoundsSt, afterWOMessage } from '$lib/stores/workout.js';
+	import { currenttimeSession, roundsSet, timescriptSt, scriptSt, strRoundsSt, genTimesSt, updateTime, currenttime, workoutRoundsSt, afterWOMessage, workoutRoundsStSession } from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import {get} from 'svelte/store';
@@ -36,7 +36,7 @@
 	let lastCalled = 0;
 	let exitMessage = false;
 	let resetMessage = false;
-	let paused = false;
+	let paused = true;
 	let timeMessage = false;
 	let existingTime = 0;
 
@@ -168,13 +168,35 @@
 
 	// Start funcs
 	onMount(() => {
+		currenttimeSession();
 		const oldTime = get(currenttime)
+
+		timescriptStSession()
+		if (!timescript){
+			error = "Error loading workout"
+		}
+		scriptStSession();
+		if (!script){
+			error = "Error loading workout"
+		}
+		strRoundsStSession();
+		if (!strRounds){
+			error = "Error loading workout"
+		}
+		genTimesStSession();
+		if (!getTimes){
+			error = "Error loading workout"
+		}
+		workoutRoundsStSession();
+		if(!woRounds){
+			error = "Error loading workout"
+		}
+
 		if (oldTime !== 0){
 			timeMessage = true;
 			existingTime = oldTime
 		} else {
 			loading = false;
-			startStopwatch();
 		}
 	});
 
@@ -214,7 +236,7 @@
 
     $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
         round = woRounds[roundIter];
-		rounds.set(roundIter);
+		roundsSet(roundIter);(roundIter);
         roundIter++;
     }
 
@@ -239,6 +261,7 @@
 	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
+	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
 	{#if exitMessage}
 		<div>Are you sure you want to exit?</div>
