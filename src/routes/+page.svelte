@@ -5,7 +5,7 @@
 	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from './Logout.svelte';
-	import { afterWOMessage } from '$lib/stores/workout';
+	import { afterWOMessage, storedWorkout, storedWorkoutSession } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from './UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
@@ -26,6 +26,11 @@
 		userObj = user;
 	});
 
+	let lastWO;
+	const unsubscribeWO = storedWorkout.subscribe((workout) => {
+		lastWO = workout;
+	})
+
 	function workoutGen(type){
 		creationType.set(type);
 		goto('./main');
@@ -39,6 +44,8 @@
 		token = getLoginToken();
 		getUser(token);
 		name = userObj.Name ? userObj.Name : '';
+		storedWorkoutSession();
+
 		console.log(token);
 		console.log(getLoginState());
 	});
@@ -47,6 +54,7 @@
 		afterWOMessage.set(false);
 		unsubscribeUser();
 		unsubscribe();
+		unsubscribeWO();
 	})
 </script>
 
@@ -55,6 +63,10 @@
 	<div>Nice job{#if !name}!{:else}, {name}!{/if}</div>
 {:else}
 	<div>Welcome{#if !name}!{:else}, {name}!{/if}</div>
+{/if}
+
+{#if lastWO}
+	<button on:click={goto('./workout')}>Return to last workout</button>
 {/if}
 
 {#if !showForm}
