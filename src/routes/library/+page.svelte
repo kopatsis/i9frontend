@@ -34,7 +34,7 @@
 
 	async function mountCall() {
 		try {
-			const token = getLoginToken();
+			const token = await getLoginToken();
 			await getLibrary(token);
 		} catch (err) {
 			error = err;
@@ -55,9 +55,9 @@
 
 		const unsubFirebase = userStore.subscribe((value) => {
 			firebaseUser = value;
-			if (firebaseUser === undefined && !localLogin) {
+			if (firebaseUser === undefined && !login) {
 				loading = true;
-			} else if (firebaseUser === null && !localLogin) {
+			} else if (firebaseUser === null && !login) {
 				goto('./login');
 			} else if (firebaseUser) {
 				mountCall();

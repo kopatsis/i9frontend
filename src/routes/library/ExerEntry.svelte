@@ -46,7 +46,7 @@
 
 	async function postChanges() {
 		try {
-			const token = getLoginToken();
+			const token = await getLoginToken();
 			if (oldblocked !== blocked) {
 				if (blocked) {
 					await blockChange(token, entry.ID, 'PATCH');
@@ -57,7 +57,7 @@
 			}
 			if (oldfav !== fav) {
 				await favChange(token, entry.ID, dispToFave(fav));
-				oldfav = fav;
+				oldfav = dispToFave(fav);
 			}
 			editstat = false;
 			exercises.update((items) =>
@@ -69,10 +69,10 @@
 	}
 
 	onMount(() => {
-		oldblocked = faveDisp(entry.Blocked);
-		oldfav = entry.Favoritism;
-		blocked = faveDisp(entry.Blocked);
-		fav = entry.Favoritism;
+		oldblocked = entry.Blocked;
+		oldfav = faveDisp(entry.Favoritism);
+		blocked = entry.Blocked;
+		fav = faveDisp(entry.Favoritism);
 	});
 </script>
 
@@ -82,7 +82,7 @@
 	Body Parts Used: {#each entry.BodyParts as p, i (p)}
 		<span
 			>{bodyP[p]}
-			{#if i !== entry.BodyParts.length - 1},{/if}</span
+			{#if i !== entry.BodyParts.length - 1}, {/if}</span
 		>
 	{/each}
 </div>

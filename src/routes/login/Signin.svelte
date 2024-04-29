@@ -16,7 +16,7 @@
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-				const name = user.email || 'local';
+				const name = '';
 				const token = await user.getIdToken();
 				await postNewUser(token, name);
         setLocalLogout()

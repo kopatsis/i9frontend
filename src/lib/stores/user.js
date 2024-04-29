@@ -4,6 +4,7 @@ import { writable, get } from 'svelte/store';
 export const user = writable(null);
 
 async function fetchUserData(token) {
+    console.log(token)
     try {
         const backend = import.meta.env.VITE_BACKEND_URL + "/users"
         console.log(backend);
@@ -23,6 +24,7 @@ async function fetchUserData(token) {
 }
 
 export async function getUser(token) {
+    console.log(token)
     if (!get(user)) {
         try{
             const currentUser = await fetchUserData(token);

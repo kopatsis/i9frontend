@@ -78,9 +78,9 @@
 
 		const unsubFirebase = userStore.subscribe((value) => {
 			firebaseUser = value;
-			if (firebaseUser === undefined && !localLogin) {
+			if (firebaseUser === undefined && !local) {
 				loading = true;
-			} else if (firebaseUser === null && !localLogin) {
+			} else if (firebaseUser === null && !local) {
 				goto('./login');
 			} else if (firebaseUser) {
 				mountCall();
@@ -95,7 +95,7 @@
 
 	async function postAndExit() {
 		loading = true;
-		const token = getLoginToken();
+		const token = await getLoginToken();
 		const woID = get(id);
 		await postRating(token, woID, retVals, favVals);
 		wipeWorkout();

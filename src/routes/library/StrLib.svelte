@@ -6,6 +6,7 @@
 
 	export let library = null;
 	let sampleID = '';
+	let sampleType = 'static';
 	let filter = '';
 
 	const bodyP = [
@@ -46,10 +47,10 @@
 </select>
 
 {#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
-	<StrEntry {entry} {bodyP} bind:sampleID />
+	<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType/>
 {/each}
 
 {#if sampleID && sampleID !== ''}
 	<button on:click={() => (sampleID = '')}>&times;</button>
-	<Sample backendID={sampleID} />
+	<Sample backendID={sampleID} type={sampleType}/>
 {/if}

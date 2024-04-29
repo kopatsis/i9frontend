@@ -71,7 +71,7 @@
 	async function toReview() {
 		loading = true;
 		try {
-			const token = getLoginToken();
+			const token = await getLoginToken();
 			const workout = await getWorkoutById(token, entry.ID);
 			unravelWO(workout);
 
@@ -88,7 +88,7 @@
 	async function toRestart() {
 		loading = true;
 		try {
-			const token = getLoginToken();
+			const token = await getLoginToken();
 			const workout = await cloneWorkoutById(token, entry.ID);
 			unravelWO(workout);
 

@@ -40,7 +40,7 @@
 	let loading = true;
 
 	onMount(async () => {
-		const token = getLoginToken();
+		const token = await getLoginToken();
 		error = await getUser(token);
 		loading = false;
 
@@ -83,7 +83,7 @@
 
 	const submitWO = async () => {
 		loading = true;
-		const token = getLoginToken();
+		const token = await getLoginToken();
 		if (
 			showAdvanced &&
 			(plyo !== userData.PlyoTolerance ||

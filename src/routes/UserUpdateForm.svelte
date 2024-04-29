@@ -26,7 +26,7 @@
 	let loading = true;
 
 	onMount(async () => {
-		const token = getLoginToken();
+		const token = await getLoginToken();
 		error = await getUser(token);
 		loading = false;
 
@@ -64,7 +64,7 @@
 		loading = true;
 		let body = {};
 
-		const token = getLoginToken();
+		const token = await getLoginToken();
 
 		if (plyo !== userData.PlyoTolerance) {
 			body['plyo'] = plyo;

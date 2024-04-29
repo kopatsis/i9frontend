@@ -5,8 +5,9 @@ import { localLogin, userStore } from './firebaseuser';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '../../auth/firebase';
 
-export function getLoginToken() {
+export async function getLoginToken() {
 	const user = get(userStore);
+	console.log(user)
 	if (user) {
 		getIdToken(user)
 			.then((token) => {
@@ -15,8 +16,10 @@ export function getLoginToken() {
 			.catch((error) => {
 				console.error('Failed to retrieve ID token:', error);
 			});
+	} else {
+		return getLocalToken();
 	}
-	return getLocalToken();
+	
 }
 
 export function getLocalToken() {

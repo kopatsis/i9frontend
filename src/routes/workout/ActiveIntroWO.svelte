@@ -143,7 +143,7 @@
 			roundIter = 1
 		}
 		const finalRound = roundIter + Math.min(Math.max((time - woRounds[roundIter-1].start) / (woRounds[roundIter-1].end - time),0),1) - 1
-		const token = getLoginToken();
+		const token = await getLoginToken();
 		await postIntroRating(token, finalRound);
 		wipeWorkout();
 		afterWOMessage.set(true);

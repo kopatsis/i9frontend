@@ -9,6 +9,7 @@
 	export let entry;
 	export let bodyP;
 	export let sampleID;
+	export let sampleType;
 	let editstat = false;
 
 	let blocked;
@@ -16,7 +17,7 @@
 
 	async function postChanges() {
 		try {
-			const token = getLoginToken();
+			const token = await getLoginToken();
 			if (oldblocked !== blocked) {
 				if (blocked) {
 					await blockChange(token, entry.ID, 'PATCH', 'strs');
@@ -34,8 +35,8 @@
 	}
 
 	onMount(() => {
-		oldblocked = faveDisp(entry.Blocked);
-		blocked = faveDisp(entry.Blocked);
+		oldblocked = entry.Blocked;
+		blocked = entry.Blocked;
 	});
 </script>
 
@@ -45,7 +46,7 @@
 	Body Parts Used: {#each entry.BodyParts as p, i (p)}
 		<span
 			>{bodyP[p]}
-			{#if i !== entry.BodyParts.length - 1},{/if}</span
+			{#if i !== entry.BodyParts.length - 1}, {/if}</span
 		>
 	{/each}
 </div>
@@ -53,6 +54,7 @@
 <button
 	on:click={() => {
 		sampleID = entry.ID;
+		sampleType = entry.Status === "Static" ? "static" : "dynamic"
 	}}>&#x2139;</button
 >
 

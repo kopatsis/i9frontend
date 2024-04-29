@@ -16,6 +16,7 @@
 	let emailValid = false;
 
 	let error = '';
+	let name = '';
 
 	function validateEmail(email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -48,7 +49,6 @@
 			try {
 				const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 				const user = userCredential.user;
-				const name = user.email || 'local';
 				const token = await user.getIdToken();
 				await postNewUser(token, name);
 				setLocalLogout();
@@ -69,6 +69,9 @@
 {/if}
 
 <form>
+	<label for="name">Email:</label>
+	<input type="text" id="name" bind:value={name} placeholder="Enter your name (optional)" />
+
 	<label for="email">Email:</label>
 	<input type="email" id="email" bind:value={email} placeholder="Enter your email" />
 	<p>{emailMessage}</p>

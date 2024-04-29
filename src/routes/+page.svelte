@@ -40,28 +40,32 @@
 		goto('./main');
 	}
 
-	function mountCall() {
-		const token = getLoginToken();
+	async function mountCall() {
+		const token = await getLoginToken();
 		getUser(token);
 		name = userObj && userObj.Name ? userObj.Name : '';
 		storedWorkoutSession();
+		loading = false;
 	}
 
 	onMount(() => {
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {
+			console.log("local sub run: ", value)
 			local = value;
 			if (local && !firebaseUser) {
+				console.log("trigger?")
 				mountCall();
 			}
 		});
 
 		const unsubFirebase = userStore.subscribe((value) => {
+			console.log("firebase sub run: ", value, localLogin)
 			firebaseUser = value;
-			if (firebaseUser === undefined && !localLogin) {
+			if (firebaseUser === undefined && !local) {
 				loading = true;
-			} else if (firebaseUser === null && !localLogin) {
+			} else if (firebaseUser === null && !local) {
 				goto('./login');
 			} else if (firebaseUser) {
 				mountCall();
@@ -85,6 +89,7 @@
 <h1>i9!</h1>
 {#if loading}
 	<div>loading...</div>
+{:else}
 	{#if afterWOMTrue}
 		<div>
 			Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}

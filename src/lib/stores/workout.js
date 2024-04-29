@@ -18,8 +18,9 @@ export const updateTime = async (/** @type {number} */ seconds, type="", status=
     currenttime.set(seconds)
     sessionStorage.setItem("currenttime", String(seconds));
     if (autopush || Math.round(seconds) % 10 === 0 || Math.round(seconds) % 10 === 1) {
-        const token = getLoginToken();
+        const token = await getLoginToken();
         const woID = get(id)
+        // @ts-ignore
         await patchWorkout(token, woID, seconds, status, type);
     }
 }
