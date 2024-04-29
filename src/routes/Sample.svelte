@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import { fetchSampleByExt } from '$lib/jshelp/fetchsample';
+	import { fetchSampleByExt, fetchSample } from '$lib/jshelp/fetchsample';
 	import { preloadSampleImages } from '$lib/jshelp/preloader';
 	import { onMount } from 'svelte';
 

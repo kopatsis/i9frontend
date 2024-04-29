@@ -18,22 +18,23 @@
 	onDestroy(unsubscribe);
 
 	onMount(async () => {
-		if(!getLoginState()){
+		if (!getLoginState()) {
 			goto('./login');
-		}
-		try {
-			let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
-			if (!retset) {
-				retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
-				localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
+		} else {
+			try {
+				let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
+				if (!retset) {
+					retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
+					localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
+				}
+				retrievedSettings = retset;
+				const token = getLoginToken();
+				error = await getUser(token);
+			} catch (error) {
+				error = error;
 			}
-			retrievedSettings = retset;
-			const token = getLoginToken();
-			error = await getUser(token);
-		} catch (error) {
-			error = error;
+			loading = false;
 		}
-		loading = false;
 	});
 </script>
 

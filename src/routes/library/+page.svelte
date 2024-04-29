@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import { exercises, getLibrary, stretches } from '$lib/stores/library';
 	import { onDestroy, onMount } from 'svelte';
@@ -28,15 +28,16 @@
 	});
 
 	onMount(async () => {
-		if(!getLoginState()){
+		if (!getLoginState()) {
 			goto('./login');
-		}
-		try {
-			const token = getLoginToken();
-			await getLibrary(token)
-			loading = false
-		} catch (err){
-			error = err
+		} else {
+			try {
+				const token = getLoginToken();
+				await getLibrary(token);
+				loading = false;
+			} catch (err) {
+				error = err;
+			}
 		}
 	});
 </script>
@@ -64,7 +65,7 @@
 	>
 
 	{#if current === 'Exercise'}
-		<ExerLib library={exers}/>
+		<ExerLib library={exers} />
 	{:else}
 		<StrLib library={strs} />
 	{/if}

@@ -23,13 +23,14 @@
     onMount(() => {
       auth.onAuthStateChanged(user => {
         if (user) {
+          console.log(user)
           isUserLoggedIn = true;
         }
       });
     });
   
     function proceed() {
-      goto('/');
+      goto('./');
     }
   </script>
   

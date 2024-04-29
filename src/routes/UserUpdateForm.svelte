@@ -3,7 +3,7 @@
 
 	import { onDestroy, onMount } from 'svelte';
 	import { user, getUser } from '$lib/stores/user.js';
-	import BodyPInput from '../BodyPInput.svelte';
+	import BodyPInput from './BodyPInput.svelte';
 	import { patchUser } from '$lib/jshelp/fetchwo.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 

@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
 	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
@@ -29,9 +29,9 @@
 	let lastWO;
 	const unsubscribeWO = storedWorkout.subscribe((workout) => {
 		lastWO = workout;
-	})
+	});
 
-	function workoutGen(type){
+	function workoutGen(type) {
 		creationType.set(type);
 		goto('./main');
 	}
@@ -39,15 +39,12 @@
 	onMount(() => {
 		if (!getLoginState()) {
 			goto('./login');
+		} else {
+			token = getLoginToken();
+			getUser(token);
+			name = userObj.Name ? userObj.Name : '';
+			storedWorkoutSession();
 		}
-
-		token = getLoginToken();
-		getUser(token);
-		name = userObj.Name ? userObj.Name : '';
-		storedWorkoutSession();
-
-		console.log(token);
-		console.log(getLoginState());
 	});
 
 	onDestroy(() => {
@@ -55,14 +52,18 @@
 		unsubscribeUser();
 		unsubscribe();
 		unsubscribeWO();
-	})
+	});
 </script>
 
-<h1>Welcome to i9 lol</h1>
+<h1>i9!</h1>
 {#if afterWOMTrue}
-	<div>Nice job{#if !name}!{:else}, {name}!{/if}</div>
+	<div>
+		Nice job{#if !name}!{:else}, {name}!{/if}
+	</div>
 {:else}
-	<div>Welcome{#if !name}!{:else}, {name}!{/if}</div>
+	<div>
+		Welcome{#if !name}!{:else}, {name}!{/if}
+	</div>
 {/if}
 
 {#if lastWO}
@@ -70,9 +71,9 @@
 {/if}
 
 {#if !showForm}
-	<button on:click={() => showForm = true}>Edit Defaults</button>
+	<button on:click={() => (showForm = true)}>Edit Defaults</button>
 {:else}
-	<UserUpdateForm token={token} bind:exists={showForm}/>
+	<UserUpdateForm {token} bind:exists={showForm} />
 {/if}
 
 <button on:click={() => workoutGen('Regular')}>Generate Workout</button>

@@ -17,11 +17,11 @@
 	onMount(() => {
 		if (!getLoginState()) {
 			goto('./login');
-		}
-
-		workoutTypeSession();
-		if (!type) {
-			error = 'No workout type existing';
+		} else {
+			workoutTypeSession();
+			if (!type) {
+				error = 'No workout type existing';
+			}
 		}
 	});
 </script>

@@ -10,7 +10,13 @@
 		scriptStSession, 
 		strRoundsStSession,
 		genTimesStSession,
-		afterWOMessage
+		afterWOMessage,
+
+		currenttime,
+
+		currenttimeSession
+
+
 
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
@@ -165,6 +171,7 @@
 
 	// Start funcs
 	onMount(() => {
+		currenttimeSession();
 		const oldTime = get(currenttime)
 
 		timescriptStSession()

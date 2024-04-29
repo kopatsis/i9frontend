@@ -29,15 +29,16 @@
 	});
 
 	onMount(async () => {
-		if(!getLoginState()){
+		if (!getLoginState()) {
 			goto('./login');
-		}
-		try {
-			const token = getLoginToken();
-			await getHistory(token);
-			loading = false;
-		} catch (err) {
-			error = err;
+		} else {
+			try {
+				const token = getLoginToken();
+				await getHistory(token);
+				loading = false;
+			} catch (err) {
+				error = err;
+			}
 		}
 	});
 </script>

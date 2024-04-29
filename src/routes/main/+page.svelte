@@ -26,9 +26,9 @@
 	onMount(() => {
 		if (!getLoginState()) {
 			goto('./login');
+		} else {
+			loading = false;
 		}
-
-		loading = false;
 	});
 </script>
 
