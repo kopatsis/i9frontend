@@ -42,7 +42,7 @@
 		} else {
 			token = getLoginToken();
 			getUser(token);
-			name = userObj.Name ? userObj.Name : '';
+			name = (userObj && userObj.Name) ? userObj.Name : '';
 			storedWorkoutSession();
 		}
 	});
@@ -58,11 +58,11 @@
 <h1>i9!</h1>
 {#if afterWOMTrue}
 	<div>
-		Nice job{#if !name}!{:else}, {name}!{/if}
+		Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}
 	</div>
 {:else}
 	<div>
-		Welcome{#if !name}!{:else}, {name}!{/if}
+		Welcome{#if !name || name === 'local'}!{:else}, {name}!{/if}
 	</div>
 {/if}
 

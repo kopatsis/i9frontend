@@ -4,6 +4,7 @@
     import { auth } from '../../auth/firebase';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
+	import { signInWithEmailAndPassword } from 'firebase/auth';
   
     let email = '';
     let password = '';
@@ -12,8 +13,12 @@
   
     async function signIn() {
       try {
-        await auth.signInWithEmailAndPassword(email, password);
-        goto('/');
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+				const name = user.email || 'local';
+				const token = await user.getIdToken();
+				await postNewUser(token, name);
+        goto('./');
       } catch (error) {
         errorMessage = error.message;
         console.error('Login error:', error);
