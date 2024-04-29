@@ -1,11 +1,16 @@
 <script>
 	// @ts-nocheck
 
-	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { user, getUser } from '$lib/stores/user.js';
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../Logout.svelte';
 	import Setting from './Setting.svelte';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import { goto } from '$app/navigation';
+
+	let local = false;
+	let firebaseUser = undefined;
 
 	let loading = true;
 	let error = '';
@@ -17,24 +22,48 @@
 	});
 	onDestroy(unsubscribe);
 
-	onMount(async () => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			try {
-				let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
-				if (!retset) {
-					retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
-					localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
-				}
-				retrievedSettings = retset;
-				const token = getLoginToken();
-				error = await getUser(token);
-			} catch (error) {
-				error = error;
+	async function mountCall() {
+		try {
+			let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
+			if (!retset) {
+				retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
+				localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
 			}
+			retrievedSettings = retset;
+			const token = getLoginToken();
+			error = await getUser(token);
+		} catch (error) {
+			error = error;
+		} finally {
 			loading = false;
 		}
+	}
+
+	onMount(async () => {
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			if (local && !firebaseUser) {
+				mountCall();
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				mountCall();
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 </script>
 

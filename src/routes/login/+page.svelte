@@ -2,7 +2,7 @@
 	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
-	import { getLocalToken, setLoginState, setLoginToken } from '$lib/jshelp/localtoken';
+	import { getLocalToken, loginLocally, setLoginState, setLoginToken } from '$lib/jshelp/localtoken';
 	import Signin from './Signin.svelte';
 	import Signup from './Signup.svelte';
 
@@ -40,7 +40,7 @@
 				setLoginToken('');
 			}
 		}
-		setLoginState(true);
+		loginLocally();
 		goto('./');
 	};
 </script>

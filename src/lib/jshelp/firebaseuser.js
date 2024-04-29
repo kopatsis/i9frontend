@@ -4,6 +4,7 @@ import { auth } from '../../auth/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export const userStore = writable(undefined);
+export const localLogin = writable(false);
 
 onAuthStateChanged(auth, user => {
     if (user) {

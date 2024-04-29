@@ -3,11 +3,15 @@
 
 	import { workouts, strworkouts, getHistory } from '$lib/stores/library';
 	import { onDestroy, onMount } from 'svelte';
-	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
+	import { getLoginState, getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import Logout from '../Logout.svelte';
 	import WorkoutHist from './WorkoutHist.svelte';
 	import StrWorkoutHist from './StrWorkoutHist.svelte';
 	import { goto } from '$app/navigation';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+
+	let local = false;
+	let firebaseUser = undefined;
 
 	let current = 'Workout';
 	let loading = true;
@@ -28,18 +32,42 @@
 		unsubscribeStrWO();
 	});
 
-	onMount(async () => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			try {
-				const token = getLoginToken();
-				await getHistory(token);
-				loading = false;
-			} catch (err) {
-				error = err;
-			}
+	async function mountCall() {
+		try {
+			const token = getLoginToken();
+			await getHistory(token);
+		} catch (err) {
+			error = err;
+		} finally {
+			loading = false;
 		}
+	}
+
+	onMount(() => {
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			if (local && !firebaseUser) {
+				mountCall();
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				mountCall();
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 </script>
 

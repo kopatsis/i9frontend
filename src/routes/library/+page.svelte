@@ -6,9 +6,14 @@
 	import ExerLib from './ExerLib.svelte';
 	import StrLib from './StrLib.svelte';
 	import Logout from '../Logout.svelte';
-	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import { goto } from '$app/navigation';
 
 	let current = 'Exercise';
+
+	let local = false;
+	let firebaseUser = undefined;
 	let loading = true;
 	let error = '';
 
@@ -27,18 +32,42 @@
 		unsubscribeSt();
 	});
 
-	onMount(async () => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			try {
-				const token = getLoginToken();
-				await getLibrary(token);
-				loading = false;
-			} catch (err) {
-				error = err;
-			}
+	async function mountCall() {
+		try {
+			const token = getLoginToken();
+			await getLibrary(token);
+		} catch (err) {
+			error = err;
+		} finally {
+			loading = false;
 		}
+	}
+
+	onMount( () => {
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			if (local && !firebaseUser) {
+				mountCall();
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				mountCall();
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 </script>
 

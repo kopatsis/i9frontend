@@ -6,6 +6,11 @@
 	import ActiveIntroWo from './ActiveIntroWO.svelte';
 	import ActiveWo from './ActiveWO.svelte';
 	import { goto } from '$app/navigation';
+	import { setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+
+	let local = false;
+	let firebaseUser = undefined;
 
 	let type = '';
 	let error;
@@ -14,15 +19,38 @@
 	});
 	onDestroy(unsubscribe);
 
-	onMount(() => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			workoutTypeSession();
+	function mountCall() {
+		workoutTypeSession();
 			if (!type) {
 				error = 'No workout type existing';
 			}
-		}
+	}
+
+	onMount(() => {
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			if (local && !firebaseUser) {
+				mountCall();
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				mountCall();
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 </script>
 

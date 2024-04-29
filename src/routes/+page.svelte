@@ -2,17 +2,20 @@
 	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
-	import { getLoginState, getLoginToken } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import Logout from './Logout.svelte';
 	import { afterWOMessage, storedWorkout, storedWorkoutSession } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from './UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 
 	// @ts-nocheck
 
-	let token = '';
+	let local = false;
+	let firebaseUser = undefined;
+	let loading = true;
+
 	let name = '';
 	let showForm = false;
 
@@ -26,6 +29,7 @@
 		userObj = user;
 	});
 
+	// sub to wotype instead
 	let lastWO;
 	const unsubscribeWO = storedWorkout.subscribe((workout) => {
 		lastWO = workout;
@@ -36,15 +40,38 @@
 		goto('./main');
 	}
 
+	function mountCall() {
+		const token = getLoginToken();
+		getUser(token);
+		name = userObj && userObj.Name ? userObj.Name : '';
+		storedWorkoutSession();
+	}
+
 	onMount(() => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			token = getLoginToken();
-			getUser(token);
-			name = (userObj && userObj.Name) ? userObj.Name : '';
-			storedWorkoutSession();
-		}
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			if (local && !firebaseUser) {
+				mountCall();
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				mountCall();
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 
 	onDestroy(() => {
@@ -56,27 +83,29 @@
 </script>
 
 <h1>i9!</h1>
-{#if afterWOMTrue}
-	<div>
-		Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}
-	</div>
-{:else}
-	<div>
-		Welcome{#if !name || name === 'local'}!{:else}, {name}!{/if}
-	</div>
-{/if}
+{#if loading}
+	<div>loading...</div>
+	{#if afterWOMTrue}
+		<div>
+			Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}
+		</div>
+	{:else}
+		<div>
+			Welcome{#if !name || name === 'local'}!{:else}, {name}!{/if}
+		</div>
+	{/if}
 
-{#if lastWO}
-	<button on:click={goto('./workout')}>Return to last workout</button>
-{/if}
+	{#if lastWO}
+		<button on:click={goto('./workout')}>Return to last workout</button>
+	{/if}
 
-{#if !showForm}
-	<button on:click={() => (showForm = true)}>Edit Defaults</button>
-{:else}
-	<UserUpdateForm {token} bind:exists={showForm} />
-{/if}
+	{#if !showForm}
+		<button on:click={() => (showForm = true)}>Edit Defaults</button>
+	{:else}
+		<UserUpdateForm bind:exists={showForm} />
+	{/if}
 
-<button on:click={() => workoutGen('Regular')}>Generate Workout</button>
-<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
-<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
-<Logout />
+	<button on:click={() => workoutGen('Regular')}>Generate Workout</button>
+	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
+	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
+{/if}

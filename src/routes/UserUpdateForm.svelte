@@ -7,8 +7,7 @@
 	import { patchUser } from '$lib/jshelp/fetchwo.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 
-	export let token = '';  
-    export let exists = true;
+	export let exists = true;
 
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
@@ -25,8 +24,9 @@
 	let bannedParts;
 
 	let loading = true;
-  
+
 	onMount(async () => {
+		const token = getLoginToken();
 		error = await getUser(token);
 		loading = false;
 
@@ -64,9 +64,7 @@
 		loading = true;
 		let body = {};
 
-		if (token === '') {
-			token = getLoginToken();
-		}
+		const token = getLoginToken();
 
 		if (plyo !== userData.PlyoTolerance) {
 			body['plyo'] = plyo;
@@ -86,7 +84,7 @@
 
 		try {
 			await patchUser(token, body);
-            exists = false
+			exists = false;
 		} catch (error) {
 			error = error;
 			console.log(error);
@@ -94,7 +92,7 @@
 	};
 </script>
 
-<button on:click={() => exists = false}>Exit</button>
+<button on:click={() => (exists = false)}>Exit</button>
 {#if loading}
 	<div>loading...</div>
 {:else if error || !userData}

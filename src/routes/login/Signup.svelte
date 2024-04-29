@@ -1,6 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
+	import { setLocalLogout } from '$lib/jshelp/localtoken';
 
 	import { auth } from '../../auth/firebase';
 	import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -47,9 +48,10 @@
 			try {
 				const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 				const user = userCredential.user;
-				const name = user.email || 'New User Name';
+				const name = user.email || 'local';
 				const token = await user.getIdToken();
 				await postNewUser(token, name);
+				setLocalLogout();
 				goto('./');
 			} catch (error) {
 				if (error.code === 'auth/email-already-in-use') {

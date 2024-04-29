@@ -1,12 +1,16 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { getLoginState } from '$lib/jshelp/localtoken';
+	import { setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../Logout.svelte';
 	import CreateForm from './CreateForm.svelte';
 	import { adaptID, creationType } from '$lib/stores/creation';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 
 	let loading = true;
+	let local = false;
+	// @ts-ignore
+	let firebaseUser = undefined;
 
 	let type = 'Regular';
 	const unsubscribeType = creationType.subscribe((creationType) => {
@@ -24,11 +28,31 @@
 	});
 
 	onMount(() => {
-		if (!getLoginState()) {
-			goto('./login');
-		} else {
-			loading = false;
-		}
+		setLocalLoginState();
+
+		const unsubLocalLogin = localLogin.subscribe((value) => {
+			local = value;
+			// @ts-ignore
+			if (local && !firebaseUser) {
+				loading = false;
+			}
+		});
+
+		const unsubFirebase = userStore.subscribe((value) => {
+			firebaseUser = value;
+			if (firebaseUser === undefined && !localLogin) {
+				loading = true;
+			} else if (firebaseUser === null && !localLogin) {
+				goto('./login');
+			} else if (firebaseUser) {
+				loading = false;
+			}
+		});
+
+		return () => {
+			unsubLocalLogin();
+			unsubFirebase();
+		};
 	});
 </script>
 
@@ -37,27 +61,29 @@
 {#if loading}
 	<div>loading...</div>
 {:else}
-	<!-- <button
-		on:click={() => {
-			if (type !== 'Regular') {
-				type = 'Regular';
-			}
-		}}>Regular</button
-	>
-	<button
-		on:click={() => {
-			if (type !== 'Stretch') {
-				type = 'Stretch';
-			}
-		}}>Stretch</button
-	>
-	<button
-		on:click={() => {
-			if (type !== 'Intro') {
-				type = 'Intro';
-			}
-		}}>Intro</button
-	> -->
+	{#if type !== 'Adapt'}
+		<button
+			on:click={() => {
+				if (type !== 'Regular') {
+					creationType.set('Regular');
+				}
+			}}>Regular</button
+		>
+		<button
+			on:click={() => {
+				if (type !== 'Stretch') {
+					creationType.set('Stretch');
+				}
+			}}>Stretch</button
+		>
+		<button
+			on:click={() => {
+				if (type !== 'Intro') {
+					creationType.set('Intro');
+				}
+			}}>Intro</button
+		>
+	{/if}
 
 	{#if adaptID}
 		<CreateForm formType={type} />

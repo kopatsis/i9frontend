@@ -1,7 +1,7 @@
 // @ts-nocheck
 import CryptoJS from 'crypto-js';
 import { get } from 'svelte/store';
-import { userStore } from './firebaseuser';
+import { localLogin, userStore } from './firebaseuser';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '../../auth/firebase';
 
@@ -22,6 +22,16 @@ export function getLoginToken() {
 export function getLocalToken() {
 	const encryptedToken = localStorage.getItem('cjAjlopaGG');
 	return encryptedToken === null ? '' : decryption(encryptedToken);
+}
+
+export function setLocalLoginState(){
+    const encryptedState = localStorage.getItem('DgFmTmmfMe');
+    localLogin.set(encryptedState === null ? false : decryption(encryptedState) === 'TRUE');
+}
+
+export function setLocalLogout(){
+    localStorage.setItem('DgFmTmmfMe', encryption('FALSE'));
+    localLogin.set(false);
 }
 
 export function getLoginState() {
@@ -45,8 +55,25 @@ export function setLoginState(state) {
 	localStorage.setItem('DgFmTmmfMe', encryptedT);
 }
 
+export function loginLocally(){
+	const encryptedT = encryption('TRUE');
+	localStorage.setItem('DgFmTmmfMe', encryptedT);
+	localLogin.set(true);
+	const user = get(userStore);
+	if (user) {
+		auth
+			.signOut()
+			.then(() => {
+				console.log('User signed out successfully');
+			})
+			.catch((error) => {
+				console.error('Sign out error:', error);
+			});
+	}
+}
+
 export function logout() {
-	localStorage.setItem('DgFmTmmfMe', 'FALSE');
+	setLocalLogout();
 	const user = get(userStore);
 	if (user) {
 		auth

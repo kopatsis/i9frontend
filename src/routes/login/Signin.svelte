@@ -5,6 +5,7 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
+	import { setLocalLogout } from '$lib/jshelp/localtoken';
   
     let email = '';
     let password = '';
@@ -18,6 +19,7 @@
 				const name = user.email || 'local';
 				const token = await user.getIdToken();
 				await postNewUser(token, name);
+        setLocalLogout()
         goto('./');
       } catch (error) {
         errorMessage = error.message;
