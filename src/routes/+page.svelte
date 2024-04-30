@@ -114,4 +114,5 @@
 	<button on:click={() => workoutGen('Regular')}>Generate Workout</button>
 	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
 	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
+	<br><button on:click={() => goto('./settings')}>⚙️</button>
 {/if}

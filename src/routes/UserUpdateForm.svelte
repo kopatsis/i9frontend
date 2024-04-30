@@ -31,7 +31,7 @@
 		loading = false;
 
 		if (userData) {
-			minutes = Math.round(100 * userData.LastMinutes) / 100;
+			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100,8),240);
 			diff = String(Math.max(1, userData.LastDifficulty));
 			plyo = userData.PlyoTolerance;
 			pushup = userData.PushupSetting;
@@ -85,9 +85,9 @@
 		try {
 			await patchUser(token, body);
 			exists = false;
-		} catch (error) {
-			error = error;
-			console.log(error);
+		} catch (err) {
+			error = err;
+			console.log(err);
 		}
 	};
 </script>

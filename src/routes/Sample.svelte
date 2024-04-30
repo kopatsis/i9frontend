@@ -87,8 +87,8 @@
             desc = sampleObj.Description;
 			setImgInit();
 			startStopwatch();
-		} catch (error) {
-			error = error;
+		} catch (err) {
+			error = err;
 			loading = false;
 		}
 	});

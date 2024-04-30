@@ -30,10 +30,17 @@
 				localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
 			}
 			retrievedSettings = retset;
+		} catch (error) {
+			let retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
+			localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
+			retrievedSettings = retset;
+		} 
+
+		try{
 			const token = await getLoginToken();
 			error = await getUser(token);
-		} catch (error) {
-			error = error;
+		} catch (err){
+			error = err
 		} finally {
 			loading = false;
 		}

@@ -54,11 +54,11 @@
 				await postNewUser(token, name);
 				setLocalLogout();
 				goto('./');
-			} catch (error) {
-				if (error.code === 'auth/email-already-in-use') {
+			} catch (err) {
+				if (err.code === 'auth/email-already-in-use') {
 					error = 'Email already in use. Please login or use another email.';
 				} else {
-					error = error;
+					error = err;
 				}
 			}
 		}
@@ -70,8 +70,8 @@
 {/if}
 
 <form>
-	<label for="name">Email:</label>
-	<input type="text" id="name" bind:value={name} placeholder="Enter your name (optional)" />
+	<label for="name">Name:</label>
+	<input type="text" id="name" bind:value={name} placeholder="Enter your name (optional)" /><br>
 
 	<label for="email">Email:</label>
 	<input type="email" id="email" bind:value={email} placeholder="Enter your email" />

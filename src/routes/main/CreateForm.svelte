@@ -104,9 +104,9 @@
 
 			try {
 				await patchUser(token, body);
-			} catch (error) {
-				error = error;
-                console.log(error)
+			} catch (err) {
+				error = err;
+                console.log(err)
 			}
 		}
 		try {
@@ -133,10 +133,10 @@
 				loading = false;
 				goto('./review');
 			}, 1000);
-		} catch (error) {
+		} catch (err) {
 			loading = false;
-			error = error;
-            console.log(error)
+			error = err;
+            console.log(err)
 		}
 	};
 </script>

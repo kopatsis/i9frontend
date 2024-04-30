@@ -78,10 +78,10 @@
 			preloadImages(extractImageList(workout));
 			loading = false;
 			goto('./review');
-		} catch (error) {
+		} catch (err) {
 			loading = false;
-			error = error;
-			console.log(error);
+			error = err;
+			console.log(err);
 		}
 	}
 
@@ -95,10 +95,10 @@
 			preloadImages(extractImageList(workout));
 			loading = false;
 			goto('./review');
-		} catch (error) {
+		} catch (err) {
 			loading = false;
-			error = error;
-			console.log(error);
+			error = err;
+			console.log(err);
 		}
 	}
 

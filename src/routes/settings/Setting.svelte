@@ -14,7 +14,7 @@
 
 	function updatePair(newvalue) {
 		data = { ...data, [key]: newvalue };
-		localStorage.setItem('yZgvPlBiFb', data);
+		localStorage.setItem('yZgvPlBiFb', JSON.stringify(data));
 	}
 </script>
 

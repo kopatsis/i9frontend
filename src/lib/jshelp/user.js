@@ -19,6 +19,9 @@ export async function postNewUser(token, email) {
 
 	try {
 		const response = await fetch(url, options);
+		if (response.status === 204) {
+			return {};
+		}
 		if (!response.ok) {
 			const resp = await response.json()
 			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));

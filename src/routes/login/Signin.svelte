@@ -34,6 +34,8 @@
         if (user) {
           console.log(user)
           isUserLoggedIn = true;
+        } else {
+          isUserLoggedIn = false;
         }
       });
     });

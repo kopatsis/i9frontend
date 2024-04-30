@@ -23,12 +23,12 @@ export async function getLoginToken() {
 
 export function getLocalToken() {
 	const encryptedToken = localStorage.getItem('cjAjlopaGG');
-	return encryptedToken === null ? '' : decryption(encryptedToken);
+	return !encryptedToken ? '' : decryption(encryptedToken);
 }
 
 export function setLocalLoginState(){
     const encryptedState = localStorage.getItem('DgFmTmmfMe');
-    localLogin.set(encryptedState === null ? false : decryption(encryptedState) === 'TRUE');
+    localLogin.set(!encryptedState ? false : decryption(encryptedState) === 'TRUE');
 }
 
 export function setLocalLogout(){
