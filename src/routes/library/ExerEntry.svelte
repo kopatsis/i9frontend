@@ -59,12 +59,13 @@
 				await favChange(token, entry.ID, dispToFave(fav));
 				oldfav = dispToFave(fav);
 			}
-			editstat = false;
 			exercises.update((items) =>
-				items.map((i) => (i.ID === entry.ID ? { ...i, Blocked: blocked, Favoritism: fav } : i))
+				items.map((i) => (i.ID === entry.ID ? { ...i, Blocked: oldblocked, Favoritism: oldfav } : i))
 			);
 		} catch (error) {
 			console.log(error);
+		}finally {
+			editstat = false
 		}
 	}
 

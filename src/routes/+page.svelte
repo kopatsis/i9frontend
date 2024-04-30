@@ -42,6 +42,7 @@
 
 	async function mountCall() {
 		const token = await getLoginToken();
+		console.log(token)
 		getUser(token);
 		name = userObj && userObj.Name ? userObj.Name : '';
 		storedWorkoutSession();

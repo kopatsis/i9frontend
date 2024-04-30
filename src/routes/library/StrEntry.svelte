@@ -17,20 +17,22 @@
 
 	async function postChanges() {
 		try {
-			const token = await getLoginToken();
 			if (oldblocked !== blocked) {
+				const token = await getLoginToken();
 				if (blocked) {
 					await blockChange(token, entry.ID, 'PATCH', 'strs');
 				} else {
 					await blockChange(token, entry.ID, 'DELETE', 'strs');
 				}
 				oldblocked = blocked;
+				stretches.update((items) =>
+					items.map((i) => (i.ID === entry.ID ? { ...i, Blocked: oldblocked } : i))
+				);
 			}
-			stretches.update((items) =>
-				items.map((i) => (i.ID === entry.ID ? { ...i, Blocked: blocked } : i))
-			);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			editstat = false
 		}
 	}
 
@@ -46,7 +48,8 @@
 	Body Parts Used: {#each entry.BodyParts as p, i (p)}
 		<span
 			>{bodyP[p]}
-			{#if i !== entry.BodyParts.length - 1}, {/if}</span
+			{#if i !== entry.BodyParts.length - 1},
+			{/if}</span
 		>
 	{/each}
 </div>
@@ -54,7 +57,7 @@
 <button
 	on:click={() => {
 		sampleID = entry.ID;
-		sampleType = entry.Status === "Static" ? "static" : "dynamic"
+		sampleType = entry.Status === 'Static' ? 'static' : 'dynamic';
 	}}>&#x2139;</button
 >
 

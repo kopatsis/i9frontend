@@ -7,19 +7,18 @@ import { auth } from '../../auth/firebase';
 
 export async function getLoginToken() {
 	const user = get(userStore);
-	console.log(user)
 	if (user) {
-		getIdToken(user)
-			.then((token) => {
-				return token;
-			})
-			.catch((error) => {
-				console.error('Failed to retrieve ID token:', error);
-			});
+		try {
+			const token = await getIdToken(user);
+			console.log(token);
+			return token;
+		} catch (error) {
+			console.error('Failed to retrieve ID token:', error);
+			return '';
+		}
 	} else {
 		return getLocalToken();
 	}
-	
 }
 
 export function getLocalToken() {
