@@ -6,6 +6,8 @@
     import { goto } from '$app/navigation';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
 	import { setLocalLogout } from '$lib/jshelp/localtoken';
+	import { postNewUser } from '$lib/jshelp/user';
+	import Logout from '../Logout.svelte';
   
     let email = '';
     let password = '';
@@ -45,6 +47,7 @@
     <div>
       <p>You are already logged in. Would you like to stay signed in?</p>
       <button on:click={proceed}>Proceed</button>
+      <Logout />
     </div>
   {:else}
     <form on:submit|preventDefault={signIn}>

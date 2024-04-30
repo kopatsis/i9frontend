@@ -6,7 +6,7 @@ export const user = writable(null);
 async function fetchUserData(token) {
     console.log(token)
     try {
-        const backend = import.meta.env.VITE_BACKEND_URL + "/users"
+        const backend = import.meta.env.VITE_BACKEND_URL + "/users?force=true"
         console.log(backend);
         console.log(token);
         const response = await fetch(backend, {

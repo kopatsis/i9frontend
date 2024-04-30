@@ -2,6 +2,7 @@
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
 	import { setLocalLogout } from '$lib/jshelp/localtoken';
+	import { postNewUser } from '$lib/jshelp/user';
 
 	import { auth } from '../../auth/firebase';
 	import { createUserWithEmailAndPassword } from 'firebase/auth';

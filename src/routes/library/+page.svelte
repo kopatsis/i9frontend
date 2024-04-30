@@ -55,9 +55,9 @@
 
 		const unsubFirebase = userStore.subscribe((value) => {
 			firebaseUser = value;
-			if (firebaseUser === undefined && !login) {
+			if (firebaseUser === undefined && !local) {
 				loading = true;
-			} else if (firebaseUser === null && !login) {
+			} else if (firebaseUser === null && !local) {
 				goto('./login');
 			} else if (firebaseUser) {
 				mountCall();

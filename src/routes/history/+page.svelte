@@ -1,9 +1,9 @@
 <script>
 	// @ts-nocheck
 
-	import { workouts, strworkouts, getHistory } from '$lib/stores/library';
+	import { workouts, strworkouts, getHistory } from '$lib/stores/history';
 	import { onDestroy, onMount } from 'svelte';
-	import { getLoginState, getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import Logout from '../Logout.svelte';
 	import WorkoutHist from './WorkoutHist.svelte';
 	import StrWorkoutHist from './StrWorkoutHist.svelte';

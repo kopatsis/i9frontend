@@ -7,7 +7,7 @@
  */
 export async function postNewUser(token, email) {
 	// @ts-ignore
-	const url = import.meta.env.VITE_BACKEND_URL + '/users?force=true';
+	const url = import.meta.env.VITE_BACKEND_URL + '/users';
 	const options = {
 		method: 'POST',
 		headers: {
