@@ -4,7 +4,6 @@
 	import { workouts, strworkouts, getHistory } from '$lib/stores/history';
 	import { onDestroy, onMount } from 'svelte';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
-	import Logout from '../Logout.svelte';
 	import WorkoutHist from './WorkoutHist.svelte';
 	import StrWorkoutHist from './StrWorkoutHist.svelte';
 	import { goto } from '$app/navigation';
@@ -100,4 +99,3 @@
 		<StrWorkoutHist history={strwos} />
 	{/if}
 {/if}
-<Logout />

@@ -26,8 +26,8 @@ export async function getHistory(token) {
 			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
 		}
 		const respJSON = await response.json();
-        workouts.set(respJSON.Stretch);
-        strworkouts.set(respJSON.Workout);
+        workouts.set(respJSON.Workout);
+        strworkouts.set(respJSON.Stretch);
         return "Success";
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);

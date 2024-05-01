@@ -113,7 +113,7 @@
 		<UserUpdateForm bind:exists={showForm} />
 	{/if}
 
-	{#if userObj.Assessed}<button on:click={() => workoutGen('Regular')}>Generate Workout</button
+	{#if userObj?.Assessed}<button on:click={() => workoutGen('Regular')}>Generate Workout</button
 		>{/if}
 	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
 	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>

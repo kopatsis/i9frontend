@@ -5,6 +5,7 @@
 	import StrEntry from '../library/StrEntry.svelte';
 
 	export let history = null;
+	console.log(history);
 </script>
 
 {#if !history || history.length < 1}

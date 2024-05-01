@@ -34,13 +34,13 @@
 			let retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
 			localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
 			retrievedSettings = retset;
-		} 
+		}
 
-		try{
+		try {
 			const token = await getLoginToken();
 			error = await getUser(token);
-		} catch (err){
-			error = err
+		} catch (err) {
+			error = err;
 		} finally {
 			loading = false;
 		}
@@ -81,7 +81,7 @@
 {:else if !userData}
 	<div>Error fetching user data, please try again</div>
 {:else}
-<button on:click={() => goto('./')}>Home</button><br>
+	<button on:click={() => goto('./')}>Home</button><br />
 	<Setting key={'mode'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
 	<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 	<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />

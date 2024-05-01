@@ -191,8 +191,8 @@ export function unravelWO(response, type="Regular") {
 
 		if (round.Type == "Split") {
 			let lastEntry = workoutRounds[workoutRounds.length - 1];
-			lastEntry.titles[0] += " (" + round.SplitPairs[0] ? "2" : "1" + ")";
-			lastEntry.titles[lastEntry.titles.length - 1] += " (" + round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1" + ")";
+			lastEntry.titles[0] += " (" + (round.SplitPairs[0] ? "2" : "1") + ")";
+			lastEntry.titles[lastEntry.titles.length - 1] += " (" + (round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1") + ")";
 			workoutRounds[workoutRounds.length - 1] = lastEntry;
 		}
 
@@ -222,8 +222,8 @@ export function unravelWO(response, type="Regular") {
 
 					if (round.Type == "Split") {
 						let lastEntry = script[script.length - 1]
-						lastEntry.names[0] += " (" + round.SplitPairs[0] ? "2" : "1" + ")"
-						lastEntry.names[lastEntry.names.length - 1] += " (" + round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1" + ")"
+						lastEntry.names[0] += " (" + (round.SplitPairs[0] ? "2" : "1") + ")"
+						lastEntry.names[lastEntry.names.length - 1] += " (" + (round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1") + ")"
 						script[script.length - 1] = lastEntry
 					}
 

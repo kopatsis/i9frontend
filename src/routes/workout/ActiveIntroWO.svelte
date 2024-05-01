@@ -75,12 +75,12 @@
 		strRounds = strRoundsSt;
 	});
 
-	let getTimes;
+	let genTimes;
 	const unsubscribeGen = genTimesSt.subscribe((genTimesSt) => {
-		getTimes = genTimesSt;
+		genTimes = genTimesSt;
 	});
 
-	let woRounds;
+	let woRounds = [];
 	const unsubscribeWO = workoutRoundsSt.subscribe((workoutRoundsSt) => {
 		woRounds = workoutRoundsSt;
 	});
@@ -227,7 +227,7 @@
 			error = 'Error loading workout';
 		}
 		genTimesStSession();
-		if (!getTimes) {
+		if (!genTimes) {
 			error = 'Error loading workout';
 		}
 		workoutRoundsStSession();
@@ -269,7 +269,7 @@
 		status = 'Exercise';
 	} else if (status === 'Exercise' && time > genTimes.static) {
 		status = 'Static';
-	} else if (status === 'Static' && time > getTimes.end) {
+	} else if (status === 'Static' && time > genTimes.end) {
 		quit();
 	}
 
@@ -279,7 +279,12 @@
 	}
 </script>
 
-{#if timeMessage}
+{#if  loading}
+	<div>loading...</div>
+{:else if !timescript || !script || !strRounds || !genTimes || !woRounds}
+	<div>No workout active</div>
+	<button on:click={() => goto('./main')}>Create one now</button>
+{:else if timeMessage}
 	<div>
 		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(
 			existingTime % 60
@@ -287,8 +292,6 @@
 	</div>
 	<button on:click={startAtOld}>Yes</button>
 	<button on:click={startAnew}>No</button>
-{:else if loading}
-	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
 {:else}

@@ -3,8 +3,9 @@
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
-	import { cloneWorkoutById, getWorkoutById } from '$lib/jshelp/fetchwo';
+	import { cloneWorkoutById, extractImageList, getWorkoutById } from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType } from '$lib/stores/creation';
+	import { goto } from '$app/navigation';
 
 	export let entry = null;
 	let loading = false;
@@ -73,7 +74,11 @@
 		try {
 			const token = await getLoginToken();
 			const workout = await getWorkoutById(token, entry.ID);
-			unravelWO(workout);
+			if (entry.IsIntro) {
+				unravelWO(workout, 'Intro');
+			} else {
+				unravelWO(workout);
+			}
 
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -104,7 +109,7 @@
 
 	function toAdapt() {
 		adaptID.set(entry.ID);
-		creationType.set("Adapt");
+		creationType.set('Adapt');
 	}
 
 	const options = [null, 'Low Cortisol', 'Simple', 'Easy', 'Medium', 'Hard', 'Extreme'];
@@ -115,6 +120,9 @@
 {:else if error !== ''}
 	<div>F: {error}</div>
 {:else}
+	{#if entry.IsIntro}
+		<div>Assessment/Intro Workout</div>
+	{/if}
 	<div>Date: {formatDateString(entry.Date)}</div>
 	<div>Name: {entry.Name}</div>
 	<div>Status: {entry.Status}</div>
@@ -162,7 +170,7 @@
 		<button on:click={toReview}>Start</button>
 	{:else if entry.Status === 'Progressing' || entry.Status === 'Paused'}
 		<button on:click={toReview}>Resume</button>
-	{:else}
+	{:else if !entry.IsIntro}
 		<button on:click={toRestart}>Restart</button>
 		<button on:click={toAdapt}>Adapt*</button>
 		<div>
