@@ -1,8 +1,24 @@
 <script>
 	// @ts-nocheck
-	import { currenttimeSession, timescriptSt, scriptSt, strRoundsSt, genTimesSt, updateTime, workoutRoundsSt, afterWOMessage, timescriptStSession, scriptStSession, strRoundsStSession, genTimesStSession, workoutRoundsStSession, roundsSet, wipeWorkout } from '$lib/stores/workout.js';
+	import {
+		currenttimeSession,
+		timescriptSt,
+		scriptSt,
+		strRoundsSt,
+		genTimesSt,
+		updateTime,
+		workoutRoundsSt,
+		afterWOMessage,
+		timescriptStSession,
+		scriptStSession,
+		strRoundsStSession,
+		genTimesStSession,
+		workoutRoundsStSession,
+		roundsSet,
+		wipeWorkout
+	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 	import { postIntroRating } from '$lib/jshelp/postwo';
@@ -10,6 +26,7 @@
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
+	let sampleExists = false;
 
 	// Variables in presentation section
 	let interval = null;
@@ -18,8 +35,8 @@
 	let error = '';
 
 	let status = 'Dynamic';
-    let round = null;
-    let roundIter = 0;
+	let round = null;
+	let roundIter = 0;
 
 	let picIter = 0;
 	let src = '';
@@ -88,10 +105,10 @@
 		paused = true;
 		clearInterval(interval);
 		time = 0;
-		
+
 		status = 'Dynamic';
-    	round = null;
-    	roundIter = 0;
+		round = null;
+		roundIter = 0;
 
 		picIter = 0;
 		src = '';
@@ -117,7 +134,6 @@
 		clearInterval(interval);
 	});
 
-
 	function formatTime() {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
 	}
@@ -132,17 +148,22 @@
 
 	let currentSampleID = '';
 	const showCurrentSample = (sampleID) => {
-		if (currentSampleID !== sampleID) {
-			currentSampleID = sampleID;
-		}
+		currentSampleID = sampleID;
+		sampleExists = true;
 	};
 
 	async function quit() {
 		loading = true;
-		if (roundIter === 0){
-			roundIter = 1
+		if (roundIter === 0) {
+			roundIter = 1;
 		}
-		const finalRound = roundIter + Math.min(Math.max((time - woRounds[roundIter-1].start) / (woRounds[roundIter-1].end - time),0),1) - 1
+		const finalRound =
+			roundIter +
+			Math.min(
+				Math.max((time - woRounds[roundIter - 1].start) / (woRounds[roundIter - 1].end - time), 0),
+				1
+			) -
+			1;
 		const token = await getLoginToken();
 		await postIntroRating(token, finalRound);
 		wipeWorkout();
@@ -150,37 +171,37 @@
 		goto('./');
 	}
 
-	function resetQuestion(){
+	function resetQuestion() {
 		pauseStopwatch();
 		resetMessage = true;
 	}
 
-	function exitQuestion(){
+	function exitQuestion() {
 		pauseStopwatch();
 		exitMessage = true;
 	}
 
-	function returnNoReset(){
+	function returnNoReset() {
 		resetMessage = false;
 		startStopwatch();
 	}
 
-	function returnNoExit(){
+	function returnNoExit() {
 		exitMessage = false;
 		startStopwatch();
 	}
 
-	function startAnew(){
+	function startAnew() {
 		timeMessage = false;
 		time = 0;
 		loading = false;
 		startStopwatch();
 	}
 
-	function startAtOld(){
+	function startAtOld() {
 		time = 0;
 		timeMessage = false;
-		while (time < existingTime){
+		while (time < existingTime) {
 			time += 0.05;
 		}
 		time = workingTime;
@@ -191,32 +212,32 @@
 	// Start funcs
 	onMount(() => {
 		currenttimeSession();
-		const oldTime = get(currenttime)
+		const oldTime = get(currenttime);
 
-		timescriptStSession()
-		if (!timescript){
-			error = "Error loading workout"
+		timescriptStSession();
+		if (!timescript) {
+			error = 'Error loading workout';
 		}
 		scriptStSession();
-		if (!script){
-			error = "Error loading workout"
+		if (!script) {
+			error = 'Error loading workout';
 		}
 		strRoundsStSession();
-		if (!strRounds){
-			error = "Error loading workout"
+		if (!strRounds) {
+			error = 'Error loading workout';
 		}
 		genTimesStSession();
-		if (!getTimes){
-			error = "Error loading workout"
+		if (!getTimes) {
+			error = 'Error loading workout';
 		}
 		workoutRoundsStSession();
-		if (!woRounds){
-			error = "Error loading workout"
+		if (!woRounds) {
+			error = 'Error loading workout';
 		}
 
-		if (oldTime !== 0){
+		if (oldTime !== 0) {
 			timeMessage = true;
-			existingTime = oldTime
+			existingTime = oldTime;
 		} else {
 			loading = false;
 		}
@@ -238,30 +259,36 @@
 		picEndTime = script[picIter].time;
 	}
 
-    $: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start){
-        round = woRounds[roundIter];
+	$: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
+		round = woRounds[roundIter];
 		roundsSet(roundIter);
-        roundIter++;
-    }
+		roundIter++;
+	}
 
 	$: if (status === 'Dynamic' && time > genTimes.exercises) {
 		status = 'Exercise';
-	} else if (status === 'Exercise' && time > genTimes.static){
-        status = 'Static'
-    } else if (status === 'Static' && time > getTimes.end){
+	} else if (status === 'Exercise' && time > genTimes.static) {
+		status = 'Static';
+	} else if (status === 'Static' && time > getTimes.end) {
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled+1 && !loading){
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
 </script>
+
 {#if timeMessage}
-	<div>Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(existingTime % 60)} sec?</div>
+	<div>
+		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(
+			existingTime % 60
+		)} sec?
+	</div>
 	<button on:click={startAtOld}>Yes</button>
 	<button on:click={startAnew}>No</button>
-{:else if loading}	<div>loading...</div>
+{:else if loading}
+	<div>loading...</div>
 {:else if error}
 	<div>F: {error}</div>
 {:else}
@@ -293,9 +320,6 @@
 					showCurrentSample(strRounds.dynamic.samples[set - 1]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === strRounds.dynamic.samples[set - 1]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{:else if status === 'Static'}
 		<div>Static Stretches Cooldown:</div>
@@ -307,39 +331,33 @@
 					showCurrentSample(strRounds.static.samples[set - 1]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === strRounds.static.samples[set - 1]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{:else}
-    <div>
-		<div>Round {round.round}: {round.sets} Sets</div>
-        <div>Start: {Math.floor(round.start/60)}m {Math.round(round.start%60)}s</div>
-		<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
-		<div>Type: {round.type}</div>
-		{#if round.type !== 'Combo'}
-			<span
-				>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
-			>
-		{/if}
-		{#each round.samples as sample, j}
-			<div>
-				{#if round.type === 'Combo'}
-					<span>{round.reps[j]}x &nbsp;</span>
-				{/if}
-				<span>{round.titles[j]}</span>
-				<button
-					on:click={() => {
-						showCurrentSample(sample);
-					}}>&#x2139;</button
+		<div>
+			<div>Round {round.round}: {round.sets} Sets</div>
+			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
+			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+			<div>Type: {round.type}</div>
+			{#if round.type !== 'Combo'}
+				<span
+					>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
 				>
-				{#if currentSampleID === sample}
-					<Sample sampleID={currentSampleID} />
-				{/if}
-			</div>
-		{/each}
-		<div>Rest before next round: {Math.round(round.roundrest)}</div>
-	</div>
+			{/if}
+			{#each round.samples as sample, j}
+				<div>
+					{#if round.type === 'Combo'}
+						<span>{round.reps[j]}x &nbsp;</span>
+					{/if}
+					<span>{round.titles[j]}</span>
+					<button
+						on:click={() => {
+							showCurrentSample(sample);
+						}}>&#x2139;</button
+					>
+				</div>
+			{/each}
+			<div>Rest before next round: {Math.round(round.roundrest)}</div>
+		</div>
 	{/if}
 
 	<br />
@@ -384,6 +402,10 @@
 		}}>Top</button
 	>
 
-	<button on:click={() => audioDisp = true}>Show music</button>
-	<Audio bind:display={audioDisp}/>
+	{#if sampleExists}
+		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+	{/if}
+
+	<button on:click={() => (audioDisp = true)}>Show music</button>
+	<Audio bind:display={audioDisp} />
 {/if}

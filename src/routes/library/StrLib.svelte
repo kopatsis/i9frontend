@@ -5,6 +5,7 @@
 	import StrEntry from './StrEntry.svelte';
 
 	export let library = null;
+	let sampleExists = false;
 	let sampleID = '';
 	let sampleType = 'static';
 	let filter = '';
@@ -37,6 +38,10 @@
 		'Dynamic',
 		'Static',
 	];
+
+	$: if (sampleID && sampleType){
+		sampleExists = true;
+	}
 </script>
 
 <select bind:value={filter}>
@@ -50,7 +55,6 @@
 	<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType/>
 {/each}
 
-{#if sampleID && sampleID !== ''}
-	<button on:click={() => (sampleID = '')}>&times;</button>
-	<Sample backendID={sampleID} type={sampleType}/>
+{#if sampleExists}
+	<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists}/>
 {/if}

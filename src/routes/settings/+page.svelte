@@ -81,6 +81,7 @@
 {:else if !userData}
 	<div>Error fetching user data, please try again</div>
 {:else}
+<button on:click={() => goto('./')}>Home</button><br>
 	<Setting key={'mode'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
 	<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 	<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />

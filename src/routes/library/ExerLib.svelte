@@ -7,6 +7,7 @@
 	export let library = null;
 	let sampleID = '';
 	let filter = '';
+	let sampleExists = false;
 
 	const bodyP = [
 		null,
@@ -45,6 +46,10 @@
 		'Planks',
 		'Supermans'
 	];
+
+	$: if (sampleID){
+		sampleExists = true;
+	}
 </script>
 
 <select bind:value={filter}>
@@ -58,7 +63,6 @@
 	<ExerEntry {entry} {bodyP} bind:sampleID />
 {/each}
 
-{#if sampleID && sampleID !== ''}
-	<button on:click={() => (sampleID = '')}>&times;</button>
-	<Sample backendID={sampleID} />
+{#if sampleExists}
+	<Sample backendID={sampleID} bind:exists={sampleExists}/>
 {/if}

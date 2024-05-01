@@ -76,6 +76,7 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
+<button on:click={() => goto('./')}>Home</button><button on:click={() => goto('./library')}>Library</button><br>
 	<button
 		on:click={() => {
 			if (current !== 'Workout') {

@@ -61,6 +61,7 @@
 {#if loading}
 	<div>loading...</div>
 {:else}
+<button on:click={() => goto('./')}>Discard</button><br>
 	{#if type !== 'Adapt'}
 		<button
 			on:click={() => {

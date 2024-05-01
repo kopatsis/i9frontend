@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 
 	let error = '';
+	let sampleExists = false;
 
 	let workout;
 	const unsubscribe = strRoundsSt.subscribe((strRoundsSt) => {
@@ -25,10 +26,10 @@
 	});
 
 	let currentSampleID = '';
+
 	const showCurrentSample = (sampleID) => {
-		if (currentSampleID !== sampleID) {
-			currentSampleID = sampleID;
-		}
+		currentSampleID = sampleID;
+		sampleExists = true;
 	};
 </script>
 
@@ -46,9 +47,6 @@
 					showCurrentSample(workout.dynamic.samples[i]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === workout.dynamic.samples[i]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{/each}
 	<br />
@@ -63,11 +61,11 @@
 					showCurrentSample(workout.static.samples[i]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === workout.static.samples[i]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{/each}
+	{#if sampleExists}
+		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+	{/if}
 {/if}
 
 <div>

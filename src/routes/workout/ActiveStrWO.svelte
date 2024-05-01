@@ -6,27 +6,23 @@
 		strRoundsSt,
 		genTimesSt,
 		updateTime,
-		timescriptStSession, 
-		scriptStSession, 
+		timescriptStSession,
+		scriptStSession,
 		strRoundsStSession,
 		genTimesStSession,
 		afterWOMessage,
-
 		currenttime,
-
 		currenttimeSession
-
-
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 	import Audio from '../Audio.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
+	let sampleExists = false;
 
 	// Variables in presentation section
 	let interval = null;
@@ -96,7 +92,7 @@
 		paused = true;
 		clearInterval(interval);
 		time = 0;
-		
+
 		status = 'Dynamic';
 		picIter = 0;
 		src = '';
@@ -135,9 +131,8 @@
 
 	let currentSampleID = '';
 	const showCurrentSample = (sampleID) => {
-		if (currentSampleID !== sampleID) {
-			currentSampleID = sampleID;
-		}
+		currentSampleID = sampleID;
+		sampleExists = true;
 	};
 
 	async function quit() {
@@ -172,45 +167,45 @@
 	// Start funcs
 	onMount(() => {
 		currenttimeSession();
-		const oldTime = get(currenttime)
+		const oldTime = get(currenttime);
 
-		timescriptStSession()
-		if (!timescript){
-			error = "Error loading workout"
+		timescriptStSession();
+		if (!timescript) {
+			error = 'Error loading workout';
 		}
 		scriptStSession();
-		if (!script){
-			error = "Error loading workout"
+		if (!script) {
+			error = 'Error loading workout';
 		}
 		strRoundsStSession();
-		if (!strRounds){
-			error = "Error loading workout"
+		if (!strRounds) {
+			error = 'Error loading workout';
 		}
 		genTimesStSession();
-		if (!getTimes){
-			error = "Error loading workout"
+		if (!getTimes) {
+			error = 'Error loading workout';
 		}
 
-		if (oldTime !== 0){
+		if (oldTime !== 0) {
 			timeMessage = true;
-			existingTime = oldTime
+			existingTime = oldTime;
 		} else {
 			loading = false;
 			startStopwatch();
 		}
 	});
 
-	function startAnew(){
+	function startAnew() {
 		timeMessage = false;
 		time = 0;
 		loading = false;
 		startStopwatch();
 	}
 
-	function startAtOld(){
+	function startAtOld() {
 		time = 0;
 		timeMessage = false;
-		while (time < existingTime){
+		while (time < existingTime) {
 			time += 0.05;
 		}
 		time = workingTime;
@@ -247,7 +242,11 @@
 </script>
 
 {#if timeMessage}
-	<div>Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(existingTime % 60)} sec?</div>
+	<div>
+		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(
+			existingTime % 60
+		)} sec?
+	</div>
 	<button on:click={startAtOld}>Yes</button>
 	<button on:click={startAnew}>No</button>
 {:else if loading}
@@ -284,9 +283,6 @@
 					showCurrentSample(strRounds.dynamic.samples[set - 1]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === strRounds.dynamic.samples[set - 1]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{:else if status === 'Static'}
 		<div>Static Stretches:</div>
@@ -298,9 +294,6 @@
 					showCurrentSample(strRounds.static.samples[set - 1]);
 				}}>&#x2139;</button
 			>
-			{#if currentSampleID === strRounds.static.samples[set - 1]}
-				<Sample sampleID={currentSampleID} />
-			{/if}
 		</div>
 	{/if}
 
@@ -346,6 +339,10 @@
 		}}>Top</button
 	>
 
-	<button on:click={() => audioDisp = true}>Show music</button>
-	<Audio bind:display={audioDisp}/>
+	{#if sampleExists}
+		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+	{/if}
+
+	<button on:click={() => (audioDisp = true)}>Show music</button>
+	<Audio bind:display={audioDisp} />
 {/if}

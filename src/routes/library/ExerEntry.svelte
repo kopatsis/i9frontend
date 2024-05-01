@@ -95,10 +95,10 @@
 >
 
 <div>Blocked: {entry.Blocked}</div>
-<div>Favoritism Value: {Math.round(entry.Favoritism * 100) / 100}</div>
+<div>Favoritism Value: {faveDisp(entry.Favoritism)}</div>
 <button on:click={() => (editstat = true)}>Edit</button>
 {#if editstat}
-	<input type="checkbox" name="blocked" bind:value={blocked} />
+	<input type="checkbox" name="blocked" bind:checked={blocked} />
 	<label for="blocked">Block Exercise</label><br />
 
 	<div>Favoritism Value:</div>

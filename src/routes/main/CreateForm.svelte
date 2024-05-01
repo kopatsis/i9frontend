@@ -53,7 +53,7 @@
 			} else if (formType === 'Intro') {
 				minutes = Math.max(minutes, 25);
 			}
-			diff = Math.max(1,userData.LastDifficulty);
+			diff = String(Math.min(Math.max(1,userData.LastDifficulty),6));
 
 
 			plyo = userData.PlyoTolerance;

@@ -91,6 +91,7 @@
 {#if loading}
 	<div>loading...</div>
 {:else}
+<button on:click={() => goto('./history')}>History</button><button on:click={() => goto('./library')}>Library</button><br>
 	{#if afterWOMTrue}
 		<div>
 			Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}
@@ -102,7 +103,7 @@
 	{/if}
 
 	{#if lastWO}
-		<button on:click={goto('./workout')}>Return to last workout</button>
+		<button on:click={() => goto('./workout')}>Return to last workout</button>
 	{/if}
 
 	{#if !showForm}

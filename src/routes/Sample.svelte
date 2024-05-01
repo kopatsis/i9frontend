@@ -9,6 +9,7 @@
 	export let type = 'exercise';
 	export let size = 'mid';
 	export let sampleID = '';
+	export let exists = true;
 	const cdn = import.meta.env.VITE_CDN_URL;
 
 	let interval = null;
@@ -102,6 +103,7 @@
 	}
 </script>
 
+<button on:click={() => (exists = false)}>Exit</button>
 {#if loading}
 	<div>loading...</div>
 {:else if error}
