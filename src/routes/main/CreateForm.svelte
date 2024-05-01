@@ -20,13 +20,7 @@
 
 	export let formType = 'Regular';
 	export let workoutID = '';
-
-	let userData;
-	const unsubscribe = user.subscribe((value) => {
-		userData = value;
-	});
-
-	onDestroy(unsubscribe);
+	export let userData;
 
 	let error = '';
 	let minutes;
@@ -40,9 +34,10 @@
 	let loading = true;
 
 	onMount(async () => {
-		const token = await getLoginToken();
-		error = await getUser(token);
-		loading = false;
+		if (!userData) {
+			const token = await getLoginToken();
+			error = await getUser(token);
+		}
 
 		if (userData) {
 			minutes = Math.round(100 * userData.LastMinutes) / 100;
@@ -53,22 +48,22 @@
 			} else if (formType === 'Intro') {
 				minutes = Math.max(minutes, 25);
 			}
-			diff = String(Math.min(Math.max(1,userData.LastDifficulty),6));
-
+			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
 
 			plyo = userData.PlyoTolerance;
 			pushup = userData.PushupSetting;
 			bannedParts = [...userData.BannedParts];
 		}
+		loading = false;
 	});
 
-    $: if (formType === 'Regular') {
-				minutes = Math.max(minutes, 8);
-			} else if (formType === 'Stretch') {
-				minutes = Math.max(minutes, 1);
-			} else if (formType === 'Intro') {
-				minutes = Math.max(minutes, 25);
-			}
+	$: if (formType === 'Regular') {
+		minutes = Math.max(minutes, 8);
+	} else if (formType === 'Stretch') {
+		minutes = Math.max(minutes, 1);
+	} else if (formType === 'Intro') {
+		minutes = Math.max(minutes, 25);
+	}
 
 	const arraysHaveSameItems = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) {
@@ -106,11 +101,10 @@
 				await patchUser(token, body);
 			} catch (err) {
 				error = err;
-                console.log(err)
+				console.log(err);
 			}
 		}
 		try {
-
 			let workout;
 
 			if (formType === 'Regular') {
@@ -124,8 +118,8 @@
 				unravelWO(workout);
 			} else {
 				workout = await fetchIntroWorkout(token, minutes);
-				unravelWO(workout, "Intro");
-				workoutTypeSet("Intro");
+				unravelWO(workout, 'Intro');
+				workoutTypeSet('Intro');
 			}
 
 			preloadImages(extractImageList(workout));
@@ -136,7 +130,7 @@
 		} catch (err) {
 			loading = false;
 			error = err;
-            console.log(err)
+			console.log(err);
 		}
 	};
 </script>
@@ -177,9 +171,13 @@
 				<option value="4">Medium</option>
 				<option value="5">Hard</option>
 				<option value="6">Extreme</option>
-			  </select>
-			<div>*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving</div>
-			<div>**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones</div>
+			</select>
+			<div>
+				*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving
+			</div>
+			<div>
+				**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones
+			</div>
 			<br />
 		{/if}
 

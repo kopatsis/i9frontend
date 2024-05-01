@@ -1,14 +1,18 @@
 <script>
+	// @ts-nocheck
+
 	import { goto } from '$app/navigation';
-	import { setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../Logout.svelte';
 	import CreateForm from './CreateForm.svelte';
+	import { user, getUser } from '$lib/stores/user.js';
 	import { adaptID, creationType } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 
 	let loading = true;
 	let local = false;
+	let error = '';
 	// @ts-ignore
 	let firebaseUser = undefined;
 
@@ -22,10 +26,22 @@
 		id = adaptID;
 	});
 
+	let userData;
+	const unsubscribeUser = user.subscribe((value) => {
+		userData = value;
+	});
+
 	onDestroy(() => {
 		unsubscribeType();
 		unsubscribeID();
+		unsubscribeUser();
 	});
+
+	async function mountCall() {
+		const token = await getLoginToken();
+		error = await getUser(token);
+		loading = false;
+	}
 
 	onMount(() => {
 		setLocalLoginState();
@@ -34,7 +50,7 @@
 			local = value;
 			// @ts-ignore
 			if (local && !firebaseUser) {
-				loading = false;
+				mountCall();
 			}
 		});
 
@@ -45,7 +61,7 @@
 			} else if (firebaseUser === null && !local) {
 				goto('./login');
 			} else if (firebaseUser) {
-				loading = false;
+				mountCall();
 			}
 		});
 
@@ -60,16 +76,20 @@
 
 {#if loading}
 	<div>loading...</div>
+{:else if error}
+	<div>F: {error}</div>
 {:else}
-<button on:click={() => goto('./')}>Discard</button><br>
+	<button on:click={() => goto('./')}>Discard</button><br />
 	{#if type !== 'Adapt'}
-		<button
-			on:click={() => {
-				if (type !== 'Regular') {
-					creationType.set('Regular');
-				}
-			}}>Regular</button
-		>
+		{#if userData.Assessed}
+			<button
+				on:click={() => {
+					if (type !== 'Regular') {
+						creationType.set('Regular');
+					}
+				}}>Regular</button
+			>
+		{/if}
 		<button
 			on:click={() => {
 				if (type !== 'Stretch') {
@@ -87,8 +107,8 @@
 	{/if}
 
 	{#if adaptID}
-		<CreateForm formType={type} />
+		<CreateForm formType={type} {userData} />
 	{:else}
-		<CreateForm formType={type} workoutID={adaptID} />
+		<CreateForm formType={type} {userData} workoutID={adaptID} />
 	{/if}
 {/if}
