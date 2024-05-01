@@ -313,5 +313,5 @@ export function unravelWO(response, type="Regular") {
 	timescriptStSet(timescript);
 	workoutRoundsStSet(workoutRounds);
 	storedWorkoutSet(response);
-	workoutTypeSet("Stretch");
+	workoutTypeSet(type);
 }
