@@ -47,7 +47,7 @@
 		'Supermans'
 	];
 
-	$: if (sampleID){
+	$: if (sampleID) {
 		sampleExists = true;
 	}
 </script>
@@ -60,9 +60,9 @@
 </select>
 
 {#each library.filter((entry) => filter === '' || entry.Parent === filter) as entry (entry.ID)}
-	<ExerEntry {entry} {bodyP} bind:sampleID />
+	<ExerEntry {entry} {bodyP} bind:sampleID bind:sampleEx={sampleExists} />
 {/each}
 
 {#if sampleExists}
-	<Sample backendID={sampleID} bind:exists={sampleExists}/>
+	<Sample backendID={sampleID} bind:exists={sampleExists} />
 {/if}

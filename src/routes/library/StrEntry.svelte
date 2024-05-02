@@ -10,6 +10,7 @@
 	export let bodyP;
 	export let sampleID;
 	export let sampleType;
+	export let sampleEx = false;
 	let editstat = false;
 
 	let blocked;
@@ -32,7 +33,7 @@
 		} catch (error) {
 			console.log(error);
 		} finally {
-			editstat = false
+			editstat = false;
 		}
 	}
 
@@ -56,8 +57,9 @@
 
 <button
 	on:click={() => {
+		sampleType = entry.Type === 'Static' ? 'static' : 'dynamic';
 		sampleID = entry.ID;
-		sampleType = entry.Status === 'Static' ? 'static' : 'dynamic';
+		sampleEx = true;
 	}}>&#x2139;</button
 >
 

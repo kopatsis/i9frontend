@@ -9,6 +9,7 @@
 	export let entry;
 	export let bodyP;
     export let sampleID;
+	export let sampleEx = false;
 	let editstat = false;
 
 	let blocked;
@@ -90,6 +91,7 @@
 
 <button
 	on:click={() => {
+		sampleEx = true;
 		sampleID = entry.ID;
 	}}>&#x2139;</button
 >

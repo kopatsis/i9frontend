@@ -34,14 +34,8 @@
 		'Right Hip'
 	];
 
-	const types = [
-		'Dynamic',
-		'Static',
-	];
+	const types = ['Dynamic', 'Static'];
 
-	$: if (sampleID && sampleType){
-		sampleExists = true;
-	}
 </script>
 
 <select bind:value={filter}>
@@ -52,9 +46,9 @@
 </select>
 
 {#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
-	<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType/>
+	<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType bind:sampleEx={sampleExists} />
 {/each}
 
 {#if sampleExists}
-	<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists}/>
+	<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} />
 {/if}
