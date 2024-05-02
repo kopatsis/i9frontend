@@ -47,9 +47,6 @@
 		'Supermans'
 	];
 
-	$: if (sampleID) {
-		sampleExists = true;
-	}
 </script>
 
 <select bind:value={filter}>
