@@ -239,9 +239,8 @@
 		if (oldTime !== 0) {
 			timeMessage = true;
 			existingTime = oldTime;
-		} else {
-			loading = false;
 		}
+		loading = false;
 	});
 
 	// Reactive statements on time change
@@ -280,8 +279,11 @@
 	}
 </script>
 
-{#if  loading}
+{#if loading}
 	<div>loading...</div>
+{:else if error}
+	<div>F: {error}</div>
+	<button on:click={() => goto('./')}>Go Home</button>
 {:else if !timescript || !script || !strRounds || !genTimes || !woRounds}
 	<div>No workout active</div>
 	<button on:click={() => goto('./main')}>Create one now</button>
@@ -293,8 +295,6 @@
 	</div>
 	<button on:click={startAtOld}>Yes</button>
 	<button on:click={startAnew}>No</button>
-{:else if error}
-	<div>F: {error}</div>
 {:else}
 	{#if exitMessage}
 		<div>Are you done with this workout or do you want to keep going?</div>

@@ -68,12 +68,14 @@ export const storedWorkoutSession = () => {
 }
 
 export const strRoundsStSession = () => {
+    console.log("seshcheck: ", get(strRoundsSt))
     if (!get(strRoundsSt)){
         const value = sessionStorage.getItem("strRoundsSt")
         if (!value){
             return
         }
         const check = JSON.parse(value)
+        console.log("!!!!!!!!!!", check)
         strRoundsSt.set(check)
     }
 }

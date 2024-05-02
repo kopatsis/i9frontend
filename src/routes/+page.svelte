@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import { afterWOMessage, storedWorkout, storedWorkoutSession, workoutType } from '$lib/stores/workout';
+	import { afterWOMessage, storedWorkout, storedWorkoutSession, workoutType, workoutTypeSession } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from './UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
@@ -44,7 +44,7 @@
 		console.log(token);
 		getUser(token);
 		name = userObj && userObj.Name ? userObj.Name : '';
-		storedWorkoutSession();
+		workoutTypeSession();
 		loading = false;
 	}
 

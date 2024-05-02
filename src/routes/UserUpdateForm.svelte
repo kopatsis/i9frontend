@@ -90,6 +90,8 @@
 			console.log(err);
 		}
 	};
+
+	$: validTime = minutes > 8 && minutes < 240;
 </script>
 
 <button on:click={() => (exists = false)}>Exit</button>
@@ -103,14 +105,19 @@
 		<div>{userData.Name}'s default workout settings:</div>
 		<label for="length">Length in minutes (8-240):</label>
 		<input
-			type="number"
-			id="length"
-			name="length input"
-			min="8.0"
-			max="240.0"
-			step="0.01"
-			bind:value={minutes}
-		/>
+				type="number"
+				id="length"
+				name="length input"
+				min="0.0"
+				max="1000.0"
+				step="0.01"
+				bind:value={minutes}
+			/>
+			{#if !validTime}
+				<div>
+					Please enter a time within the range of 8-240 minutes
+				</div>
+			{/if}
 
 		<label for="difficulty">Difficulty Type:</label>
 		<select id="difficulty" bind:value={diff}>

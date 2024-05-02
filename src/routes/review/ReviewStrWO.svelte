@@ -8,21 +8,21 @@
 
 	let error = '';
 	let sampleExists = false;
+	let loading = true;
 
 	let workout;
 	const unsubscribe = strRoundsSt.subscribe((strRoundsSt) => {
 		workout = strRoundsSt;
 	});
 
-	onDestroy(() => {
-		unsubscribe();
-	});
+	onDestroy(unsubscribe);
 
 	onMount(() => {
 		strRoundsStSession();
 		if (!workout) {
 			error = 'No workout existing';
-		}
+		} 
+		loading = false;
 	});
 
 	let currentSampleID = '';
@@ -33,7 +33,9 @@
 	};
 </script>
 
-{#if error}
+{#if loading}
+	<div>loading...</div>
+{:else if error}
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}

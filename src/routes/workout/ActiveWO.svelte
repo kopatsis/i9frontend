@@ -12,18 +12,10 @@
 		workoutRoundsSt,
 		afterWOMessage,
 		workoutRoundsStSession,
-
 		timescriptStSession,
-
 		scriptStSession,
-
 		strRoundsStSession,
-
 		genTimesStSession
-
-
-
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -218,9 +210,8 @@
 		if (oldTime !== 0) {
 			timeMessage = true;
 			existingTime = oldTime;
-		} else {
-			loading = false;
 		}
+		loading = false;
 	});
 
 	function startAnew() {
@@ -280,6 +271,9 @@
 
 {#if loading}
 	<div>loading...</div>
+{:else if error}
+	<div>F: {error}</div>
+	<button on:click={() => goto('./')}>Go Home</button>
 {:else if !timescript || !script || !strRounds || !genTimes || !woRounds}
 	<div>No workout active</div>
 	<button on:click={() => goto('./main')}>Create one now</button>
@@ -291,9 +285,6 @@
 	</div>
 	<button on:click={startAtOld}>Yes</button>
 	<button on:click={startAnew}>No</button>
-{:else if error}
-	<div>F: {error}</div>
-	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
 	{#if exitMessage}
 		<div>Are you sure you want to exit?</div>

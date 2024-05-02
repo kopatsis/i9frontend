@@ -31,6 +31,7 @@
 	let asnew = true;
 	let showAdvanced = false;
 	let loading = true;
+	let validTime;
 
 	onMount(async () => {
 		if (!userData) {
@@ -56,13 +57,26 @@
 		loading = false;
 	});
 
+	const validateTime = () => {
+		if ((formType === 'Regular' && minutes < 8) || minutes > 240) {
+			return false;
+		} else if ((formType === 'Stretch' && minutes < 1) || minutes > 240) {
+			return false;
+		} else if ((formType === 'Intro' && minutes < 25) || minutes > 60) {
+			return false;
+		}
+		return true;
+	};
+
 	$: if (formType === 'Regular') {
-		minutes = Math.max(minutes, 8);
+		minutes = Math.min(Math.max(minutes, 8), 240);
 	} else if (formType === 'Stretch') {
-		minutes = Math.max(minutes, 1);
+		minutes = Math.min(Math.max(minutes, 1), 240);
 	} else if (formType === 'Intro') {
-		minutes = Math.max(minutes, 25);
+		minutes = Math.min(Math.max(minutes, 25), 60);
 	}
+
+	$: validTime = validateTime();
 
 	const arraysHaveSameItems = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) {
@@ -138,7 +152,11 @@
 {:else if error || !userData}
 	<div>F: {error}</div>
 {:else}
-	<form on:submit|preventDefault={submitWO}>
+	<form on:submit|preventDefault={() => {
+		if(validTime){
+			submitWO();
+		}
+	}}>
 		<div>
 			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Workout{/if}: {formType}
 		</div>
@@ -153,11 +171,20 @@
 				type="number"
 				id="length"
 				name="length input"
-				min="{formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1}.0"
-				max="{formType === 'Intro' ? 60 : 240}.0"
+				min="0.0"
+				max="1000.0"
 				step="0.01"
 				bind:value={minutes}
 			/>
+			{#if !validTime}
+				<div>
+					Please enter a time within the range of {formType === 'Regular'
+						? 8
+						: formType === 'Intro'
+							? 25
+							: 1} - {formType === 'Intro' ? 60 : 240} minutes
+				</div>
+			{/if}
 			<br />
 		{/if}
 

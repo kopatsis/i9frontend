@@ -15,6 +15,8 @@
 
 	let error;
 	let strRounds;
+	let loading = true;
+
 	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
 		strRounds = strRoundsSt;
 	});
@@ -38,6 +40,7 @@
 		if (!strRounds) {
 			error = 'No workout existing';
 		}
+		loading = false;
 	});
 
 	let currentSampleID = '';
@@ -47,7 +50,9 @@
 	};
 </script>
 
-{#if error}
+{#if loading}
+	<div>loading...</div>
+{:else if error}
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}

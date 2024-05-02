@@ -5,11 +5,12 @@
 	import ReviewWo from './ReviewWO.svelte';
 	import ReviewStrWo from './ReviewStrWO.svelte';
 	import { goto } from '$app/navigation';
-	import { getLoginState, setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 
 	let local = false;
 	let firebaseUser = undefined;
+	let loading = true;
 
 	let type;
 	let error = '';
@@ -20,9 +21,10 @@
 
 	function mountCall() {
 		workoutTypeSession();
-			if (!type) {
-				error = 'No workout type existing';
-			}
+		if (!type) {
+			error = 'No workout type existing';
+		}
+		loading = false;
 	}
 
 	onMount(() => {
@@ -53,7 +55,10 @@
 	});
 </script>
 
-{#if error}
+
+{#if loading}
+	<div>loading...</div>
+{:else if error}
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else if type === 'Stretch'}
