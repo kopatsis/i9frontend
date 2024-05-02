@@ -104,7 +104,7 @@
 	{/if}
 
 	{#if woType}
-		<button on:click={() => goto('./workout')}>Return to last workout ({woType})</button>
+		<button on:click={() => goto('./review')}>Return to last workout ({woType})</button>
 	{/if}
 
 	{#if !showForm}

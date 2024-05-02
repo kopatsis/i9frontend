@@ -23,6 +23,7 @@
 	import Imgframe from '../../components/Imgframe.svelte';
 	import { postIntroRating } from '$lib/jshelp/postwo';
 	import Audio from '../Audio.svelte';
+	import { get } from 'svelte/store';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;

@@ -1,8 +1,8 @@
 <script>
 	// @ts-nocheck
 
-	import { onDestroy, onMount } from 'svelte';
-	import { user, getUser } from '$lib/stores/user.js';
+	import { onMount } from 'svelte';
+	import { getUser } from '$lib/stores/user.js';
 	import BodyPInput from '../BodyPInput.svelte';
 	import {
 		extractImageList,
@@ -16,7 +16,6 @@
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
-	import { workoutTypeSet } from '$lib/stores/workout';
 
 	export let formType = 'Regular';
 	export let workoutID = '';
@@ -137,11 +136,12 @@
 {#if loading}
 	<div>loading...</div>
 {:else if error || !userData}
-	<div>F</div>
-	<div>{error}</div>
+	<div>F: {error}</div>
 {:else}
 	<form on:submit|preventDefault={submitWO}>
-		<div>{userData.Name}'s workout: {formType}</div>
+		<div>
+			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Workout{/if}: {formType}
+		</div>
 		{#if formType !== 'Adapt'}
 			<label for="length"
 				>Length in minutes ({formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1} - {formType ===

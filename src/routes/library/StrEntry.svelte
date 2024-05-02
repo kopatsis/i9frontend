@@ -72,3 +72,5 @@
 	{/if}
 	<button on:click={() => (editstat = false)}>Discard</button>
 {/if}
+
+<br /><br />
