@@ -34,6 +34,7 @@ export const wipeWorkout = () => {
     workoutRoundsSt.set(null);
     workoutType.set('');
     rounds.set(0);
+    id.set('');
     sessionStorage.removeItem('storedWorkout');
     sessionStorage.removeItem('strRoundsSt');
     sessionStorage.removeItem('genTimesSt');
@@ -42,6 +43,7 @@ export const wipeWorkout = () => {
     sessionStorage.removeItem('workoutRoundsSt');
     sessionStorage.removeItem('workoutType');
     sessionStorage.removeItem('rounds');
+    sessionStorage.removeItem('woID');
 }
 
 export const roundsSession = () => {
@@ -137,10 +139,20 @@ export const workoutTypeSession = () => {
 export const currenttimeSession = () => {
     if (get(currenttime) === 0){
         const value = sessionStorage.getItem("currenttime")
-        if (!value){
+        if (!value || isNaN(Number(value))){
             return
         }
         currenttime.set(Number(value))
+    }
+}
+
+export const woIdSession = () => {
+    if (get(id) === ''){
+        const value = sessionStorage.getItem("woID")
+        if (!value){
+            return
+        }
+        id.set(value)
     }
 }
 
@@ -182,4 +194,9 @@ export const workoutTypeSet = (/** @type {any} */ item) => {
 export const roundsSet = (/** @type {any} */ item) => {
     rounds.set(item);
 	sessionStorage.setItem("rounds", String(item));
+}
+
+export const idSet = (/** @type {any} */ item) => {
+    id.set(item);
+	sessionStorage.setItem("woID", item);
 }

@@ -1,7 +1,7 @@
 // @ts-nocheck
 // @ts-ignore
 
-import { currenttime, strRoundsStSet, genTimesStSet, scriptStSet, timescriptStSet, storedWorkoutSet, workoutTypeSet, workoutRoundsStSet } from "$lib/stores/workout";
+import { currenttime, strRoundsStSet, genTimesStSet, scriptStSet, timescriptStSet, storedWorkoutSet, workoutTypeSet, workoutRoundsStSet, idSet } from "$lib/stores/workout";
 
 export function unravelstretchWO(response) {
 
@@ -44,7 +44,7 @@ export function unravelstretchWO(response) {
 					reps: [0]
 				});
 
-				if (set.RepSlice.length > 1) {
+				if (set.SeparateStretch && set.RepSlice.length > 1) {
 					if (set.RepSequence[j] === 0) {
 						script[script.length - 1].names[0] += ' - Left';
 					} else {
@@ -102,6 +102,7 @@ export function unravelstretchWO(response) {
 	timescriptStSet(timescript);
 	storedWorkoutSet(response);
 	workoutTypeSet("Stretch");
+	idSet(response.workout.ID)
 	
 }
 
@@ -148,7 +149,7 @@ export function unravelWO(response, type="Regular") {
 					reps: [0]
 				});
 
-				if (set.RepSlice.length > 1) {
+				if (set.SeparateStretch && set.RepSlice.length > 1) {
 					if (set.RepSequence[j] === 0) {
 						script[script.length - 1].names[0] += ' - Left';
 					} else {
@@ -314,4 +315,5 @@ export function unravelWO(response, type="Regular") {
 	workoutRoundsStSet(workoutRounds);
 	storedWorkoutSet(response);
 	workoutTypeSet(type);
+	idSet(response.workout.ID)
 }

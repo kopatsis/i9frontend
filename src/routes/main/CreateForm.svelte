@@ -21,6 +21,8 @@
 	export let workoutID = '';
 	export let userData;
 
+	let oldFormType = formType;
+
 	let error = '';
 	let minutes;
 	let diff;
@@ -68,12 +70,15 @@
 		return true;
 	};
 
-	$: if (formType === 'Regular') {
-		minutes = Math.min(Math.max(minutes, 8), 240);
-	} else if (formType === 'Stretch') {
-		minutes = Math.min(Math.max(minutes, 1), 240);
-	} else if (formType === 'Intro') {
-		minutes = Math.min(Math.max(minutes, 25), 60);
+	$: if (formType !== oldFormType) {
+		oldFormType = formType;
+		if (formType === 'Regular') {
+			minutes = Math.min(Math.max(minutes, 8), 240);
+		} else if (formType === 'Stretch') {
+			minutes = Math.min(Math.max(minutes, 1), 240);
+		} else if (formType === 'Intro') {
+			minutes = Math.min(Math.max(minutes, 25), 60);
+		}
 	}
 
 	$: validTime = validateTime();
@@ -152,11 +157,13 @@
 {:else if error || !userData}
 	<div>F: {error}</div>
 {:else}
-	<form on:submit|preventDefault={() => {
-		if(validTime){
-			submitWO();
-		}
-	}}>
+	<form
+		on:submit|preventDefault={() => {
+			if (validTime) {
+				submitWO();
+			}
+		}}
+	>
 		<div>
 			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Workout{/if}: {formType}
 		</div>

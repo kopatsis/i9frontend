@@ -236,7 +236,7 @@
 			error = 'Error loading workout';
 		}
 
-		if (oldTime !== 0) {
+		if (oldTime >= 0) {
 			timeMessage = true;
 			existingTime = oldTime;
 		}
