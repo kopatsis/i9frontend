@@ -34,7 +34,7 @@
 	let status = 'Dynamic';
 
 	let picIter = 0;
-	let src = '';
+	let src = 'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
 	let set = 0;
 	let activeTitle = '';
 	let picEndTime = 0;
@@ -87,6 +87,7 @@
 	function pauseStopwatch() {
 		clearInterval(interval);
 		interval = null;
+		paused = true;
 	}
 
 	function resetStopwatch() {
@@ -96,7 +97,7 @@
 
 		status = 'Dynamic';
 		picIter = 0;
-		src = '';
+		src = 'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
 		set = 0;
 		activeTitle = '';
 		picEndTime = 0;
@@ -118,7 +119,7 @@
 		clearInterval(interval);
 	});
 
-	function formatTime() {
+	function formatTime(time) {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
 	}
 
@@ -136,13 +137,20 @@
 		sampleExists = true;
 	};
 
-	async function quit() {
+	async function quit(status) {
 		clearInterval(interval);
 		interval = null;
 		loading = true;
-		await updateTime(time, 'stretch', 'Paused', true);
-		afterWOMessage.set(true);
-		goto('./');
+		try {
+			await updateTime(time, 'stretch', status, true);
+		} catch (err) {
+			console.log(err);
+		} finally {
+			if (status === 'Rated') {
+				afterWOMessage.set(true);
+			}
+			goto('./');
+		}
 	}
 
 	function resetQuestion() {
@@ -169,20 +177,25 @@
 	onMount(() => {
 		currenttimeSession();
 		const oldTime = get(currenttime);
+		console.log(oldTime);
 
 		timescriptStSession();
+		console.log(timescript);
 		if (!timescript) {
 			error = 'Error loading workout';
 		}
 		scriptStSession();
+		console.log(script);
 		if (!script) {
 			error = 'Error loading workout';
 		}
 		strRoundsStSession();
+		console.log(strRounds);
 		if (!strRounds) {
 			error = 'Error loading workout';
 		}
 		genTimesStSession();
+		console.log(genTimes);
 		if (!genTimes) {
 			error = 'Error loading workout';
 		}
@@ -202,6 +215,7 @@
 	}
 
 	function startAtOld() {
+		loading = true;
 		time = 0;
 		timeMessage = false;
 		while (time < existingTime) {
@@ -213,14 +227,14 @@
 	}
 
 	// Reactive statements on time change
-	$: if (time > scriptEndTime && scriptIter + 1 < timescript.length) {
+	$: if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
 		scriptStartTime = scriptEndTime;
 		scriptRest = timescript[scriptIter].isrest;
 		scriptIter++;
 		scriptEndTime = timescript[scriptIter].time;
 	}
 
-	$: if (time > picEndTime && picIter + 1 < script.length) {
+	$: if (script && time > picEndTime && picIter + 1 < script.length) {
 		src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
 		activeTitle = script[picIter].names[0]; // Have it so it's just one title in unravel lol
 		set = script[picIter].set;
@@ -228,10 +242,10 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (status === 'Dynamic' && time > genTimes.static) {
+	$: if (genTimes && status === 'Dynamic' && time > genTimes.static) {
 		status = 'Static';
-	} else if (status === 'Static' && time > genTimes.end) {
-		quit();
+	} else if (genTimes && status === 'Static' && time > genTimes.end) {
+		quit('Rated');
 	}
 
 	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {
@@ -260,7 +274,7 @@
 	{#if exitMessage}
 		<div>Are you sure you want to exit?</div>
 		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={quit}>Exit</button>
+		<button on:click={() => quit('Paused')}>Exit</button>
 	{:else if resetMessage}
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
@@ -273,7 +287,7 @@
 	{/if}
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
-	<div>{formatTime()}</div>
+	<div>{formatTime(time)}</div>
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches:</div>

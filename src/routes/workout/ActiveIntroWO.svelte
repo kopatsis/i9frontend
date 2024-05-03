@@ -40,7 +40,7 @@
 	let roundIter = 0;
 
 	let picIter = 0;
-	let src = '';
+	let src = 'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
 	let set = 0;
 	let activeTitle = '';
 	let picEndTime = 0;
@@ -112,7 +112,7 @@
 		roundIter = 0;
 
 		picIter = 0;
-		src = '';
+		src = 'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
 		set = 0;
 		activeTitle = '';
 		picEndTime = 0;
@@ -200,6 +200,7 @@
 	}
 
 	function startAtOld() {
+		loading = true;
 		time = 0;
 		timeMessage = false;
 		while (time < existingTime) {
@@ -244,14 +245,14 @@
 	});
 
 	// Reactive statements on time change
-	$: if (time > scriptEndTime && scriptIter + 1 < timescript.length) {
+	$: if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
 		scriptStartTime = scriptEndTime;
 		scriptRest = timescript[scriptIter].isrest;
 		scriptIter++;
 		scriptEndTime = timescript[scriptIter].time;
 	}
 
-	$: if (time > picEndTime && picIter + 1 < script.length) {
+	$: if (script && time > picEndTime && picIter + 1 < script.length) {
 		src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
 		activeTitle = script[picIter].names[0]; // Have it so it's just one title in unravel lol
 		set = script[picIter].set;
@@ -259,17 +260,17 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
+	$: if (woRounds && roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
 		round = woRounds[roundIter];
 		roundsSet(roundIter);
 		roundIter++;
 	}
 
-	$: if (status === 'Dynamic' && time > genTimes.exercises) {
+	$: if (genTimes && status === 'Dynamic' && time > genTimes.exercises) {
 		status = 'Exercise';
-	} else if (status === 'Exercise' && time > genTimes.static) {
+	} else if (genTimes && status === 'Exercise' && time > genTimes.static) {
 		status = 'Static';
-	} else if (status === 'Static' && time > genTimes.end) {
+	} else if (genTimes && status === 'Static' && time > genTimes.end) {
 		quit();
 	}
 

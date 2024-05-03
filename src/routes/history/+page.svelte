@@ -35,6 +35,7 @@
 		try {
 			const token = await getLoginToken();
 			await getHistory(token);
+			console.log(wos, strwos);
 		} catch (err) {
 			error = err;
 		} finally {

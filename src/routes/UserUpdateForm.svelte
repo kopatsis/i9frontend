@@ -31,7 +31,7 @@
 		loading = false;
 
 		if (userData) {
-			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100,8),240);
+			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100, 8), 240);
 			diff = String(Math.max(1, userData.LastDifficulty));
 			plyo = userData.PlyoTolerance;
 			pushup = userData.PushupSetting;
@@ -102,22 +102,23 @@
 	<div>{error}</div>
 {:else}
 	<form on:submit|preventDefault={submitWO}>
-		<div>{userData.Name}'s default workout settings:</div>
+		<div>
+			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s default workout settings:
+			{:else}Your default workout settings:{/if}:
+		</div>
 		<label for="length">Length in minutes (8-240):</label>
 		<input
-				type="number"
-				id="length"
-				name="length input"
-				min="0.0"
-				max="1000.0"
-				step="0.01"
-				bind:value={minutes}
-			/>
-			{#if !validTime}
-				<div>
-					Please enter a time within the range of 8-240 minutes
-				</div>
-			{/if}
+			type="number"
+			id="length"
+			name="length input"
+			min="0.0"
+			max="1000.0"
+			step="0.01"
+			bind:value={minutes}
+		/>
+		{#if !validTime}
+			<div>Please enter a time within the range of 8-240 minutes</div>
+		{/if}
 
 		<label for="difficulty">Difficulty Type:</label>
 		<select id="difficulty" bind:value={diff}>

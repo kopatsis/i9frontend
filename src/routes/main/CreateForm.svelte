@@ -59,7 +59,7 @@
 		loading = false;
 	});
 
-	const validateTime = () => {
+	const validateTime = (minutes) => {
 		if ((formType === 'Regular' && minutes < 8) || minutes > 240) {
 			return false;
 		} else if ((formType === 'Stretch' && minutes < 1) || minutes > 240) {
@@ -81,7 +81,7 @@
 		}
 	}
 
-	$: validTime = validateTime();
+	$: validTime = validateTime(minutes);
 
 	const arraysHaveSameItems = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) {
@@ -165,7 +165,7 @@
 		}}
 	>
 		<div>
-			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Workout{/if}: {formType}
+			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Your workout{/if}: {formType}
 		</div>
 		{#if formType !== 'Adapt'}
 			<label for="length"

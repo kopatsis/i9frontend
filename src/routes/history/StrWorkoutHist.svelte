@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 
 	import StrEntry from '../library/StrEntry.svelte';
+	import StrWorkoutEntry from './StrWorkoutEntry.svelte';
 
 	export let history = null;
 	console.log(history);
@@ -13,6 +14,6 @@
 	<button on:click={() => goto('./main')}>Start one now</button>
 {:else}
 	{#each history as entry (entry.ID)}
-		<StrEntry {entry} />
+		<StrWorkoutEntry {entry} />
 	{/each}
 {/if}

@@ -2,6 +2,7 @@
 	// @ts-nocheck
 
 	import {
+		name,
 		strRoundsSt,
 		strRoundsStSession,
 		workoutRoundsSt,
@@ -26,9 +27,15 @@
 		woRounds = workoutRoundsSt;
 	});
 
+	let woName = '';
+	const unsubscribeName = name.subscribe((name) => {
+		woName = name;
+	});
+
 	onDestroy(() => {
 		unsubscribeSt();
 		unsubscribeWO();
+		unsubscribeName();
 	});
 
 	onMount(() => {
@@ -56,6 +63,7 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
+	{#if woName}<div>Workout Name: {woName}</div>{/if}
 	<div>Dynamic Stretch Warmup:</div>
 	{#each strRounds.dynamic.times as time, i}
 		<div>

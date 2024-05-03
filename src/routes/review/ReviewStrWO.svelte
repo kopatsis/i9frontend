@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import { strRoundsSt, strRoundsStSession } from '$lib/stores/workout.js';
+	import { name, strRoundsSt, strRoundsStSession } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
 	import Sample from '../Sample.svelte';
 	import { goto } from '$app/navigation';
@@ -15,13 +15,21 @@
 		workout = strRoundsSt;
 	});
 
-	onDestroy(unsubscribe);
+	let woName = '';
+	const unsubscribeName = name.subscribe((name) => {
+		woName = name;
+	});
+
+	onDestroy(() => {
+		unsubscribe();
+		unsubscribeName();
+	});
 
 	onMount(() => {
 		strRoundsStSession();
 		if (!workout) {
 			error = 'No workout existing';
-		} 
+		}
 		loading = false;
 	});
 
@@ -39,6 +47,7 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
+	{#if woName}<div>Workout Name: {woName}</div>{/if}
 	<div>Dynamic Stretches:</div>
 	{#each workout.dynamic.times as time, i}
 		<div>

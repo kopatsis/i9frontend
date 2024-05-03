@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import { afterWOMessage, storedWorkout, storedWorkoutSession, workoutType, workoutTypeSession } from '$lib/stores/workout';
+	import { afterWOMessage, name, nameSession, workoutType, workoutTypeSession } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from './UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
@@ -16,7 +16,7 @@
 	let firebaseUser = undefined;
 	let loading = true;
 
-	let name = '';
+	let uname = '';
 	let showForm = false;
 
 	let afterWOMTrue = false;
@@ -34,6 +34,11 @@
 		woType = workout;
 	});
 
+	let woName = '';
+	const unsubscribeName = name.subscribe((name) => {
+		woName = name;
+	});
+
 	function workoutGen(type) {
 		creationType.set(type);
 		goto('./main');
@@ -43,8 +48,9 @@
 		const token = await getLoginToken();
 		console.log(token);
 		getUser(token);
-		name = userObj && userObj.Name ? userObj.Name : '';
+		uname = userObj && userObj.Name ? userObj.Name : '';
 		workoutTypeSession();
+		nameSession();
 		loading = false;
 	}
 
@@ -83,6 +89,7 @@
 		unsubscribeUser();
 		unsubscribe();
 		unsubscribeWO();
+		unsubscribeName();
 	});
 </script>
 
@@ -95,16 +102,16 @@
 	><br />
 	{#if afterWOMTrue}
 		<div>
-			Nice job{#if !name || name === 'local'}!{:else}, {name}!{/if}
+			Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
 		</div>
 	{:else}
 		<div>
-			Welcome{#if !name || name === 'local'}!{:else}, {name}!{/if}
+			Welcome{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
 		</div>
 	{/if}
 
 	{#if woType}
-		<button on:click={() => goto('./review')}>Return to last workout ({woType})</button>
+		<button on:click={() => goto('./review')}>Return to last {woType} workout ({woName})</button>
 	{/if}
 
 	{#if !showForm}

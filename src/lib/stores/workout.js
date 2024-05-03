@@ -11,6 +11,7 @@ export const workoutRoundsSt = writable(null);
 export const workoutType = writable('');
 export const currenttime = writable(0);
 export const id = writable("");
+export const name = writable("");
 export const rounds = writable(0);
 export const afterWOMessage = writable(false);
 
@@ -35,6 +36,7 @@ export const wipeWorkout = () => {
     workoutType.set('');
     rounds.set(0);
     id.set('');
+    name.set('');
     sessionStorage.removeItem('storedWorkout');
     sessionStorage.removeItem('strRoundsSt');
     sessionStorage.removeItem('genTimesSt');
@@ -44,6 +46,7 @@ export const wipeWorkout = () => {
     sessionStorage.removeItem('workoutType');
     sessionStorage.removeItem('rounds');
     sessionStorage.removeItem('woID');
+    sessionStorage.removeItem('woName');
 }
 
 export const roundsSession = () => {
@@ -156,6 +159,16 @@ export const woIdSession = () => {
     }
 }
 
+export const nameSession = () => {
+    if (get(name) === ''){
+        const value = sessionStorage.getItem("woName")
+        if (!value){
+            return
+        }
+        name.set(value)
+    }
+}
+
 export const storedWorkoutSet = (/** @type {any} */ item) => {
     storedWorkout.set(item);
 	sessionStorage.setItem("storedWorkout", JSON.stringify(item));
@@ -199,4 +212,9 @@ export const roundsSet = (/** @type {any} */ item) => {
 export const idSet = (/** @type {any} */ item) => {
     id.set(item);
 	sessionStorage.setItem("woID", item);
+}
+
+export const nameSet = (/** @type {any} */ item) => {
+    name.set(item);
+	sessionStorage.setItem("woName", item);
 }

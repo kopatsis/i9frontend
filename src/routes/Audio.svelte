@@ -2,7 +2,7 @@
 	export let display = false;
 </script>
 
-<button on:click={() => display = false}>Hide</button>
+<button class="{display ? '' : 'hide'}" on:click={() => display = false}>Hide</button>
 
 <iframe class="{display ? '' : 'hide'}"
 	title="audioplayer"
