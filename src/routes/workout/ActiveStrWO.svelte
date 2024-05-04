@@ -235,7 +235,7 @@
 		timeMessage = false;
 		time = 0;
 		loading = false;
-		updateTime(time, 'stretch');
+		updateTime(time, 'stretch', 'Progressing', true);
 		startStopwatch();
 	}
 
@@ -288,7 +288,7 @@
 		scriptEndTime = workingScriptEndTime;
 		scriptRest = workingScriptRest;
 
-		updateTime(time, 'stretch');
+		updateTime(time, 'stretch', 'Progressing', true);
 		loading = false;
 		timeMessage = false;
 		startStopwatch();

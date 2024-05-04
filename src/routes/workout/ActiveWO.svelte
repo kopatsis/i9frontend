@@ -59,6 +59,10 @@
 
 	let audioDisp = false;
 
+	let transitionTime = 3;
+	let transitioning = false;
+	let intervalCountdown;
+
 	// Subscriptions section
 	let timescript;
 	const unsubscribeTimeScript = timescriptSt.subscribe((timescriptSt) => {
@@ -87,12 +91,22 @@
 
 	// Timing functions
 	function startStopwatch() {
-		paused = false;
-		if (interval === null) {
-			interval = setInterval(() => {
-				time += 0.05;
-			}, 50);
-		}
+		if (intervalCountdown) clearInterval(intervalCountdown);
+		transitioning = true;
+		intervalCountdown = setInterval(() => {
+			transitionTime--;
+			if (transitionTime === 0) {
+				transitioning = false;
+				clearInterval(intervalCountdown);
+				if (interval === null) {
+					interval = setInterval(() => {
+						time += 0.01;
+					}, 10);
+				}
+				paused = false;
+				transitionTime = 3;
+			}
+		}, 800);
 	}
 
 	function pauseStopwatch() {
@@ -212,28 +226,92 @@
 			error = 'Error loading workout';
 		}
 
-		if (oldTime >= 0) {
+		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
 		}
 		loading = false;
+		if (!error) {
+			startStopwatch();
+		}
 	});
 
 	function startAnew() {
 		timeMessage = false;
 		time = 0;
 		loading = false;
+		updateTime(time, '', 'Progressing', true);
 		startStopwatch();
 	}
 
 	function startAtOld() {
 		loading = true;
-		time = 0;
-		timeMessage = false;
-		while (time < existingTime) {
-			time += 0.05;
+
+		let workingTime = 0;
+		let workingStatus = 'Dynamic';
+		let workingPicIter = 0;
+		let workingSrc =
+			'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
+		let workingSet = 0;
+		let workingActiveTitle = '';
+		let workingPicEndTime = 0;
+		let workingScriptIter = 0;
+		let workingScriptStartTime = 0;
+		let workingScriptEndTime = 0;
+		let workingScriptRest = false;
+		let workingRound = null;
+		let workingRoundIter = 0;
+
+		while (workingTime < existingTime) {
+			workingTime += 0.01;
+
+			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
+				workingScriptStartTime = workingScriptEndTime;
+				workingScriptRest = timescript[workingScriptIter].isrest;
+				workingScriptIter++;
+				workingScriptEndTime = timescript[workingScriptIter].time;
+			}
+
+			if (script && workingTime > workingPicEndTime && workingPicIter + 1 < script.length) {
+				workingSrc = cdn + '/' + script[workingPicIter].position + angle + '-' + size + '.webp';
+				workingActiveTitle = script[workingPicIter].names[0];
+				workingSet = script[workingPicIter].set;
+				workingPicIter++;
+				workingPicEndTime = script[workingPicIter].time;
+			}
+
+			if (
+				workingRoundIter + 1 < woRounds.length &&
+				workingTime > woRounds[workingRoundIter].start
+			) {
+				workingRound = woRounds[workingRoundIter];
+				roundsSet(workingRoundIter);
+				workingRoundIter++;
+			}
+
+			if (genTimes && workingStatus === 'Dynamic' && workingTime > genTimes.exercises) {
+				workingStatus = 'Exercise';
+			} else if (genTimes && workingStatus === 'Exercise' && workingTime > genTimes.static) {
+				workingStatus = 'Static';
+			}
 		}
+		time = workingTime;
+		status = workingStatus;
+		picIter = workingPicIter;
+		src = workingSrc;
+		set = workingSet;
+		activeTitle = workingActiveTitle;
+		picEndTime = workingPicEndTime;
+		scriptIter = workingScriptIter;
+		scriptStartTime = workingScriptStartTime;
+		scriptEndTime = workingScriptEndTime;
+		scriptRest = workingScriptRest;
+		round = workingRound;
+		roundIter = workingRoundIter;
+
+		updateTime(time, '', 'Progressing', true);
 		loading = false;
+		timeMessage = false;
 		startStopwatch();
 	}
 
@@ -256,7 +334,6 @@
 	$: if (woRounds && roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
 		round = woRounds[roundIter];
 		roundsSet(roundIter);
-		roundIter;
 		roundIter++;
 	}
 
@@ -300,6 +377,8 @@
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
 		<button on:click={resetStopwatch}>Yes, restart</button>
+	{:else if transitioning}
+		<div>Countdown: {transitionTime}</div>
 	{/if}
 	{#if paused}
 		<button on:click={startStopwatch}>Start</button>
