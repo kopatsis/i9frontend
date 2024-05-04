@@ -38,6 +38,7 @@ export const wipeWorkout = () => {
     rounds.set(0);
     id.set('');
     name.set('');
+    currenttime.set(0);
     sessionStorage.removeItem('storedWorkout');
     sessionStorage.removeItem('strRoundsSt');
     sessionStorage.removeItem('genTimesSt');
@@ -48,6 +49,7 @@ export const wipeWorkout = () => {
     sessionStorage.removeItem('rounds');
     sessionStorage.removeItem('woID');
     sessionStorage.removeItem('woName');
+    sessionStorage.removeItem('currenttime');
 }
 
 export const roundsSession = () => {
@@ -218,4 +220,9 @@ export const idSet = (/** @type {any} */ item) => {
 export const nameSet = (/** @type {any} */ item) => {
     name.set(item);
 	sessionStorage.setItem("woName", item);
+}
+
+export const currenttimeSet = (/** @type {any} */ item) => {
+    currenttime.set(item);
+	sessionStorage.setItem("currenttime", String(item));
 }

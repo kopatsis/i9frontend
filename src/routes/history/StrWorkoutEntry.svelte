@@ -1,6 +1,14 @@
 <script>
 	// @ts-nocheck
-	import { cloneStretchWorkoutById, getStretchWorkoutById } from '$lib/jshelp/fetchwo';
+	import { goto } from '$app/navigation';
+
+	import {
+		cloneStretchWorkoutById,
+		extractImageList,
+		getStretchWorkoutById
+	} from '$lib/jshelp/fetchwo';
+	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import { preloadImages } from '$lib/jshelp/preloader';
 	import { unravelstretchWO } from '$lib/jshelp/unravelwo';
 
 	export let entry = null;
@@ -103,9 +111,9 @@
 		<button on:click={() => (expanded = false)}>Collapse</button>
 	{/if}
 
-	{#if entry.Status === 'Unstarted'}
+	{#if entry.Status === 'Unstarted' && entry.PausedTime < entry.Minutes}
 		<button on:click={toReview}>Start</button>
-	{:else if entry.Status === 'Progressing' || entry.Status === 'Paused'}
+	{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
 		<button on:click={toReview}>Resume</button>
 	{:else}
 		<button on:click={toRestart}>Restart</button>

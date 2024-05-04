@@ -4,7 +4,7 @@
 </script>
 
 <div class="outerbar">
-	<div class="innerbar" style="width: {((end - current) / end) * 100}%;"></div>
+	<div class="innerbar" style="width: {(current / end) * 100}%;"></div>
 </div>
 
 <style>
@@ -16,7 +16,6 @@
 	.outerbar {
 		display: flex;
 		justify-content: flex-start;
-		position: absolute;
 		height: 10px;
 		width: 512px;
 	}

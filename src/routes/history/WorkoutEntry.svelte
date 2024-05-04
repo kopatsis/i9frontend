@@ -112,7 +112,16 @@
 		creationType.set('Adapt');
 	}
 
-	const options = ['Intro', 'Stretch', 'Low Cortisol', 'Simple', 'Easy', 'Medium', 'Hard', 'Extreme'];
+	const options = [
+		'Intro',
+		'Stretch',
+		'Low Cortisol',
+		'Simple',
+		'Easy',
+		'Medium',
+		'Hard',
+		'Extreme'
+	];
 </script>
 
 {#if loading}
@@ -126,7 +135,7 @@
 	<div>Date: {formatDateString(entry.Date)}</div>
 	<div>Name: {entry.Name}</div>
 	<div>Status: {entry.Status}</div>
-	<div>Difficulty: {options[entry.Difficulty+1]}</div>
+	<div>Difficulty: {options[entry.Difficulty + 1]}</div>
 	<div>
 		Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
 				entry.Minutes
@@ -147,7 +156,7 @@
 		{/each}
 
 		{#each entry.Exercises as round, i (i)}
-			<div>Round {i+1}: {round.Status}</div>
+			<div>Round {i + 1}: {round.Status}</div>
 			<div>
 				{Math.round(round.Times.ExercisePerSet)}s on / {Math.round(round.Times.RestPerSet)}s off
 			</div>
@@ -166,9 +175,9 @@
 		<button on:click={() => (expanded = false)}>Collapse</button>
 	{/if}
 
-	{#if entry.Status === 'Unstarted'}
+	{#if entry.Status === 'Unstarted' && entry.PausedTime < entry.Minutes}
 		<button on:click={toReview}>Start</button>
-	{:else if entry.Status === 'Progressing' || entry.Status === 'Paused'}
+	{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
 		<button on:click={toReview}>Resume</button>
 	{:else if !entry.IsIntro}
 		<button on:click={toRestart}>Restart</button>

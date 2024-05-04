@@ -99,7 +99,7 @@
 				paused = false;
 				transitionTime = 3;
 			}
-		}, 666);
+		}, 800);
 	}
 
 	function pauseStopwatch() {
@@ -169,7 +169,7 @@
 		} catch (err) {
 			console.log(err);
 		} finally {
-			if (status === 'Rated') {
+			if (status === 'Finished') {
 				wipeWorkout();
 				afterWOMessage.set(true);
 			}
@@ -220,14 +220,17 @@
 			error = 'Error loading workout';
 		}
 
-		if (oldTime >= 0) {
+		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
 		}
 		loading = false;
-		startStopwatch();
+		if (!error) {
+			startStopwatch();
+		}
 	});
 
+	// Having old time functions
 	function startAnew() {
 		timeMessage = false;
 		time = 0;
@@ -238,48 +241,60 @@
 
 	function startAtOld() {
 		loading = true;
-		workingTime = 0;
-		timeMessage = false;
+
+		let workingTime = 0;
+		let workingStatus = 'Dynamic';
+		let workingPicIter = 0;
+		let workingSrc =
+			'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
+		let workingSet = 0;
+		let workingActiveTitle = '';
+		let workingPicEndTime = 0;
+		let workingScriptIter = 0;
+		let workingScriptStartTime = 0;
+		let workingScriptEndTime = 0;
+		let workingScriptRest = false;
+
 		while (workingTime < existingTime) {
-			workingTime += 0.05;
-			timeScriptReact();
-			scriptReact();
-			genTimesReact();
+			workingTime += 0.01;
+			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
+				workingScriptStartTime = workingScriptEndTime;
+				workingScriptRest = timescript[workingScriptIter].isrest;
+				workingScriptIter++;
+				workingScriptEndTime = timescript[workingScriptIter].time;
+			}
+
+			if (script && workingTime > workingPicEndTime && workingPicIter + 1 < script.length) {
+				workingSrc = cdn + '/' + script[workingPicIter].position + angle + '-' + size + '.webp';
+				workingActiveTitle = script[workingPicIter].names[0];
+				workingSet = script[workingPicIter].set;
+				workingPicIter++;
+				workingPicEndTime = script[workingPicIter].time;
+			}
+
+			if (genTimes && workingStatus === 'Dynamic' && workingTime > genTimes.static) {
+				workingStatus = 'Static';
+			}
 		}
 		time = workingTime;
+		status = workingStatus;
+		picIter = workingPicIter;
+		src = workingSrc;
+		set = workingSet;
+		activeTitle = workingActiveTitle;
+		picEndTime = workingPicEndTime;
+		scriptIter = workingScriptIter;
+		scriptStartTime = workingScriptStartTime;
+		scriptEndTime = workingScriptEndTime;
+		scriptRest = workingScriptRest;
+
 		updateTime(time, 'stretch');
-		startStopwatch();
 		loading = false;
+		timeMessage = false;
+		startStopwatch();
 	}
 
 	// Reactive statements on time change
-	function timeScriptReact(time) {
-		if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
-			scriptStartTime = scriptEndTime;
-			scriptRest = timescript[scriptIter].isrest;
-			scriptIter++;
-			scriptEndTime = timescript[scriptIter].time;
-		}
-	}
-
-	function scriptReact(time) {
-		if (script && time > picEndTime && picIter + 1 < script.length) {
-			src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
-			activeTitle = script[picIter].names[0]; // Have it so it's just one title in unravel lol
-			set = script[picIter].set;
-			picIter++;
-			picEndTime = script[picIter].time;
-		}
-	}
-
-	function genTimesReact(time) {
-		if (genTimes && status === 'Dynamic' && time > genTimes.static) {
-			status = 'Static';
-		} else if (genTimes && status === 'Static' && time > genTimes.end) {
-			quit('Rated');
-		}
-	}
-
 	$: if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
 		scriptStartTime = scriptEndTime;
 		scriptRest = timescript[scriptIter].isrest;
@@ -298,7 +313,7 @@
 	$: if (genTimes && status === 'Dynamic' && time > genTimes.static) {
 		status = 'Static';
 	} else if (genTimes && status === 'Static' && time > genTimes.end) {
-		quit('Rated');
+		quit('Finished');
 	}
 
 	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {
@@ -342,8 +357,8 @@
 	{/if}
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
-	<div>{formatTime(time)}</div>
-	<TimeProgress current={time} end={genTimes ? genTimes.end : 1}/>
+	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
+	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches:</div>
