@@ -38,7 +38,7 @@
 		unsubscribeWO();
 	});
 
-	let transitionTime = 5;
+	let transitionTime = 3;
 
 	let intervalId;
 	function countDown() {

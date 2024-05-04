@@ -336,6 +336,7 @@
 		</div>
 	{:else}
 		<div>
+			{#if activeTitle === 'Round Rest'}Up Next:{/if}
 			<div>Round {round.round}: {round.sets} Sets</div>
 			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
 			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>

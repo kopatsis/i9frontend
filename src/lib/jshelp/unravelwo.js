@@ -1,10 +1,20 @@
 // @ts-nocheck
 // @ts-ignore
 
-import { currenttime, strRoundsStSet, genTimesStSet, scriptStSet, timescriptStSet, storedWorkoutSet, workoutTypeSet, workoutRoundsStSet, idSet, nameSet } from "$lib/stores/workout";
+import {
+	currenttime,
+	strRoundsStSet,
+	genTimesStSet,
+	scriptStSet,
+	timescriptStSet,
+	storedWorkoutSet,
+	workoutTypeSet,
+	workoutRoundsStSet,
+	idSet,
+	nameSet
+} from '$lib/stores/workout';
 
 export function unravelstretchWO(response) {
-
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -21,7 +31,10 @@ export function unravelstretchWO(response) {
 	if (workout.StaticSamples == null || workout.DynamicSamples == null) {
 		throw new Error('No existing static or dynamic samples');
 	}
-	const strRounds = { static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [] }, dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [] } };
+	const strRounds = {
+		static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [] },
+		dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [] }
+	};
 	const genTimes = { dynamic: 0, static: 0, end: 0 };
 	const script = [];
 	const timescript = [];
@@ -89,10 +102,18 @@ export function unravelstretchWO(response) {
 			}
 		}
 	}
+	timescript.push({ time: runningtime, isrest: false });
+	script.push({
+		time: runningtime,
+		position: 'standing-thumbs-up-wink',
+		set: 0,
+		names: '',
+		reps: [0]
+	});
 
 	genTimes.end = runningtime;
 
-	if (response.PausedTime !== 0){
+	if (response.PausedTime !== 0) {
 		currenttime.set(response.PausedTime);
 	}
 
@@ -101,14 +122,13 @@ export function unravelstretchWO(response) {
 	scriptStSet(script);
 	timescriptStSet(timescript);
 	storedWorkoutSet(response);
-	workoutTypeSet("Stretch");
+	workoutTypeSet('Stretch');
 	idSet(response.workout.ID);
 	nameSet(response.workout.Name);
-	
 }
 
 // @ts-ignore
-export function unravelWO(response, type="Regular") {
+export function unravelWO(response, type = 'Regular') {
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -126,7 +146,11 @@ export function unravelWO(response, type="Regular") {
 	if (workout.StaticSamples == null || workout.DynamicSamples == null) {
 		throw new Error('No existing static or dynamic samples');
 	}
-	const strRounds = { static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [] }, dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [] }, rest: 0 };
+	const strRounds = {
+		static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [] },
+		dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [] },
+		rest: 0
+	};
 	const genTimes = { dynamic: 0, exercises: 0, static: 0, end: 0 };
 	const workoutRounds = [];
 	const script = [];
@@ -185,16 +209,23 @@ export function unravelWO(response, type="Regular") {
 			samples: round.SampleIDs,
 			titles: round.Names,
 			reps: round.Reps,
-			on: round.ExerPerSet, 
+			on: round.ExerPerSet,
 			off: round.RestPerSet,
 			roundrest: round.RestPerRound,
 			start: runningtime
 		});
 
-		if (round.Type == "Split") {
+		if(workoutRounds.length < 2){
+			workoutRounds[0].start -= workout.DynamicRest;
+		} else {
+			workoutRounds[workoutRounds.length-1].start -= workoutRounds[workoutRounds.length-2].roundrest;
+		}
+
+		if (round.Type == 'Split') {
 			let lastEntry = workoutRounds[workoutRounds.length - 1];
-			lastEntry.titles[0] += " (" + (round.SplitPairs[0] ? "2" : "1") + ")";
-			lastEntry.titles[lastEntry.titles.length - 1] += " (" + (round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1") + ")";
+			lastEntry.titles[0] += ' (' + (round.SplitPairs[0] ? '2' : '1') + ')';
+			lastEntry.titles[lastEntry.titles.length - 1] +=
+				' (' + (round.SplitPairs[round.SplitPairs.length - 1] ? '2' : '1') + ')';
 			workoutRounds[workoutRounds.length - 1] = lastEntry;
 		}
 
@@ -203,7 +234,7 @@ export function unravelWO(response, type="Regular") {
 
 			timescript.push({ time: runningtime, isrest: false });
 
-			let startTime = runningtime
+			let startTime = runningtime;
 
 			for (let j = 0; j < set.RepCount; j++) {
 				const rep = set.RepSlice[set.RepSequence[j]];
@@ -213,20 +244,21 @@ export function unravelWO(response, type="Regular") {
 						time: runningtime,
 						position: rep.Positions[k],
 						set: i + 1,
-						names: [round.Names],
+						names: [round.Names]
 					});
 
-					if (round.Type == "Combo") {
+					if (round.Type == 'Combo') {
 						script[script.length - 1].reps = round.Reps;
 					} else {
 						script[script.length - 1].reps = [set.RepCount];
 					}
 
-					if (round.Type == "Split") {
-						let lastEntry = script[script.length - 1]
-						lastEntry.names[0] += " (" + (round.SplitPairs[0] ? "2" : "1") + ")"
-						lastEntry.names[lastEntry.names.length - 1] += " (" + (round.SplitPairs[round.SplitPairs.length - 1] ? "2" : "1") + ")"
-						script[script.length - 1] = lastEntry
+					if (round.Type == 'Split') {
+						let lastEntry = script[script.length - 1];
+						lastEntry.names[0] += ' (' + (round.SplitPairs[0] ? '2' : '1') + ')';
+						lastEntry.names[lastEntry.names.length - 1] +=
+							' (' + (round.SplitPairs[round.SplitPairs.length - 1] ? '2' : '1') + ')';
+						script[script.length - 1] = lastEntry;
 					}
 
 					runningtime += rep.Times[k];
@@ -236,10 +268,10 @@ export function unravelWO(response, type="Regular") {
 				time: runningtime,
 				position: workout.StandingPosition,
 				set: i + 1,
-				names: round.Names,
+				names: round.Names
 			});
 
-			runningtime = round.ExerPerSet + startTime
+			runningtime = round.ExerPerSet + startTime;
 			timescript.push({ time: runningtime, isrest: true });
 
 			if (i === round.SetCount - 1) {
@@ -247,30 +279,29 @@ export function unravelWO(response, type="Regular") {
 					time: runningtime,
 					position: workout.CongratsPosition,
 					set: i + 1,
-					names: ["Congrats"],
+					names: ['Congrats']
 				});
-				runningtime += 1
+				runningtime += 1;
 				script.push({
 					time: runningtime,
 					position: set.RestPosition,
 					set: i + 1,
-					names: ["Round Rest"],
+					names: ['Round Rest']
 				});
-				runningtime += round.RestPerRound - 1
+				runningtime += round.RestPerRound - 1;
 			} else {
 				script.push({
 					time: runningtime,
 					position: workout.StandingPosition,
 					set: i + 1,
-					names: ["Set Rest"],
+					names: ['Set Rest']
 				});
 			}
-			runningtime += round.RestPerSet
-
+			runningtime += round.RestPerSet;
 		}
 	}
 
-	genTimes.static = runningtime
+	genTimes.static = runningtime;
 
 	for (let i = 0; i < staticSlice.length; i++) {
 		const set = staticSlice[i];
@@ -303,9 +334,18 @@ export function unravelWO(response, type="Regular") {
 		}
 	}
 
+	timescript.push({ time: runningtime, isrest: false });
+	script.push({
+		time: runningtime,
+		position: 'standing-thumbs-up-wink',
+		set: 0,
+		names: '',
+		reps: [0]
+	});
+
 	genTimes.end = runningtime;
 
-	if (response.PausedTime !== 0){
+	if (response.PausedTime !== 0) {
 		currenttime.set(response.PausedTime);
 	}
 

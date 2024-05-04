@@ -21,6 +21,8 @@
 	import Imgframe from '../../components/Imgframe.svelte';
 	import Audio from '../Audio.svelte';
 	import { get } from 'svelte/store';
+	import Progress from '../../components/Progress.svelte';
+	import TimeProgress from '../../components/TimeProgress.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -55,6 +57,10 @@
 
 	let audioDisp = false;
 
+	let transitionTime = 3;
+	let transitioning = false;
+	let intervalCountdown;
+
 	// Subscriptions section
 	let timescript;
 	const unsubscribeTimeScript = timescriptSt.subscribe((timescriptSt) => {
@@ -78,11 +84,22 @@
 
 	// Timing functions
 	function startStopwatch() {
-		if (interval === null) {
-			interval = setInterval(() => {
-				time += 0.01;
-			}, 10);
-		}
+		if (intervalCountdown) clearInterval(intervalCountdown);
+		transitioning = true;
+		intervalCountdown = setInterval(() => {
+			transitionTime--;
+			if (transitionTime === 0) {
+				transitioning = false;
+				clearInterval(intervalCountdown);
+				if (interval === null) {
+					interval = setInterval(() => {
+						time += 0.01;
+					}, 10);
+				}
+				paused = false;
+				transitionTime = 3;
+			}
+		}, 666);
 	}
 
 	function pauseStopwatch() {
@@ -110,6 +127,11 @@
 
 		lastCalled = 0;
 		interval = null;
+
+		resetMessage = false;
+
+		startStopwatch();
+		updateTime(time, 'stretch');
 	}
 
 	onDestroy(() => {
@@ -182,22 +204,18 @@
 		console.log(oldTime);
 
 		timescriptStSession();
-		console.log(timescript);
 		if (!timescript) {
 			error = 'Error loading workout';
 		}
 		scriptStSession();
-		console.log(script);
 		if (!script) {
 			error = 'Error loading workout';
 		}
 		strRoundsStSession();
-		console.log(strRounds);
 		if (!strRounds) {
 			error = 'Error loading workout';
 		}
 		genTimesStSession();
-		console.log(genTimes);
 		if (!genTimes) {
 			error = 'Error loading workout';
 		}
@@ -207,27 +225,61 @@
 			existingTime = oldTime;
 		}
 		loading = false;
+		startStopwatch();
 	});
 
 	function startAnew() {
 		timeMessage = false;
 		time = 0;
 		loading = false;
+		updateTime(time, 'stretch');
 		startStopwatch();
 	}
 
 	function startAtOld() {
 		loading = true;
-		time = 0;
+		workingTime = 0;
 		timeMessage = false;
-		while (time < existingTime) {
-			time += 0.05;
+		while (workingTime < existingTime) {
+			workingTime += 0.05;
+			timeScriptReact();
+			scriptReact();
+			genTimesReact();
 		}
-		loading = false;
+		time = workingTime;
+		updateTime(time, 'stretch');
 		startStopwatch();
+		loading = false;
 	}
 
 	// Reactive statements on time change
+	function timeScriptReact(time) {
+		if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
+			scriptStartTime = scriptEndTime;
+			scriptRest = timescript[scriptIter].isrest;
+			scriptIter++;
+			scriptEndTime = timescript[scriptIter].time;
+		}
+	}
+
+	function scriptReact(time) {
+		if (script && time > picEndTime && picIter + 1 < script.length) {
+			src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
+			activeTitle = script[picIter].names[0]; // Have it so it's just one title in unravel lol
+			set = script[picIter].set;
+			picIter++;
+			picEndTime = script[picIter].time;
+		}
+	}
+
+	function genTimesReact(time) {
+		if (genTimes && status === 'Dynamic' && time > genTimes.static) {
+			status = 'Static';
+		} else if (genTimes && status === 'Static' && time > genTimes.end) {
+			quit('Rated');
+		}
+	}
+
 	$: if (timescript && time > scriptEndTime && scriptIter + 1 < timescript.length) {
 		scriptStartTime = scriptEndTime;
 		scriptRest = timescript[scriptIter].isrest;
@@ -280,6 +332,8 @@
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
 		<button on:click={resetStopwatch}>Yes, restart</button>
+	{:else if transitioning}
+		<div>Countdown: {transitionTime}</div>
 	{/if}
 	{#if paused}
 		<button on:click={startStopwatch}>Start</button>
@@ -289,6 +343,7 @@
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
 	<div>{formatTime(time)}</div>
+	<TimeProgress current={time} end={genTimes ? genTimes.end : 1}/>
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches:</div>
