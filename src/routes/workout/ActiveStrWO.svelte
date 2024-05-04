@@ -305,15 +305,15 @@
 		{/if}
 	{:else if status === 'Static'}
 		<div>Static Stretches:</div>
-			<div>
-				<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-				<span>{activeTitle}</span>
-				<button
-					on:click={() => {
-						showCurrentSample(strRounds.static.samples[set - 1]);
-					}}>&#x2139;</button
-				>
-			</div>
+		<div>
+			<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
+			<span>{activeTitle}</span>
+			<button
+				on:click={() => {
+					showCurrentSample(strRounds.static.samples[set - 1]);
+				}}>&#x2139;</button
+			>
+		</div>
 	{/if}
 
 	<br />
