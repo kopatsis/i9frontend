@@ -112,7 +112,7 @@
 		creationType.set('Adapt');
 	}
 
-	const options = [null, 'Low Cortisol', 'Simple', 'Easy', 'Medium', 'Hard', 'Extreme'];
+	const options = ['Intro', 'Stretch', 'Low Cortisol', 'Simple', 'Easy', 'Medium', 'Hard', 'Extreme'];
 </script>
 
 {#if loading}
@@ -126,7 +126,7 @@
 	<div>Date: {formatDateString(entry.Date)}</div>
 	<div>Name: {entry.Name}</div>
 	<div>Status: {entry.Status}</div>
-	<div>Difficulty: {options[entry.Difficulty]}</div>
+	<div>Difficulty: {options[entry.Difficulty+1]}</div>
 	<div>
 		Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
 				entry.Minutes

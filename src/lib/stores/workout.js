@@ -22,6 +22,7 @@ export const updateTime = async (/** @type {number} */ seconds, type="", status=
         const token = await getLoginToken();
         const woID = get(id)
         // @ts-ignore
+        console.log(token, woID, seconds, status, type)
         await patchWorkout(token, woID, seconds, status, type);
     }
 }

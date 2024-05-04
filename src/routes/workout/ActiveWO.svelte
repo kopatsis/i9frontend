@@ -134,7 +134,7 @@
 		clearInterval(interval);
 	});
 
-	function formatTime() {
+	function formatTime(time) {
 		return `${Math.floor(time / 60)} min ${Math.floor(time % 60)} sec`;
 	}
 
@@ -156,9 +156,14 @@
 		clearInterval(interval);
 		interval = null;
 		loading = true;
-		await updateTime(time, '', 'Paused', true);
-		afterWOMessage.set(true);
-		goto(destination);
+		try {
+			await updateTime(time, '', 'Paused', true);
+		} catch (err) {
+			console.log(err);
+		} finally {
+			afterWOMessage.set(true);
+			goto(destination);
+		}
 	}
 
 	function resetQuestion() {
@@ -228,7 +233,6 @@
 		while (time < existingTime) {
 			time += 0.05;
 		}
-		time = workingTime;
 		loading = false;
 		startStopwatch();
 	}
@@ -280,7 +284,7 @@
 	<button on:click={() => goto('./main')}>Create one now</button>
 {:else if timeMessage}
 	<div>
-		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(
+		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min {Math.floor(
 			existingTime % 60
 		)} sec?
 	</div>
@@ -304,19 +308,21 @@
 	{/if}
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
-	<div>{formatTime()}</div>
+	<div>{formatTime(time)}</div>
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches Warmup:</div>
-		<div>
-			<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
-			<span>{activeTitle}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(strRounds.dynamic.samples[set - 1]);
-				}}>&#x2139;</button
-			>
-		</div>
+		{#if activeTitle}
+			<div>
+				<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+				<span>{activeTitle}</span>
+				<button
+					on:click={() => {
+						showCurrentSample(strRounds.dynamic.samples[set - 1]);
+					}}>&#x2139;</button
+				>
+			</div>
+		{/if}
 	{:else if status === 'Static'}
 		<div>Static Stretches Cooldown:</div>
 		<div>

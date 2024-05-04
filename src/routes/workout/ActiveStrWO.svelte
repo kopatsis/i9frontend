@@ -12,7 +12,8 @@
 		genTimesStSession,
 		afterWOMessage,
 		currenttime,
-		currenttimeSession
+		currenttimeSession,
+		wipeWorkout
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -147,6 +148,7 @@
 			console.log(err);
 		} finally {
 			if (status === 'Rated') {
+				wipeWorkout();
 				afterWOMessage.set(true);
 			}
 			goto('./');
@@ -221,7 +223,6 @@
 		while (time < existingTime) {
 			time += 0.05;
 		}
-		time = workingTime;
 		loading = false;
 		startStopwatch();
 	}
@@ -264,7 +265,7 @@
 	<button on:click={() => goto('./main')}>Create one now</button>
 {:else if timeMessage}
 	<div>
-		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min ${Math.floor(
+		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min {Math.floor(
 			existingTime % 60
 		)} sec?
 	</div>
@@ -291,26 +292,28 @@
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches:</div>
-		<div>
-			<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
-			<span>{activeTitle}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(strRounds.dynamic.samples[set - 1]);
-				}}>&#x2139;</button
-			>
-		</div>
+		{#if activeTitle}
+			<div>
+				<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+				<span>{activeTitle}</span>
+				<button
+					on:click={() => {
+						showCurrentSample(strRounds.dynamic.samples[set - 1]);
+					}}>&#x2139;</button
+				>
+			</div>
+		{/if}
 	{:else if status === 'Static'}
 		<div>Static Stretches:</div>
-		<div>
-			<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-			<span>{activeTitle}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(strRounds.static.samples[set - 1]);
-				}}>&#x2139;</button
-			>
-		</div>
+			<div>
+				<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
+				<span>{activeTitle}</span>
+				<button
+					on:click={() => {
+						showCurrentSample(strRounds.static.samples[set - 1]);
+					}}>&#x2139;</button
+				>
+			</div>
 	{/if}
 
 	<br />
@@ -355,7 +358,7 @@
 		}}>Top</button
 	>
 
-	{#if sampleExists}
+	{#if sampleExists && activeTitle}
 		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 	{/if}
 

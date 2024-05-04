@@ -16,6 +16,7 @@ export async function patchWorkout(token, id, seconds, status, type="") {
     
     const bodyObj = {minutes: seconds/60, status: status};
     const url = `${import.meta.env.VITE_BACKEND_URL}/workouts${WOtype}/${id}`;
+	console.log(bodyObj, url)
 	const options = {
 		method: 'PATCH',
 		headers: {
@@ -27,6 +28,9 @@ export async function patchWorkout(token, id, seconds, status, type="") {
 
 	try {
 		const response = await fetch(url, options);
+		if (response.status === 204) {
+			return {};
+		}
 		if (!response.ok) {
 			const resp = await response.json()
 			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
