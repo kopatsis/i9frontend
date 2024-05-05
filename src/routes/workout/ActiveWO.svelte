@@ -23,6 +23,7 @@
 	import Sample from '../Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 	import Audio from '../Audio.svelte';
+	import TimeProgress from '../../components/TimeProgress.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -229,11 +230,10 @@
 		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
-		}
-		loading = false;
-		if (!error) {
+		} else if (!error){
 			startStopwatch();
 		}
+		loading = false;
 	});
 
 	function startAnew() {
@@ -387,13 +387,14 @@
 	{/if}
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
-	<div>{formatTime(time)}</div>
+	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
+	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches Warmup:</div>
 		{#if activeTitle}
 			<div>
-				<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+				<span>{activeTitle === 'Round Rest' ? Math.round(strRounds.rest) : Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
 				<span>{activeTitle}</span>
 				<button
 					on:click={() => {
@@ -415,8 +416,9 @@
 		</div>
 	{:else}
 		<div>
-			{#if activeTitle === 'Round Rest'}Up Next:{/if}
-			<div>Round {round.round}: {round.sets} Sets</div>
+			<div>{#if activeTitle === 'Round Rest'}Up Next:{/if}</div>
+			<div>Round {round.round}:</div>
+			<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
 			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
 			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
 			<div>Type: {round.type}</div>
@@ -438,7 +440,7 @@
 					>
 				</div>
 			{/each}
-			<div>Rest before next round: {Math.round(round.roundrest)}</div>
+			<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
 		</div>
 	{/if}
 

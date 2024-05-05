@@ -15,7 +15,8 @@
 		genTimesStSession,
 		workoutRoundsStSession,
 		roundsSet,
-		wipeWorkout
+		wipeWorkout,
+		currenttime
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -24,6 +25,8 @@
 	import { postIntroRating } from '$lib/jshelp/postwo';
 	import Audio from '../Audio.svelte';
 	import { get } from 'svelte/store';
+	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import TimeProgress from '../../components/TimeProgress.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -167,19 +170,18 @@
 		sampleExists = true;
 	};
 
-	async function quit() {
+	async function quit(rate=true) {
 		loading = true;
-		if (roundIter === 0) {
-			roundIter = 1;
+		if (!rate){
+			updateTime(time, '', 'Paused', true);
+			goto('./');
+			return
 		}
-		const finalRound =
-			roundIter +
-			Math.min(
-				Math.max((time - woRounds[roundIter - 1].start) / (woRounds[roundIter - 1].end - time), 0),
-				1
-			) -
-			1;
 
+		let start = time - woRounds[roundIter].start;
+		start -= roundIter < 1 ? strRounds.rest : woRounds[roundIter-1].roundrest;
+		const end = woRounds[roundIter+1].start - time - woRounds[roundIter].roundrest;
+		const finalRound = roundIter + Math.min(Math.max(start / end, 0), 1);
 		try {
 			const token = await getLoginToken();
 			await postIntroRating(token, finalRound);
@@ -320,11 +322,10 @@
 		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
-		}
-		loading = false;
-		if (!error) {
+		} else if (!error){
 			startStopwatch();
 		}
+		loading = false;
 	});
 
 	// Reactive statements on time change
@@ -383,7 +384,8 @@
 	{#if exitMessage}
 		<div>Are you done with this workout or do you want to keep going?</div>
 		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={quit}>Done</button>
+		<button on:click={() => quit(false)}>Pause and Exit</button>
+		<button on:click={() => quit(true)}>Finish Assessment</button>
 	{:else if resetMessage}
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
@@ -398,13 +400,14 @@
 	{/if}
 	<button on:click={resetQuestion}>Restart</button>
 	<button on:click={exitQuestion}>Quit</button>
-	<div>{formatTime(time)}</div>
+	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
+	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 
 	{#if status === 'Dynamic'}
 		<div>Dynamic Stretches Warmup:</div>
 		{#if activeTitle}
 			<div>
-				<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+				<span>{activeTitle === 'Round Rest' ? Math.round(strRounds.rest) : Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
 				<span>{activeTitle}</span>
 				<button
 					on:click={() => {
@@ -426,8 +429,9 @@
 		</div>
 	{:else}
 		<div>
-			{#if activeTitle === 'Round Rest'}Up Next:{/if}
-			<div>Round {round.round}: {round.sets} Sets</div>
+			<div>{#if activeTitle === 'Round Rest'}Up Next:{/if}</div>
+			<div>Round {round.round}:</div>
+			<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
 			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
 			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
 			<div>Type: {round.type}</div>
@@ -449,7 +453,7 @@
 					>
 				</div>
 			{/each}
-			<div>Rest before next round: {Math.round(round.roundrest)}</div>
+			<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
 		</div>
 	{/if}
 

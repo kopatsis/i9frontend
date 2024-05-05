@@ -223,11 +223,10 @@
 		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
-		}
-		loading = false;
-		if (!error) {
+		} else if (!error){
 			startStopwatch();
 		}
+		loading = false;
 	});
 
 	// Having old time functions

@@ -81,31 +81,33 @@
 
 	<div>Workout Rounds</div>
 	{#each woRounds as round, i}
-		<div>
-			<div>Round {round.round}: {round.sets} Sets</div>
-			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
-			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
-			<div>Type: {round.type}</div>
-			{#if round.type !== 'Combo'}
-				<span
-					>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
-				>
-			{/if}
-			{#each round.samples as sample, j}
-				<div>
-					{#if round.type === 'Combo'}
-						<span>{round.reps[j]}x &nbsp;</span>
-					{/if}
-					<span>{round.titles[j]}</span>
-					<button
-						on:click={() => {
-							showCurrentSample(sample);
-						}}>&#x2139;</button
+		{#if i < 9}
+			<div>
+				<div>Round {round.round}: {round.sets} Sets</div>
+				<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
+				<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+				<div>Type: {round.type}</div>
+				{#if round.type !== 'Combo'}
+					<span
+						>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
 					>
-				</div>
-			{/each}
-			<div>Rest before next round: {Math.round(round.roundrest)}</div>
-		</div>
+				{/if}
+				{#each round.samples as sample, j}
+					<div>
+						{#if round.type === 'Combo'}
+							<span>{round.reps[j]}x &nbsp;</span>
+						{/if}
+						<span>{round.titles[j]}</span>
+						<button
+							on:click={() => {
+								showCurrentSample(sample);
+							}}>&#x2139;</button
+						>
+					</div>
+				{/each}
+				<div>Rest before next round: {Math.round(round.roundrest)}</div>
+			</div>
+		{/if}
 	{/each}
 	<br />
 

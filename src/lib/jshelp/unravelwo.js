@@ -196,8 +196,8 @@ export function unravelWO(response, type = 'Regular') {
 		names: ['Round Rest'],
 		reps: [0]
 	});
-	runningtime += workout.DynamicRest;
 	genTimes.exercises = runningtime;
+	runningtime += workout.DynamicRest;
 	strRounds.rest = workout.DynamicRest;
 
 	for (let h = 0; h < exerRounds.length; h++) {
@@ -301,6 +301,19 @@ export function unravelWO(response, type = 'Regular') {
 			runningtime += round.RestPerSet;
 		}
 	}
+
+	workoutRounds.push({
+		round: 10,
+		sets: 0,
+		type: "",
+		samples: [],
+		titles: [],
+		reps: [],
+		on: 0,
+		off: 0,
+		roundrest: 0,
+		start: runningtime
+	});
 
 	genTimes.static = runningtime;
 
