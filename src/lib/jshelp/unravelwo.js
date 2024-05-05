@@ -2,7 +2,6 @@
 // @ts-ignore
 
 import {
-	currenttime,
 	strRoundsStSet,
 	genTimesStSet,
 	scriptStSet,

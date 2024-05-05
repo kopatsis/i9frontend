@@ -227,7 +227,7 @@
 			error = 'Error loading workout';
 		}
 
-		if (!error && oldTime >= 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
+		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
 		} else if (!error){
