@@ -9,6 +9,7 @@
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import { goto } from '$app/navigation';
+	import MainFooter from '../../components/MainFooter.svelte';
 
 	let current = 'Exercise';
 
@@ -76,7 +77,6 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-<button on:click={() => goto('./')}>Home</button><button on:click={() => goto('./history')}>History</button><br>
 	<button
 		on:click={() => {
 			if (current !== 'Exercise') {
@@ -100,4 +100,4 @@
 		<StrLib library={strs} />
 	{/if}
 {/if}
-<Logout />
+<MainFooter />

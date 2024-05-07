@@ -2,18 +2,14 @@
 	// @ts-nocheck
 
 	import { goto } from '$app/navigation';
-	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import CreateForm from '../../components/CreateForm.svelte';
+	import CreateForm from '../components/CreateForm.svelte';
 	import { user, getUser } from '$lib/stores/user.js';
 	import { adaptID, creationType } from '$lib/stores/creation';
-	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 
 	let loading = true;
-	let local = false;
 	let error = '';
-	// @ts-ignore
-	let firebaseUser = undefined;
 
 	let type = 'Regular';
 	const unsubscribeType = creationType.subscribe((creationType) => {
@@ -43,31 +39,7 @@
 	}
 
 	onMount(() => {
-		setLocalLoginState();
-
-		const unsubLocalLogin = localLogin.subscribe((value) => {
-			local = value;
-			// @ts-ignore
-			if (local && !firebaseUser) {
-				mountCall();
-			}
-		});
-
-		const unsubFirebase = userStore.subscribe((value) => {
-			firebaseUser = value;
-			if (firebaseUser === undefined && !local) {
-				loading = true;
-			} else if (firebaseUser === null && !local) {
-				goto('./login');
-			} else if (firebaseUser) {
-				mountCall();
-			}
-		});
-
-		return () => {
-			unsubLocalLogin();
-			unsubFirebase();
-		};
+		mountCall();
 	});
 </script>
 
@@ -99,7 +71,8 @@
 				if (type !== 'Intro') {
 					creationType.set('Intro');
 				}
-			}}>Intro</button
+			}}
+			>{#if userData.Assessed}Re-Assessment{:else}Assessment{/if}</button
 		>
 	{/if}
 

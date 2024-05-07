@@ -3,7 +3,7 @@
 
 	import { onMount } from 'svelte';
 	import { getUser } from '$lib/stores/user.js';
-	import BodyPInput from '../../components/BodyPInput.svelte';
+	import BodyPInput from './BodyPInput.svelte';
 	import {
 		extractImageList,
 		fetchAdaptWorkout,

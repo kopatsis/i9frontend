@@ -8,6 +8,7 @@
 	import StrWorkoutHist from './StrWorkoutHist.svelte';
 	import { goto } from '$app/navigation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import MainFooter from '../../components/MainFooter.svelte';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -76,7 +77,6 @@
 {:else if error}
 	<div>F: {error}</div>
 {:else}
-<button on:click={() => goto('./')}>Home</button><button on:click={() => goto('./library')}>Library</button><br>
 	<button
 		on:click={() => {
 			if (current !== 'Workout') {
@@ -100,3 +100,4 @@
 		<StrWorkoutHist history={strwos} />
 	{/if}
 {/if}
+<MainFooter />

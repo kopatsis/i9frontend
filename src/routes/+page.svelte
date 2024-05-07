@@ -9,6 +9,7 @@
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import MainFooter from '../components/MainFooter.svelte';
 
 	// @ts-nocheck
 
@@ -97,9 +98,6 @@
 {#if loading}
 	<div>loading...</div>
 {:else}
-	<button on:click={() => goto('./history')}>History</button><button
-		on:click={() => goto('./library')}>Library</button
-	><br />
 	{#if afterWOMTrue}
 		<div>
 			Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
@@ -125,4 +123,6 @@
 	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
 	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
 	<br /><button on:click={() => goto('./settings')}>⚙️</button>
+	<br>
 {/if}
+<MainFooter />

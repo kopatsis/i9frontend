@@ -1,16 +1,12 @@
 <script>
 	// @ts-nocheck
 
-	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { user, getUser } from '$lib/stores/user.js';
 	import { onDestroy, onMount } from 'svelte';
-	import Logout from '../../components/Logout.svelte';
-	import Setting from '../../components/Setting.svelte';
-	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import Logout from '../components/Logout.svelte';
+	import Setting from '../components/Setting.svelte';
 	import { goto } from '$app/navigation';
-
-	let local = false;
-	let firebaseUser = undefined;
 
 	let loading = true;
 	let error = '';
@@ -47,30 +43,7 @@
 	}
 
 	onMount(async () => {
-		setLocalLoginState();
-
-		const unsubLocalLogin = localLogin.subscribe((value) => {
-			local = value;
-			if (local && !firebaseUser) {
-				mountCall();
-			}
-		});
-
-		const unsubFirebase = userStore.subscribe((value) => {
-			firebaseUser = value;
-			if (firebaseUser === undefined && !local) {
-				loading = true;
-			} else if (firebaseUser === null && !local) {
-				goto('./login');
-			} else if (firebaseUser) {
-				mountCall();
-			}
-		});
-
-		return () => {
-			unsubLocalLogin();
-			unsubFirebase();
-		};
+		mountCall();
 	});
 </script>
 
