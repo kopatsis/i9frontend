@@ -6,7 +6,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { afterWOMessage, name, nameSession, workoutType, workoutTypeSession } from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
-	import UserUpdateForm from './UserUpdateForm.svelte';
+	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
 	import { creationType } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 

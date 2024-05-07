@@ -5,7 +5,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import ExerLib from './ExerLib.svelte';
 	import StrLib from './StrLib.svelte';
-	import Logout from '../Logout.svelte';
+	import Logout from '../../components/Logout.svelte';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import { goto } from '$app/navigation';

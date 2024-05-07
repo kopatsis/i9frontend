@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import Sample from '../Sample.svelte';
+	import Sample from '../../popups/Sample.svelte';
 	import ExerEntry from './ExerEntry.svelte';
 
 	export let library = null;

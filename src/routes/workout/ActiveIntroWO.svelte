@@ -20,10 +20,10 @@
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
-	import Sample from '../Sample.svelte';
+	import Sample from '../../popups/Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
 	import { postIntroRating } from '$lib/jshelp/postwo';
-	import Audio from '../Audio.svelte';
+	import Audio from '../../popups/Audio.svelte';
 	import { get } from 'svelte/store';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import TimeProgress from '../../components/TimeProgress.svelte';

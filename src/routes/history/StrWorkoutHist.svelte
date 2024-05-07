@@ -2,7 +2,6 @@
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
 
-	import StrEntry from '../library/StrEntry.svelte';
 	import StrWorkoutEntry from './StrWorkoutEntry.svelte';
 
 	export let history = null;

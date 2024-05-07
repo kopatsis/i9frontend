@@ -7,7 +7,7 @@
 	import { signInWithEmailAndPassword } from 'firebase/auth';
 	import { setLocalLogout } from '$lib/jshelp/localtoken';
 	import { postNewUser } from '$lib/jshelp/user';
-	import Logout from '../Logout.svelte';
+	import Logout from '../../components/Logout.svelte';
   
     let email = '';
     let password = '';

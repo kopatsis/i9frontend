@@ -20,9 +20,9 @@
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import Sample from '../Sample.svelte';
+	import Sample from '../../popups/Sample.svelte';
 	import Imgframe from '../../components/Imgframe.svelte';
-	import Audio from '../Audio.svelte';
+	import Audio from '../../popups/Audio.svelte';
 	import TimeProgress from '../../components/TimeProgress.svelte';
 
 	export let size = 'mid';

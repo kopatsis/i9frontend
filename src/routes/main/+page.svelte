@@ -4,7 +4,6 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import Logout from '../Logout.svelte';
 	import CreateForm from './CreateForm.svelte';
 	import { user, getUser } from '$lib/stores/user.js';
 	import { adaptID, creationType } from '$lib/stores/creation';
@@ -71,8 +70,6 @@
 		};
 	});
 </script>
-
-<Logout />
 
 {#if loading}
 	<div>loading...</div>

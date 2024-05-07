@@ -3,7 +3,7 @@
 
 	import { name, strRoundsSt, strRoundsStSession } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
-	import Sample from '../Sample.svelte';
+	import Sample from '../../popups/Sample.svelte';
 	import { goto } from '$app/navigation';
 
 	let error = '';
