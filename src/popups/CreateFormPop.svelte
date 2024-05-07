@@ -6,7 +6,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import CreateForm from '../components/CreateForm.svelte';
 	import { user, getUser } from '$lib/stores/user.js';
-	import { adaptID, creationType } from '$lib/stores/creation';
+	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 
 	let loading = true;
 	let error = '';
@@ -43,6 +43,7 @@
 	});
 </script>
 
+<button on:click={() => isCreateForm.set(false)}>Close</button>
 {#if loading}
 	<div>loading...</div>
 {:else if error}

@@ -9,6 +9,7 @@
 	import { goto } from '$app/navigation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainFooter from '../../components/MainFooter.svelte';
+	import MainHeader from '../../components/MainHeader.svelte';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -72,6 +73,7 @@
 	});
 </script>
 
+<MainHeader />
 {#if loading}
 	<div>loading...</div>
 {:else if error}

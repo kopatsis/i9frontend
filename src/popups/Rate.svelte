@@ -4,13 +4,17 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { postRating } from '$lib/jshelp/postwo';
+	import { ratingFalse } from '$lib/stores/creation';
 	import {
 		rounds,
 		workoutRoundsSt,
 		id,
 		workoutRoundsStSession,
 		roundsSession,
-		wipeWorkout
+		wipeWorkout,
+
+		afterWOMessage
+
 	} from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
 	import { get } from 'svelte/store';
@@ -72,7 +76,8 @@
 		const woID = get(id);
 		await postRating(token, woID, retVals, favVals);
 		wipeWorkout();
-		goto('./');
+        afterWOMessage.set(true);
+		ratingFalse();
 	}
 </script>
 

@@ -24,6 +24,7 @@
 	import Imgframe from '../../components/Imgframe.svelte';
 	import Audio from '../../popups/Audio.svelte';
 	import TimeProgress from '../../components/TimeProgress.svelte';
+	import { ratingTrue } from '$lib/stores/creation';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -167,7 +168,7 @@
 		sampleExists = true;
 	};
 
-	async function quit(destination = './rate') {
+	async function quit(rate=true) {
 		clearInterval(interval);
 		interval = null;
 		loading = true;
@@ -176,8 +177,12 @@
 		} catch (err) {
 			console.log(err);
 		} finally {
-			afterWOMessage.set(true);
-			goto(destination);
+			if(rate){
+				ratingTrue();
+			} else {
+				afterWOMessage.set(true);
+			}
+			goto('./');
 		}
 	}
 
@@ -371,8 +376,8 @@
 	{#if exitMessage}
 		<div>Are you sure you want to exit?</div>
 		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={quit}>Exit and Rate</button>
-		<button on:click={() => quit('./')}>Exit and Don't Rate</button>
+		<button on:click={() => quit(true)}>Exit and Rate</button>
+		<button on:click={() => quit(false)}>Exit and Don't Rate</button>
 	{:else if resetMessage}
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>

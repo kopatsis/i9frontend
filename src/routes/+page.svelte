@@ -4,14 +4,21 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import { afterWOMessage, name, nameSession, workoutType, workoutTypeSession } from '$lib/stores/workout';
+	import {
+		afterWOMessage,
+		name,
+		nameSession,
+		workoutType,
+		workoutTypeSession
+	} from '$lib/stores/workout';
 	import { getUser, user } from '$lib/stores/user';
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
-	import { creationType } from '$lib/stores/creation';
+	import { creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainFooter from '../components/MainFooter.svelte';
-
-	// @ts-nocheck
+	import MainHeader from '../components/MainHeader.svelte';
+	import Rate from '../popups/Rate.svelte';
+	import CreateFormPop from '../popups/CreateFormPop.svelte';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -40,8 +47,19 @@
 		woName = name;
 	});
 
+	let ratingPop = false;
+	const unsubscribeRating = isRating.subscribe((rating) => {
+		ratingPop = isRating;
+	});
+
+	let createPop = false;
+	const unsubscribeCreate = isCreateForm.subscribe((create) => {
+		createPop = create;
+	});
+
 	function workoutGen(type) {
 		creationType.set(type);
+		createPop.set(true);
 		goto('./main');
 	}
 
@@ -52,6 +70,7 @@
 		uname = userObj && userObj.Name ? userObj.Name : '';
 		workoutTypeSession();
 		nameSession();
+		ratingSession();
 		loading = false;
 	}
 
@@ -91,13 +110,21 @@
 		unsubscribe();
 		unsubscribeWO();
 		unsubscribeName();
+		unsubscribeRating();
+		unsubscribeCreate();
 	});
 </script>
 
-<h1>i9!</h1>
+<MainHeader />
 {#if loading}
 	<div>loading...</div>
 {:else}
+	{#if ratingPop}
+		<Rate />
+	{:else if createPop}
+		<CreateFormPop />
+	{/if}
+
 	{#if afterWOMTrue}
 		<div>
 			Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
@@ -122,7 +149,6 @@
 		>{/if}
 	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
 	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
-	<br /><button on:click={() => goto('./settings')}>⚙️</button>
-	<br>
+	<br />
 {/if}
 <MainFooter />
