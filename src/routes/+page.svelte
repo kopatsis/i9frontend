@@ -49,7 +49,7 @@
 
 	let ratingPop = false;
 	const unsubscribeRating = isRating.subscribe((rating) => {
-		ratingPop = isRating;
+		ratingPop = rating;
 	});
 
 	let createPop = false;
@@ -60,7 +60,6 @@
 	function workoutGen(type) {
 		creationType.set(type);
 		createPop.set(true);
-		goto('./main');
 	}
 
 	async function mountCall() {

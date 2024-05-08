@@ -10,7 +10,7 @@
 
 {#if !history || history.length < 1}
 	<div>No workouts in your history (yet)</div>
-	<button on:click={() => goto('./main')}>Start one now</button>
+	<button on:click={() => goto('./')}>Start one now</button>
 {:else}
 	{#each history as entry (entry.ID)}
 		<StrWorkoutEntry {entry} />

@@ -371,7 +371,7 @@
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else if !timescript || !script || !strRounds || !genTimes || !woRounds}
 	<div>No workout active</div>
-	<button on:click={() => goto('./main')}>Create one now</button>
+	<button on:click={() => goto('./')}>Create one now</button>
 {:else if timeMessage}
 	<div>
 		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min {Math.floor(
