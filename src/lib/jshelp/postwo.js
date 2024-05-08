@@ -64,6 +64,9 @@ export async function postRating(token, id, ratings, faves) {
 
 	try {
 		const response = await fetch(url, options);
+		if (response.status === 204) {
+			return {};
+		}
 		if (!response.ok) {
 			const resp = await response.json()
 			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
@@ -95,6 +98,9 @@ export async function postIntroRating(token, rounds) {
 
 	try {
 		const response = await fetch(url, options);
+		if (response.status === 204) {
+			return {};
+		}
 		if (!response.ok) {
 			const resp = await response.json()
 			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));

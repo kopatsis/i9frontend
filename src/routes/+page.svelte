@@ -59,7 +59,7 @@
 
 	function workoutGen(type) {
 		creationType.set(type);
-		createPop.set(true);
+		isCreateForm.set(true);
 	}
 
 	async function mountCall() {

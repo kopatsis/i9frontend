@@ -266,7 +266,7 @@ export function unravelWO(response, type = 'Regular') {
 			}
 			script.push({
 				time: runningtime,
-				position: workout.StandingPosition,
+				position: set.PositionEnd,
 				set: i + 1,
 				names: round.Names
 			});
@@ -284,7 +284,7 @@ export function unravelWO(response, type = 'Regular') {
 				runningtime += 1;
 				script.push({
 					time: runningtime,
-					position: set.RestPosition,
+					position: round.RestPosition,
 					set: i + 1,
 					names: ['Round Rest']
 				});
