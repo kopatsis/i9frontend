@@ -6,7 +6,7 @@
 	import Signin from './Signin.svelte';
 	import Signup from './Signup.svelte';
 
-	let signInForm = true;
+	let signUpForm = false;
 
 	async function createLocalUser() {
 		const url = `${import.meta.env.VITE_BACKEND_URL}/users/local`;
@@ -45,14 +45,34 @@
 	};
 </script>
 
-<button on:click={() => (signInForm = true)}>Existing Account</button>
-<button on:click={() => (signInForm = false)}>New Account</button>
+<div>
+    <b>i9 Fitness</b>
+</div>
 
-{#if signInForm}
-	<Signin />
-	<button on:click={localLogin}>Use without account</button>
+
+{#if !signUpForm}
+	<Signin bind:signUp={signUpForm} />
+	<button class="link-button" on:click={localLogin}>Use without account</button>
 {:else}
-	<Signup />
+	<Signup bind:signUp={signUpForm}/>
 {/if}
+
+
+<style>
+	.link-button {
+	  background: none;
+	  border: none;
+	  color: rgb(59, 59, 59);
+	  text-decoration: underline;
+	  cursor: pointer;
+	  padding: 0;
+	  font-family: inherit;
+	}
+  
+	.link-button:hover,
+	.link-button:focus {
+	  text-decoration: none;
+	}
+  </style>
 
 

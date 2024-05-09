@@ -1,8 +1,9 @@
 <script>
 	// @ts-nocheck
 
-	import { auth } from "../auth/firebase";
+	import { auth } from '../auth/firebase';
 	import { sendPasswordResetEmail } from 'firebase/auth';
+	import Modal from '../templates/Modal.svelte';
 
 	export let open = true;
 	export let email = '';
@@ -22,29 +23,33 @@
 			successMess();
 		} catch (error) {
 			if (error.code === 'auth/user-not-found') {
-                errorMessage = 'No account found with that email address.';
+				errorMessage = 'No account found with that email address.';
 			} else {
-                errorMessage = error.message;
-            }
+				errorMessage = error.message;
+			}
 			console.error('Login error:', error);
 		}
 	}
-
 </script>
 
-{#if success}
-	<div>Successfully sent reset email to {email}</div>
-{/if}
-
-<form on:submit|preventDefault={sendReset}>
-	<div>
-		<label for="email">Email:</label>
-		<input id="email" type="email" bind:value={email} placeholder="Enter your email" required />
-	</div>
-	<div>
-		<button type="submit">Send Reset Email</button>
-	</div>
-	{#if errorMessage}
-		<p style="color: red;">{errorMessage}</p>
+<Modal bind:open={open}>
+	{#if success}
+		<div>Successfully sent reset email to {email}</div>
 	{/if}
-</form>
+
+	<button on:click={() => (open = false)}>Close</button>
+
+	<form on:submit|preventDefault={sendReset}>
+		<div>
+			<label for="email">Email:</label>
+			<input id="email" type="email" bind:value={email} placeholder="Enter your email" required />
+		</div>
+		<div>
+			<button type="submit">Send Reset Email</button>
+		</div>
+		{#if errorMessage}
+			<p style="color: red;">{errorMessage}</p>
+		{/if}
+	</form>
+	<br />
+</Modal>

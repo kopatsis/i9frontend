@@ -6,6 +6,7 @@
 	import BodyPInput from '../components/BodyPInput.svelte';
 	import { patchUser } from '$lib/jshelp/fetchwo.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
+	import Modal from '../templates/Modal.svelte';
 
 	export let exists = true;
 
@@ -94,66 +95,76 @@
 	$: validTime = minutes > 8 && minutes < 240;
 </script>
 
-<button on:click={() => (exists = false)}>Exit</button>
-{#if loading}
-	<div>loading...</div>
-{:else if error || !userData}
-	<div>F</div>
-	<div>{error}</div>
-{:else}
-	<form on:submit|preventDefault={submitWO}>
-		<div>
-			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s default workout settings:
-			{:else}Your default workout settings:{/if}:
-		</div>
-		<label for="length">Length in minutes (8-240):</label>
-		<input
-			type="number"
-			id="length"
-			name="length input"
-			min="0.0"
-			max="1000.0"
-			step="0.01"
-			bind:value={minutes}
-		/>
-		{#if !validTime}
-			<div>Please enter a time within the range of 8-240 minutes</div>
-		{/if}
+<Modal bind:open={exists}>
+	<button on:click={() => (exists = false)}>Exit</button>
+	{#if loading}
+		<div>loading...</div>
+	{:else if error || !userData}
+		<div>F</div>
+		<div>{error}</div>
+	{:else}
+		<form on:submit|preventDefault={submitWO}>
+			<div>
+				{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s default workout settings:
+				{:else}Your default workout settings:{/if}:
+			</div>
+			<label for="length">Length in minutes (8-240):</label>
+			<input
+				type="number"
+				id="length"
+				name="length input"
+				min="0.0"
+				max="1000.0"
+				step="0.01"
+				bind:value={minutes}
+			/>
+			{#if !validTime}
+				<div>Please enter a time within the range of 8-240 minutes</div>
+			{/if}
 
-		<label for="difficulty">Difficulty Type:</label>
-		<select id="difficulty" bind:value={diff}>
-			<option value="1">Low Cortisol*</option>
-			<option value="2">Simple**</option>
-			<option value="3">Easy</option>
-			<option value="4">Medium</option>
-			<option value="5">Hard</option>
-			<option value="6">Extreme</option>
-		</select>
-		<div>
-			*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving
-		</div>
-		<div>
-			**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones
-		</div>
-		<br />
+			<label for="difficulty">Difficulty Type:</label>
+			<select id="difficulty" bind:value={diff}>
+				<option value="1">Low Cortisol*</option>
+				<option value="2">Simple**</option>
+				<option value="3">Easy</option>
+				<option value="4">Medium</option>
+				<option value="5">Hard</option>
+				<option value="6">Extreme</option>
+			</select>
+			<div>
+				*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving
+			</div>
+			<div>
+				**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones
+			</div>
+			<br />
 
-		<label for="plyo">Plyo Tolerability (0 - 5):</label>
-		<input type="number" id="plyo" name="plyo setting" min="0" max="5" step="1" bind:value={plyo} />
-		<br />
+			<label for="plyo">Plyo Tolerability (0 - 5):</label>
+			<input
+				type="number"
+				id="plyo"
+				name="plyo setting"
+				min="0"
+				max="5"
+				step="1"
+				bind:value={plyo}
+			/>
+			<br />
 
-		<label for="pushup">Pushup Setting:</label>
-		<select bind:value={pushup}>
-			<option value="Regular">Regular</option>
-			<option value="Knee">Knees</option>
-			<option value="Wall">Wall</option>
-		</select>
-		<br />
+			<label for="pushup">Pushup Setting:</label>
+			<select bind:value={pushup}>
+				<option value="Regular">Regular</option>
+				<option value="Knee">Knees</option>
+				<option value="Wall">Wall</option>
+			</select>
+			<br />
 
-		<BodyPInput bind:finalList={bannedParts} />
-		<br />
+			<BodyPInput bind:finalList={bannedParts} />
+			<br />
 
-		{#if anyChanges()}
-			<button type="submit">Submit Changes</button>
-		{/if}
-	</form>
-{/if}
+			{#if anyChanges()}
+				<button type="submit">Submit Changes</button>
+			{/if}
+		</form>
+	{/if}
+</Modal>

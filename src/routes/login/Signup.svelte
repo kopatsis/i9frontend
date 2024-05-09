@@ -7,6 +7,8 @@
 	import { auth } from '../../auth/firebase';
 	import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+	export let signUp = true;
+
 	let password = '';
 	let confirmPassword = '';
 
@@ -71,10 +73,10 @@
 
 <form>
 	<label for="name">Name:</label>
-	<input type="text" id="name" bind:value={name} placeholder="Enter your name (optional)" /><br>
+	<input type="text" id="name" bind:value={name} placeholder="Enter name (optional)" /><br>
 
 	<label for="email">Email:</label>
-	<input type="email" id="email" bind:value={email} placeholder="Enter your email" />
+	<input type="email" id="email" bind:value={email} placeholder="Enter email" />
 	<p>{emailMessage}</p>
 
 	<label for="password">Password:</label>
@@ -85,7 +87,7 @@
 		placeholder="Enter your password"
 		class:hidden={showPassword}
 	/>
-	<input
+	<!-- <input
 		type="text"
 		id="passwordText"
 		bind:value={password}
@@ -94,7 +96,7 @@
 	/>
 	<button on:click|preventDefault={() => (showPassword = !showPassword)}>
 		{showPassword ? 'Hide' : 'Show'} Password
-	</button>
+	</button> -->
 	<p>{lengthMessage}</p>
 	<p>{letterMessage}</p>
 	<p>{numberMessage}</p>
@@ -107,7 +109,7 @@
 		placeholder="Re-enter your password"
 		class:hidden={showConfirmPassword}
 	/>
-	<input
+	<!-- <input
 		type="text"
 		id="confirmPasswordText"
 		bind:value={confirmPassword}
@@ -116,7 +118,7 @@
 	/>
 	<button on:click|preventDefault={() => (showConfirmPassword = !showConfirmPassword)}>
 		{showConfirmPassword ? 'Hide' : 'Show'} Password
-	</button>
+	</button> -->
 	<p>{matchMessage}</p>
 
 	{#if isValidPassword && passwordsMatch && emailValid}
@@ -124,12 +126,31 @@
 		<button on:click|preventDefault={signupFirebase}>Sign Up</button>
 	{:else}
 		<div>Please complete all required fields</div>
-		<button>Sign Up</button>
+		<button type="button">Sign Up</button>
 	{/if}
+
+	<div>
+		<button class="link-button" type="button" on:click={() => (signUp = false)}>Already have an account? Sign in here</button>
+	</div>
 </form>
 
 <style>
 	.hidden {
 		display: none;
 	}
+	.link-button {
+	  background: none;
+	  border: none;
+	  color: rgb(59, 59, 59);
+	  text-decoration: underline;
+	  cursor: pointer;
+	  padding: 0;
+	  font-family: inherit;
+	}
+  
+	.link-button:hover,
+	.link-button:focus {
+	  text-decoration: none;
+	}
+
 </style>

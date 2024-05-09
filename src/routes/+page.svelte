@@ -150,4 +150,5 @@
 	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
 	<br />
 {/if}
+
 <MainFooter />

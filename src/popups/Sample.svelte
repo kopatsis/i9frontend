@@ -4,6 +4,7 @@
 	import { fetchSampleByExt, fetchSample } from '$lib/jshelp/fetchsample';
 	import { preloadSampleImages } from '$lib/jshelp/preloader';
 	import { onMount } from 'svelte';
+	import Modal from '../templates/Modal.svelte';
 
 	export let backendID = '';
 	export let type = 'exercise';
@@ -26,7 +27,7 @@
 	let title = '';
 	let desc = '';
 	let angle = '02';
-    let realTimes = [];
+	let realTimes = [];
 
 	function startStopwatch() {
 		if (interval === null) {
@@ -62,30 +63,30 @@
 		}
 	}
 
-    function processTimes(){
-        if (sampleObj){
-            for (let i = 0; i < sampleObj.Reps.Times.length; i ++){
-                if (i == 0){
-                    realTimes.push(sampleObj.Reps.Times[i]);
-                } else{
-                    realTimes.push(sampleObj.Reps.Times[i] + realTimes[i-1]);
-                }
-            }
-        }
-    }
+	function processTimes() {
+		if (sampleObj) {
+			for (let i = 0; i < sampleObj.Reps.Times.length; i++) {
+				if (i == 0) {
+					realTimes.push(sampleObj.Reps.Times[i]);
+				} else {
+					realTimes.push(sampleObj.Reps.Times[i] + realTimes[i - 1]);
+				}
+			}
+		}
+	}
 
 	onMount(async () => {
 		try {
-			if (sampleID === ''){
+			if (sampleID === '') {
 				sampleObj = await fetchSampleByExt(backendID, type);
 			} else {
 				sampleObj = await fetchSample(sampleID);
 			}
-			
+
 			preloadSampleImages(sampleObj.Reps.Positions, size);
-            processTimes();
-            title = sampleObj.Name;
-            desc = sampleObj.Description;
+			processTimes();
+			title = sampleObj.Name;
+			desc = sampleObj.Description;
 			setImgInit();
 			startStopwatch();
 		} catch (err) {
@@ -96,44 +97,56 @@
 
 	$: if (time > fullTime) {
 		time = 0;
-        i = -1;
+		i = -1;
 		setImg();
 	} else if (time > nextTime && sampleObj) {
 		setImg();
 	}
 </script>
 
-<button on:click={() => (exists = false)}>Exit</button>
-{#if loading}
-	<div>loading...</div>
-{:else if error}
-	<div>F: {error}</div>
-{:else}
-	<h1>{title}</h1>
-	<br />
-	<img {src} alt={title} />
-	<br />
-	<div>
-		{@html desc}
-	</div>
-	<button
-		on:click={() => {
-			changeAngle('01');
-		}}>Left</button
-	>
-	<button on:click={() => {
-        changeAngle('02');
-    }}>Half Left</button>
-	<button on:click={() => {
-        changeAngle('03');
-    }}>Front</button>
-	<button on:click={() => {
-        changeAngle('04');
-    }}>Half Right</button>
-	<button on:click={() => {
-        changeAngle('05');
-    }}>Right</button>
-	<button on:click={() => {
-        changeAngle('06');
-    }}>Top</button>
-{/if}
+<Modal bind:open={exists}>
+	<button on:click={() => (exists = false)}>Exit</button>
+	{#if loading}
+		<div>loading...</div>
+	{:else if error}
+		<div>F: {error}</div>
+	{:else}
+		<h1>{title}</h1>
+		<br />
+		<img {src} alt={title} />
+		<br />
+		<div>
+			{@html desc}
+		</div>
+		<button
+			on:click={() => {
+				changeAngle('01');
+			}}>Left</button
+		>
+		<button
+			on:click={() => {
+				changeAngle('02');
+			}}>Half Left</button
+		>
+		<button
+			on:click={() => {
+				changeAngle('03');
+			}}>Front</button
+		>
+		<button
+			on:click={() => {
+				changeAngle('04');
+			}}>Half Right</button
+		>
+		<button
+			on:click={() => {
+				changeAngle('05');
+			}}>Right</button
+		>
+		<button
+			on:click={() => {
+				changeAngle('06');
+			}}>Top</button
+		>
+	{/if}
+</Modal>
