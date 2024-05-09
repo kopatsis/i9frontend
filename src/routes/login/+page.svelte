@@ -50,8 +50,9 @@
 
 {#if signInForm}
 	<Signin />
+	<button on:click={localLogin}>Use without account</button>
 {:else}
 	<Signup />
 {/if}
 
-<button on:click={localLogin}>Use without account</button>
+
