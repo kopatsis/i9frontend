@@ -6,7 +6,7 @@
 
 <div>
     <button on:click={() => alert('soon... ;)')}>Shop</button>
-    i9 Fitness
+    <b>i9 Fitness</b>
     <button on:click={() => dispSettings = !dispSettings}>⚙️</button>
 </div>
 
