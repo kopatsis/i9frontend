@@ -1,20 +1,30 @@
 <script>
+	// @ts-nocheck
+
 	import { onMount } from 'svelte';
 
 	export let open = true;
 	export let closeable = true;
 	export let display = true;
+	export let closerFunc = null;
+
+	function closerAny() {
+		if (closerFunc) {
+			closerFunc();
+		}
+		if (closeable) {
+			open = false;
+		} else {
+			display = false;
+		}
+	}
 
 	/**
 	 * @param {{ key: string; }} event
 	 */
 	function handleKeydown(event) {
 		if (event.key === 'Escape') {
-			if (closeable) {
-				open = false;
-			} else {
-				display = false;
-			}
+			closerAny()
 		}
 	}
 
@@ -23,11 +33,7 @@
 	 */
 	function handleKeydownOuter(event) {
 		if (event.key === 'Enter') {
-			if (closeable) {
-				open = false;
-			} else {
-				display = false;
-			}
+			closerAny()
 		}
 	}
 
@@ -41,8 +47,8 @@
 
 <div
 	class="backdrop"
-    class:none={!display}
-	on:click={() => (open = false)}
+	class:none={!display}
+	on:click={closerAny}
 	tabindex="0"
 	on:keydown={handleKeydownOuter}
 	role="button"
@@ -54,10 +60,9 @@
 </div>
 
 <style>
-
-    .backdrop.none{
-        display: none;
-    }
+	.backdrop.none {
+		display: none;
+	}
 
 	.backdrop {
 		position: fixed;
@@ -83,8 +88,8 @@
 		flex-direction: column;
 		align-items: center;
 		max-width: 90%;
-        max-height: 90%;
-        overflow-y: scroll;
+		max-height: 90%;
+		overflow-y: scroll;
 		cursor: default;
 	}
 </style>
