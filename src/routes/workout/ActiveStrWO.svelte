@@ -142,7 +142,7 @@
 	});
 
 	function formatTime(time) {
-		return `${Math.floor(Math.round(time) / 60)} min ${Math.floor(time % 60)} sec`;
+		return `${Math.floor(Math.round(time) / 60)} min ${Math.floor(Math.round(time) % 60)} sec`;
 	}
 
 	// Other interactive functions

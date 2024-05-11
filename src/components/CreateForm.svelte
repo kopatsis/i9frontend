@@ -16,6 +16,7 @@
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
+	import { isCreateForm } from '$lib/stores/creation';
 
 	export let formType = 'Regular';
 	export let workoutID = '';
@@ -142,6 +143,7 @@
 			preloadImages(extractImageList(workout));
 			setTimeout(() => {
 				loading = false;
+				isCreateForm.set(false)
 				goto('./review');
 			}, 1000);
 		} catch (err) {

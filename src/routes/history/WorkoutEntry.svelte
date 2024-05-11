@@ -36,12 +36,20 @@
 	function averageRating() {
 		let rating = 0;
 		let i = 0;
-		entry.Exercises.array.forEach((element) => {
-			if (element.Rating > 0) {
-				rating += element.Rating;
-				i++;
-			}
-		});
+		console.log("genuinely kys")
+		console.log(entry);
+		console.log(entry.Exercises);
+		console.log(entry.Exercises[0]);
+		console.log(entry.Exercises[0].Rating);
+		if (entry) {
+			entry.Exercises.forEach((element) => {
+				if (element.Rating > 0) {
+					rating += element.Rating;
+					i++;
+				}
+			});
+		}
+
 		return rating / Math.max(1, i);
 	}
 
