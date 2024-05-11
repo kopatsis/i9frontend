@@ -218,7 +218,7 @@ export function unravelWO(response, type = 'Regular') {
 		if(workoutRounds.length < 2){
 			workoutRounds[0].start -= workout.DynamicRest;
 		} else {
-			workoutRounds[workoutRounds.length-1].start -= workoutRounds[workoutRounds.length-2].roundrest;
+			workoutRounds[workoutRounds.length-1].start -= (workoutRounds[workoutRounds.length-2].roundrest + workoutRounds[workoutRounds.length-2].off);
 		}
 
 		if (round.Type == 'Split') {

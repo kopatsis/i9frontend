@@ -117,6 +117,14 @@
 		interval = null;
 	}
 
+	document.addEventListener('visibilitychange', function () {
+		if (document.visibilityState === 'visible') {
+			startStopwatch();
+		} else {
+			pauseStopwatch();
+		}
+	});
+
 	function resetStopwatch() {
 		paused = true;
 		clearInterval(interval);
@@ -168,7 +176,7 @@
 		sampleExists = true;
 	};
 
-	async function quit(rate=true) {
+	async function quit(rate = true) {
 		clearInterval(interval);
 		interval = null;
 		loading = true;
@@ -177,7 +185,7 @@
 		} catch (err) {
 			console.log(err);
 		} finally {
-			if(rate){
+			if (rate) {
 				ratingTrue();
 			} else {
 				afterWOMessage.set(true);
@@ -235,7 +243,7 @@
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
-		} else if (!error){
+		} else if (!error) {
 			startStopwatch();
 		}
 		loading = false;
@@ -399,7 +407,11 @@
 		<div>Dynamic Stretches Warmup:</div>
 		{#if activeTitle}
 			<div>
-				<span>{activeTitle === 'Round Rest' ? Math.round(strRounds.rest) : Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+				<span
+					>{activeTitle === 'Round Rest'
+						? Math.round(strRounds.rest)
+						: Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span
+				>
 				<span>{activeTitle}</span>
 				<button
 					on:click={() => {
@@ -421,31 +433,37 @@
 		</div>
 	{:else}
 		<div>
-			<div>{#if activeTitle === 'Round Rest'}Up Next:{/if}</div>
-			<div>Round {round.round}:</div>
-			<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
-			<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
-			<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
-			<div>Type: {round.type}</div>
-			{#if round.type !== 'Combo'}
-				<span
-					>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
-				>
-			{/if}
-			{#each round.samples as sample, j}
+			{#if activeTitle === 'Round Rest' && round.round === 9}
+				<div>Nice Job! That's it for the main workout!</div>
+			{:else}
 				<div>
-					{#if round.type === 'Combo'}
-						<span>{round.reps[j]}x &nbsp;</span>
-					{/if}
-					<span>{round.titles[j]}</span>
-					<button
-						on:click={() => {
-							showCurrentSample(sample);
-						}}>&#x2139;</button
-					>
+					{#if activeTitle === 'Round Rest'}Up Next:{/if}
 				</div>
-			{/each}
-			<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
+				<div>Round {round.round}:</div>
+				<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
+				<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
+				<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+				<div>Type: {round.type}</div>
+				{#if round.type !== 'Combo'}
+					<span
+						>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
+					>
+				{/if}
+				{#each round.samples as sample, j}
+					<div>
+						{#if round.type === 'Combo'}
+							<span>{round.reps[j]}x &nbsp;</span>
+						{/if}
+						<span>{round.titles[j]}</span>
+						<button
+							on:click={() => {
+								showCurrentSample(sample);
+							}}>&#x2139;</button
+						>
+					</div>
+				{/each}
+				<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
+			{/if}
 		</div>
 	{/if}
 

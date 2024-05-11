@@ -107,6 +107,14 @@
 		paused = true;
 	}
 
+	document.addEventListener('visibilitychange', function () {
+		if (document.visibilityState === 'visible') {
+			startStopwatch();
+		} else {
+			pauseStopwatch();
+		}
+	});
+
 	function resetStopwatch() {
 		paused = true;
 		clearInterval(interval);
