@@ -16,7 +16,10 @@
 		workoutRoundsStSession,
 		roundsSet,
 		wipeWorkout,
-		currenttime
+		currenttime,
+
+		woIdSession
+
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -31,6 +34,7 @@
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
 	let sampleExists = false;
+	let worker;
 
 	// Variables in presentation section
 	let interval = null;
@@ -102,11 +106,17 @@
 			if (transitionTime === 0) {
 				transitioning = false;
 				clearInterval(intervalCountdown);
-				if (interval === null) {
-					interval = setInterval(() => {
-						time += 0.01;
-					}, 10);
+
+				if (worker) {
+					worker.postMessage({ command: 'start' });
+				} else {
+					if (interval === null) {
+						interval = setInterval(() => {
+							time += 0.01;
+						}, 10);
+					}
 				}
+
 				paused = false;
 				transitionTime = 3;
 			}
@@ -115,22 +125,21 @@
 
 	function pauseStopwatch() {
 		paused = true;
-		clearInterval(interval);
-		interval = null;
+		if (worker) {
+			worker.postMessage({ command: 'pause' });
+		} else {
+			clearInterval(interval);
+			interval = null;
+		}
 	}
 
-	document.addEventListener('visibilitychange', function () {
-		if (document.visibilityState === 'visible') {
-			startStopwatch();
-		} else {
-			pauseStopwatch();
-		}
-	});
-
 	function resetStopwatch() {
-		paused = true;
-		clearInterval(interval);
+		pauseStopwatch();
 		time = 0;
+
+		if (worker) {
+			worker.postMessage({ command: 'reset' });
+		}
 
 		status = 'Dynamic';
 		round = null;
@@ -151,6 +160,14 @@
 		interval = null;
 	}
 
+	function handleVisibilityChange() {
+		if (document.visibilityState === 'visible') {
+			startStopwatch();
+		} else {
+			pauseStopwatch();
+		}
+	}
+
 	onDestroy(() => {
 		unsubscribeTimeScript();
 		unsubscribeScript();
@@ -158,6 +175,10 @@
 		unsubscribeGen();
 		unsubscribeWO();
 		clearInterval(interval);
+		document.removeEventListener('visibilitychange', handleVisibilityChange);
+		if (worker) {
+			worker.terminate();
+		}
 	});
 
 	function formatTime(time) {
@@ -306,6 +327,16 @@
 		currenttimeSession();
 		const oldTime = get(currenttime);
 
+		if (localStorage.getItem('iDIzeJzvXq') === 'dIGdXauHOI') {
+			worker = new Worker(new URL('/timeworker.js', import.meta.url));
+
+			worker.onmessage = function (event) {
+				time = parseFloat(event.data);
+			};
+		} else {
+			document.addEventListener('visibilitychange', handleVisibilityChange);
+		}
+
 		timescriptStSession();
 		if (!timescript) {
 			error = 'Error loading workout';
@@ -326,6 +357,7 @@
 		if (!woRounds) {
 			error = 'Error loading workout';
 		}
+		woIdSession();
 
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;

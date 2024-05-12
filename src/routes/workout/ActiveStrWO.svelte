@@ -29,7 +29,6 @@
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
 	let sampleExists = false;
-	let background = false;
 	let worker;
 
 	// Variables in presentation section
@@ -233,7 +232,6 @@
 		console.log(oldTime);
 
 		if (localStorage.getItem('iDIzeJzvXq') === 'dIGdXauHOI') {
-			background = true;
 			worker = new Worker(new URL('/timeworker.js', import.meta.url));
 
 			worker.onmessage = function (event) {
