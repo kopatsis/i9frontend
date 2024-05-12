@@ -110,7 +110,7 @@
 				paused = false;
 				transitionTime = 3;
 			}
-		}, 800);
+		}, 888);
 	}
 
 	function pauseStopwatch() {

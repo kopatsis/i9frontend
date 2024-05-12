@@ -13,7 +13,10 @@
 		afterWOMessage,
 		currenttime,
 		currenttimeSession,
-		wipeWorkout
+		wipeWorkout,
+
+		woIdSession
+
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -26,6 +29,8 @@
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
 	let sampleExists = false;
+	let background = false;
+	let worker;
 
 	// Variables in presentation section
 	let interval = null;
@@ -90,35 +95,40 @@
 			if (transitionTime === 0) {
 				transitioning = false;
 				clearInterval(intervalCountdown);
-				if (interval === null) {
-					interval = setInterval(() => {
-						time += 0.01;
-					}, 10);
+
+				if (worker) {
+					worker.postMessage({ command: 'start' });
+				} else {
+					if (interval === null) {
+						interval = setInterval(() => {
+							time += 0.01;
+						}, 10);
+					}
 				}
+
 				paused = false;
 				transitionTime = 3;
 			}
-		}, 800);
+		}, 888);
 	}
 
 	function pauseStopwatch() {
-		clearInterval(interval);
-		interval = null;
 		paused = true;
+		if (worker) {
+			worker.postMessage({ command: 'pause' });
+		} else {
+			clearInterval(interval);
+			interval = null;
+		}
 	}
 
-	document.addEventListener('visibilitychange', function () {
-		if (document.visibilityState === 'visible') {
-			startStopwatch();
-		} else {
-			pauseStopwatch();
-		}
-	});
-
 	function resetStopwatch() {
-		paused = true;
-		clearInterval(interval);
+		pauseStopwatch();
 		time = 0;
+
+		if (worker) {
+			worker.postMessage({ command: 'reset' });
+		}
 
 		status = 'Dynamic';
 		picIter = 0;
@@ -141,12 +151,24 @@
 		updateTime(time, 'stretch');
 	}
 
+	function handleVisibilityChange() {
+		if (document.visibilityState === 'visible') {
+			startStopwatch();
+		} else {
+			pauseStopwatch();
+		}
+	}
+
 	onDestroy(() => {
 		unsubscribeTimeScript();
 		unsubscribeScript();
 		unsubscribeSt();
 		unsubscribeGen();
 		clearInterval(interval);
+		document.removeEventListener('visibilitychange', handleVisibilityChange);
+		if (worker) {
+			worker.terminate();
+		}
 	});
 
 	function formatTime(time) {
@@ -210,6 +232,17 @@
 		const oldTime = get(currenttime);
 		console.log(oldTime);
 
+		if (localStorage.getItem('iDIzeJzvXq') === 'dIGdXauHOI') {
+			background = true;
+			worker = new Worker(new URL('/timeworker.js', import.meta.url));
+
+			worker.onmessage = function (event) {
+				time = parseFloat(event.data);
+			};
+		} else {
+			document.addEventListener('visibilitychange', handleVisibilityChange);
+		}
+
 		timescriptStSession();
 		if (!timescript) {
 			error = 'Error loading workout';
@@ -226,11 +259,12 @@
 		if (!genTimes) {
 			error = 'Error loading workout';
 		}
+		woIdSession();
 
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
 			existingTime = oldTime;
-		} else if (!error){
+		} else if (!error) {
 			startStopwatch();
 		}
 		loading = false;

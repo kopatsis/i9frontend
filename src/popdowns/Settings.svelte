@@ -7,6 +7,7 @@
 	import Logout from '../components/Logout.svelte';
 	import Setting from '../components/Setting.svelte';
 	import { goto } from '$app/navigation';
+	import SettingBackground from '../components/SettingBackground.svelte';
 
 	let loading = true;
 	let error = '';
@@ -59,6 +60,9 @@
 	<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 	<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
 	<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
+	<br />
+	<SettingBackground />
+	<br />
 	{#if userData.Paying}
 		<button>Cancel subscription</button>
 	{:else}
