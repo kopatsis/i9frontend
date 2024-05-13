@@ -17,6 +17,8 @@
 	let isUserLoggedIn = false;
 	let forgotPass = false;
 
+	let exUser = null;
+
 	async function signIn() {
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -41,6 +43,7 @@
 	onMount(() => {
 		auth.onAuthStateChanged((user) => {
 			if (user) {
+				exUser = user.email;
 				console.log(user);
 				isUserLoggedIn = true;
 			} else {
@@ -55,10 +58,15 @@
 </script>
 
 {#if isUserLoggedIn}
-	<div>
-		<p>You are already logged in. Would you like to stay signed in?</p>
-		<button on:click={proceed}>Proceed</button>
-		<Logout />
+	<div class="isloggedin">
+		<div>
+			You are already logged in{#if exUser}&nbsp;as {exUser}{/if}.
+		</div>
+		<div>Would you like to stay signed in?</div>
+		<div class="isloggedbuttons">
+			<button class="submit" on:click={proceed}>Sign In</button>
+			<Logout />
+		</div>
 	</div>
 {:else}
 	<div class="loginouter">
@@ -73,7 +81,7 @@
 		{#if errorMessage}
 			<p style="color: red;">{errorMessage}</p>
 		{/if}
-    <div></div>
+		<div></div>
 		<div>
 			<label class="hide" for="email">Email:</label>
 			<input id="email" type="email" bind:value={email} placeholder="Email" required />
@@ -125,29 +133,29 @@
 		justify-content: center;
 	}
 
-  .submit{
-    border-radius: 0px;
-    transition: border-color 150ms ease-in-out 0s;
+	.submit {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
 		font-size: 16px;
-    margin: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    padding-left: 12px;
-    padding-right: 12px;
-    border: 1px solid rgb(137, 151, 155);
-    color: inherit;
-    background-color: transparent;
-    font-weight: normal;
-  }
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
 
-  .submit:hover{
-    background-color: aliceblue;
-  }
+	.submit:hover {
+		background-color: aliceblue;
+	}
 
-  button{
-    cursor: pointer;
-  }
+	button {
+		cursor: pointer;
+	}
 
 	.hide {
 		position: absolute;
@@ -162,18 +170,28 @@
 
 	input {
 		border: 1px solid rgb(137, 151, 155);
-    border-radius: 0px;
+		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
 		font-size: 16px;
-    margin: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
+		margin: 4px;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
-  form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.isloggedin {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.isloggedbuttons {
+		display: flex;
+	}
 </style>

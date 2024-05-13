@@ -20,13 +20,13 @@
 
 	let error = '';
 	let name = '';
+	let passwordActive = false;
 
 	function validateEmail(email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 	}
 
 	$: emailValid = validateEmail(email);
-	$: emailMessage = emailValid ? 'Email is valid' : 'Please enter a valid email address';
 
 	$: hasMinimumLength = password.length >= 10;
 	$: containsLetter = /[a-zA-Z]/.test(password);
@@ -34,18 +34,7 @@
 
 	$: isValidPassword = hasMinimumLength && containsLetter && containsNumber;
 
-	$: passwordsMatch = password === confirmPassword && password !== '';
-
-	$: lengthMessage = hasMinimumLength
-		? 'Length is sufficient.'
-		: 'Password must be at least 10 characters.';
-	$: letterMessage = containsLetter
-		? 'Contains at least one letter.'
-		: 'Password must contain at least one letter.';
-	$: numberMessage = containsNumber
-		? 'Contains at least one number.'
-		: 'Password must contain at least one number.';
-	$: matchMessage = passwordsMatch ? 'Passwords match.' : 'Passwords must match.';
+	$: passwordsMatch = password === confirmPassword || password === '';
 
 	async function signupFirebase() {
 		if (isValidPassword && passwordsMatch && emailValid) {
@@ -86,10 +75,27 @@
 
 	<label class="hide" for="email">Email:</label>
 	<input type="email" id="email" bind:value={email} placeholder="Email" required />
-	<div class="verif">{emailMessage}</div>
 
 	<label class="hide" for="password">Password:</label>
-	<input type="password" id="password" bind:value={password} placeholder="Password" required />
+	<input
+		type="password"
+		id="password"
+		bind:value={password}
+		placeholder="Password"
+		required
+		on:focus={() => (passwordActive = true)}
+		on:blur={() => (passwordActive = false)}
+	/>
+
+	<div class="verif" class:complete={hasMinimumLength}>
+		{#if hasMinimumLength}&check;{:else}&times;{/if} Password must be at least 10 characters
+	</div>
+	<div class="verif" class:complete={containsLetter}>
+		{#if containsLetter}&check;{:else}&times;{/if} Password must contain at least one letter
+	</div>
+	<div class="verif" class:complete={containsNumber}>
+		{#if containsNumber}&check;{:else}&times;{/if} Password must contain at least one number
+	</div>
 
 	<label class="hide" for="confirmPassword">Confirm Password:</label>
 	<input
@@ -99,21 +105,27 @@
 		placeholder="Confirm Password"
 		required
 	/>
-	<div class="verif">{lengthMessage}</div>
-	<div class="verif">{letterMessage}</div>
-	<div class="verif">{numberMessage}</div>
-	<div class="verif">{matchMessage}</div>
 
-	{#if isValidPassword && passwordsMatch && emailValid}
+	<div class="verif" class:invis={(passwordActive && !isValidPassword) || passwordsMatch}>Passwords do not match</div>
+
+	{#if isValidPassword && passwordsMatch && emailValid && name !== ''}
 		<button class="submit" on:click|preventDefault={signupFirebase}>Sign Up</button>
-		<div>Password is valid and confirmed!</div>
+		<div class="verif complete">Ready to submit!</div>
 	{:else}
 		<button class="submit" type="button">Sign Up</button>
-		<div class="verif">Please complete all required fields</div>
+		{#if isValidPassword && passwordsMatch && name !== ''}
+		<div class="verif">Please enter a valid email address</div>
+		{:else}
+			<div class="verif">Please complete all required fields</div>
+		{/if}
 	{/if}
 </form>
 
 <style>
+	.verif.invis {
+		visibility: hidden;
+	}
+
 	.link-button {
 		background: none;
 		border: none;
@@ -197,5 +209,9 @@
 	.verif {
 		font-size: 12px;
 		color: red;
+	}
+
+	.verif.complete {
+		color: green;
 	}
 </style>

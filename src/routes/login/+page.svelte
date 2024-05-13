@@ -46,40 +46,38 @@
 </script>
 
 <div class="loghead">
-    <b class="logheadtxt">i9 Fitness</b>
+	<b class="logheadtxt">i9 Fitness</b>
 </div>
-
 
 {#if !signUpForm}
 	<Signin bind:signUp={signUpForm} />
-	<button class="link-button" on:click={localLogin}>Use without account</button>
 {:else}
-	<Signup bind:signUp={signUpForm}/>
+	<Signup bind:signUp={signUpForm} />
 {/if}
-
+<button class="link-button" on:click={localLogin}>Use without account</button>
 
 <style>
 	.link-button {
-	  background: none;
-	  border: none;
-	  color: rgb(59, 59, 59);
-	  text-decoration: underline;
-	  cursor: pointer;
-	  padding: 0;
-	  font-family: inherit;
-	  position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-	font-size: 16px;
-	}
-  
-	.link-button:hover,
-	.link-button:focus {
-	  text-decoration: none;
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		position: fixed;
+		bottom: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 16px;
 	}
 
-	.loghead{
+	.link-button:hover,
+	.link-button:focus {
+		text-decoration: none;
+	}
+
+	.loghead {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
@@ -87,9 +85,7 @@
 		justify-content: center;
 	}
 
-	.logheadtxt{
+	.logheadtxt {
 		font-size: 28px;
 	}
-  </style>
-
-
+</style>
