@@ -14,9 +14,7 @@
 		currenttime,
 		currenttimeSession,
 		wipeWorkout,
-
 		woIdSession
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -387,14 +385,16 @@
 		<button on:click={resetStopwatch}>Yes, restart</button>
 	{:else if transitioning}
 		<div>Countdown: {transitionTime}</div>
-	{/if}
-	{#if paused}
-		<button on:click={startStopwatch}>Start</button>
 	{:else}
-		<button on:click={pauseStopwatch}>Pause</button>
+		{#if paused}
+			<button on:click={startStopwatch}>Start</button>
+		{:else}
+			<button on:click={pauseStopwatch}>Pause</button>
+		{/if}
+		<button on:click={resetQuestion}>Restart</button>
+		<button on:click={exitQuestion}>Quit</button>
 	{/if}
-	<button on:click={resetQuestion}>Restart</button>
-	<button on:click={exitQuestion}>Quit</button>
+
 	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
 	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 

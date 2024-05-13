@@ -197,16 +197,16 @@
 		sampleExists = true;
 	};
 
-	async function quit(saveTime=false) {
+	async function quit(saveTime = false) {
 		loading = true;
-		if (saveTime){
+		if (saveTime) {
 			await updateTime(time, '', 'Paused', true);
 		}
 		goto('./');
 		return;
 	}
 
-	async function pushRate(){
+	async function pushRate() {
 		let start = time - woRounds[roundIter].start;
 		start -= roundIter < 1 ? strRounds.rest : woRounds[roundIter - 1].roundrest;
 		const end = woRounds[roundIter + 1].start - time - woRounds[roundIter].roundrest;
@@ -216,7 +216,7 @@
 			await postIntroRating(token, finalRound);
 		} catch (err) {
 			console.log(err);
-		} 
+		}
 	}
 
 	function resetQuestion() {
@@ -247,7 +247,7 @@
 		startStopwatch();
 	}
 
-	async function moveToStatics(){
+	async function moveToStatics() {
 		loading = true;
 
 		await pushRate();
@@ -266,7 +266,7 @@
 		let workingRound = round;
 		let workingRoundIter = roundIter;
 
-		while (genTimes && (workingTime > genTimes.static)) {
+		while (genTimes && workingTime > genTimes.static) {
 			workingTime += 0.01;
 
 			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
@@ -465,7 +465,12 @@
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading && status !== 'Static') {
+	$: if (
+		Math.floor(time) !== lastCalled &&
+		Math.floor(time) !== lastCalled + 1 &&
+		!loading &&
+		status !== 'Static'
+	) {
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
@@ -503,16 +508,17 @@
 		<button on:click={resetStopwatch}>Yes, restart</button>
 	{:else if transitioning}
 		<div>Countdown: {transitionTime}</div>
-	{/if}
-	{#if paused}
-		<button on:click={startStopwatch}>Start</button>
 	{:else}
-		<button on:click={pauseStopwatch}>Pause</button>
+		{#if paused}
+			<button on:click={startStopwatch}>Start</button>
+		{:else}
+			<button on:click={pauseStopwatch}>Pause</button>
+		{/if}
+		{#if status !== 'Static'}
+			<button on:click={resetQuestion}>Restart</button>
+		{/if}
+		<button on:click={exitQuestion}>Quit</button>
 	{/if}
-	{#if status !== 'Static'}
-		<button on:click={resetQuestion}>Restart</button>
-	{/if}
-	<button on:click={exitQuestion}>Quit</button>
 	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
 	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 
