@@ -45,8 +45,8 @@
 	};
 </script>
 
-<div>
-    <b>i9 Fitness</b>
+<div class="loghead">
+    <b class="logheadtxt">i9 Fitness</b>
 </div>
 
 
@@ -67,11 +67,28 @@
 	  cursor: pointer;
 	  padding: 0;
 	  font-family: inherit;
+	  position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+	font-size: 16px;
 	}
   
 	.link-button:hover,
 	.link-button:focus {
 	  text-decoration: none;
+	}
+
+	.loghead{
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.logheadtxt{
+		font-size: 28px;
 	}
   </style>
 

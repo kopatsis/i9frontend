@@ -34,7 +34,7 @@
 
 	$: isValidPassword = hasMinimumLength && containsLetter && containsNumber;
 
-	$: passwordsMatch = password === confirmPassword;
+	$: passwordsMatch = password === confirmPassword && password !== '';
 
 	$: lengthMessage = hasMinimumLength
 		? 'Length is sufficient.'
@@ -45,7 +45,7 @@
 	$: numberMessage = containsNumber
 		? 'Contains at least one number.'
 		: 'Password must contain at least one number.';
-	$: matchMessage = passwordsMatch ? 'Passwords match.' : 'Passwords do not match.';
+	$: matchMessage = passwordsMatch ? 'Passwords match.' : 'Passwords must match.';
 
 	async function signupFirebase() {
 		if (isValidPassword && passwordsMatch && emailValid) {
@@ -71,86 +71,131 @@
 	<div>F: {error}</div>
 {/if}
 
+<div class="loginouter">
+	<div class="logintxt">Sign up</div>
+	<div class="signinopt">
+		or <button class="link-button" type="button" on:click={() => (signUp = false)}
+			>use an existing account</button
+		>
+	</div>
+</div>
+
 <form>
-	<label for="name">Name:</label>
-	<input type="text" id="name" bind:value={name} placeholder="Enter name (optional)" /><br>
+	<label class="hide" for="name">Name:</label>
+	<input type="text" id="name" bind:value={name} placeholder="Name" required />
 
-	<label for="email">Email:</label>
-	<input type="email" id="email" bind:value={email} placeholder="Enter email" />
-	<p>{emailMessage}</p>
+	<label class="hide" for="email">Email:</label>
+	<input type="email" id="email" bind:value={email} placeholder="Email" required />
+	<div class="verif">{emailMessage}</div>
 
-	<label for="password">Password:</label>
-	<input
-		type="password"
-		id="password"
-		bind:value={password}
-		placeholder="Enter your password"
-		class:hidden={showPassword}
-	/>
-	<!-- <input
-		type="text"
-		id="passwordText"
-		bind:value={password}
-		placeholder="Enter your password"
-		class:hidden={!showPassword}
-	/>
-	<button on:click|preventDefault={() => (showPassword = !showPassword)}>
-		{showPassword ? 'Hide' : 'Show'} Password
-	</button> -->
-	<p>{lengthMessage}</p>
-	<p>{letterMessage}</p>
-	<p>{numberMessage}</p>
+	<label class="hide" for="password">Password:</label>
+	<input type="password" id="password" bind:value={password} placeholder="Password" required />
 
-	<label for="confirmPassword">Confirm Password:</label>
+	<label class="hide" for="confirmPassword">Confirm Password:</label>
 	<input
 		type="password"
 		id="confirmPassword"
 		bind:value={confirmPassword}
-		placeholder="Re-enter your password"
-		class:hidden={showConfirmPassword}
+		placeholder="Confirm Password"
+		required
 	/>
-	<!-- <input
-		type="text"
-		id="confirmPasswordText"
-		bind:value={confirmPassword}
-		placeholder="Re-enter your password"
-		class:hidden={!showConfirmPassword}
-	/>
-	<button on:click|preventDefault={() => (showConfirmPassword = !showConfirmPassword)}>
-		{showConfirmPassword ? 'Hide' : 'Show'} Password
-	</button> -->
-	<p>{matchMessage}</p>
+	<div class="verif">{lengthMessage}</div>
+	<div class="verif">{letterMessage}</div>
+	<div class="verif">{numberMessage}</div>
+	<div class="verif">{matchMessage}</div>
 
 	{#if isValidPassword && passwordsMatch && emailValid}
+		<button class="submit" on:click|preventDefault={signupFirebase}>Sign Up</button>
 		<div>Password is valid and confirmed!</div>
-		<button on:click|preventDefault={signupFirebase}>Sign Up</button>
 	{:else}
-		<div>Please complete all required fields</div>
-		<button type="button">Sign Up</button>
+		<button class="submit" type="button">Sign Up</button>
+		<div class="verif">Please complete all required fields</div>
 	{/if}
-
-	<div>
-		<button class="link-button" type="button" on:click={() => (signUp = false)}>Already have an account? Sign in here</button>
-	</div>
 </form>
 
 <style>
-	.hidden {
-		display: none;
-	}
 	.link-button {
-	  background: none;
-	  border: none;
-	  color: rgb(59, 59, 59);
-	  text-decoration: underline;
-	  cursor: pointer;
-	  padding: 0;
-	  font-family: inherit;
-	}
-  
-	.link-button:hover,
-	.link-button:focus {
-	  text-decoration: none;
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
 	}
 
+	.link-button:hover,
+	.link-button:focus {
+		text-decoration: none;
+	}
+
+	.logintxt {
+		font-size: 48px;
+	}
+
+	.loginouter {
+		display: flex;
+		min-height: 40dvh;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.submit {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.submit:hover {
+		background-color: aliceblue;
+	}
+
+	button {
+		cursor: pointer;
+	}
+
+	.hide {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		border: 0;
+		clip: rect(0, 0, 0, 0);
+	}
+
+	input {
+		border: 1px solid rgb(137, 151, 155);
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin: 4px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.verif {
+		font-size: 12px;
+		color: red;
+	}
 </style>

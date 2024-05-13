@@ -61,33 +61,34 @@
 		<Logout />
 	</div>
 {:else}
-	<div>Login</div>
+	<div class="loginouter">
+		<div class="logintxt">Sign in</div>
+		<div class="signinopt">
+			or <button class="link-button" type="button" on:click={() => (signUp = true)}
+				>create an account</button
+			>
+		</div>
+	</div>
 	<form on:submit|preventDefault={signIn}>
 		{#if errorMessage}
 			<p style="color: red;">{errorMessage}</p>
 		{/if}
+    <div></div>
 		<div>
-			<label for="email">Email:</label>
-			<input id="email" type="email" bind:value={email} placeholder="Enter your email" required />
+			<label class="hide" for="email">Email:</label>
+			<input id="email" type="email" bind:value={email} placeholder="Email" required />
 		</div>
 		<div>
-			<label for="password">Password:</label>
-			<input
-				id="password"
-				type="password"
-				bind:value={password}
-				placeholder="Enter your password"
-				required
-			/>
+			<label class="hide" for="password">Password:</label>
+			<input id="password" type="password" bind:value={password} placeholder="Password" required />
 		</div>
 		<div>
-			<button type="submit">Sign In</button>
+			<button class="submit" type="submit">Sign In</button>
 		</div>
 		<div>
-			<button class="link-button" type="button" on:click={() => (forgotPass = true)}>Forgot Password?</button>
-		</div>
-		<div>
-			<button class="link-button" type="button" on:click={() => (signUp = true)}>Don't have an account? Sign up here</button>
+			<button class="link-button" type="button" on:click={() => (forgotPass = true)}
+				>Forgot Password?</button
+			>
 		</div>
 		{#if forgotPass}
 			<ForgotPass {email} bind:open={forgotPass} />
@@ -97,17 +98,82 @@
 
 <style>
 	.link-button {
-	  background: none;
-	  border: none;
-	  color: rgb(59, 59, 59);
-	  text-decoration: underline;
-	  cursor: pointer;
-	  padding: 0;
-	  font-family: inherit;
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
 	}
-  
+
 	.link-button:hover,
 	.link-button:focus {
-	  text-decoration: none;
+		text-decoration: none;
 	}
-  </style>
+
+	.logintxt {
+		font-size: 48px;
+	}
+
+	.loginouter {
+		display: flex;
+		min-height: 40dvh;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+  .submit{
+    border-radius: 0px;
+    transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+    margin: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border: 1px solid rgb(137, 151, 155);
+    color: inherit;
+    background-color: transparent;
+    font-weight: normal;
+  }
+
+  .submit:hover{
+    background-color: aliceblue;
+  }
+
+  button{
+    cursor: pointer;
+  }
+
+	.hide {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		border: 0;
+		clip: rect(0, 0, 0, 0);
+	}
+
+	input {
+		border: 1px solid rgb(137, 151, 155);
+    border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+    margin: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+	}
+
+  form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
