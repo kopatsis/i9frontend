@@ -197,14 +197,16 @@
 		sampleExists = true;
 	};
 
-	async function quit(rate = true) {
+	async function quit(saveTime=false) {
 		loading = true;
-		if (!rate) {
-			updateTime(time, '', 'Paused', true);
-			goto('./');
-			return;
+		if (saveTime){
+			await updateTime(time, '', 'Paused', true);
 		}
+		goto('./');
+		return;
+	}
 
+	async function pushRate(){
 		let start = time - woRounds[roundIter].start;
 		start -= roundIter < 1 ? strRounds.rest : woRounds[roundIter - 1].roundrest;
 		const end = woRounds[roundIter + 1].start - time - woRounds[roundIter].roundrest;
@@ -214,11 +216,7 @@
 			await postIntroRating(token, finalRound);
 		} catch (err) {
 			console.log(err);
-		} finally {
-			wipeWorkout();
-			afterWOMessage.set(true);
-			goto('./');
-		}
+		} 
 	}
 
 	function resetQuestion() {
@@ -249,8 +247,10 @@
 		startStopwatch();
 	}
 
-	function moveToStatics(){
+	async function moveToStatics(){
 		loading = true;
+
+		await pushRate();
 
 		let workingTime = time;
 		let workingStatus = status;
@@ -313,10 +313,8 @@
 		round = workingRound;
 		roundIter = workingRoundIter;
 
-		updateTime(time, '', 'Progressing', true);
+		exitMessage = false;
 		loading = false;
-		timeMessage = false; // to new time
-
 		startStopwatch();
 	}
 
@@ -386,8 +384,8 @@
 		roundIter = workingRoundIter;
 
 		updateTime(time, '', 'Progressing', true);
-		loading = false;
 		timeMessage = false;
+		loading = false;
 		startStopwatch();
 	}
 
@@ -467,7 +465,7 @@
 		quit();
 	}
 
-	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {
+	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading && status !== 'Static') {
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
@@ -493,8 +491,12 @@
 	{#if exitMessage}
 		<div>Are you done with this workout or do you want to keep going?</div>
 		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={() => quit(false)}>Pause and Exit</button>
-		<button on:click={() => quit(true)}>Finish Assessment</button>
+		{#if status === 'Static'}
+			<button on:click={quit}>Exit</button>
+		{:else}
+			<button on:click={() => quit(true)}>Pause and Exit</button>
+			<button on:click={() => moveToStatics()}>Finish Assessment</button>
+		{/if}
 	{:else if resetMessage}
 		<div>Are you sure you want restart?</div>
 		<button on:click={returnNoReset}>No, go back</button>
@@ -507,7 +509,9 @@
 	{:else}
 		<button on:click={pauseStopwatch}>Pause</button>
 	{/if}
-	<button on:click={resetQuestion}>Restart</button>
+	{#if status !== 'Static'}
+		<button on:click={resetQuestion}>Restart</button>
+	{/if}
 	<button on:click={exitQuestion}>Quit</button>
 	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
 	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
