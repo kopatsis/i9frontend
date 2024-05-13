@@ -105,7 +105,7 @@
 						>
 					</div>
 				{/each}
-				<div>Rest before next round: {Math.round(round.roundrest)}</div>
+				<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
 				<br><br>
 			</div>
 		{/if}

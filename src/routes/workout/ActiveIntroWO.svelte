@@ -17,9 +17,7 @@
 		roundsSet,
 		wipeWorkout,
 		currenttime,
-
 		woIdSession
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -485,9 +483,15 @@
 				<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
 				<div>Type: {round.type}</div>
 				{#if round.type !== 'Combo'}
-					<span
-						>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
-					>
+					{#if round.reps.length < 2}
+						<span>{round.reps[0]}x &nbsp;</span>
+					{:else if activeTitle === 'Round Rest'}
+						<span>{round.reps[0]}-{round.reps[1]}x &nbsp;</span>
+					{:else if set % 2 == 1}
+						<span>{round.reps[0]}x &nbsp;</span>
+					{:else}
+						<span>{round.reps[1]}x &nbsp;</span>
+					{/if}
 				{/if}
 				{#each round.samples as sample, j}
 					<div>

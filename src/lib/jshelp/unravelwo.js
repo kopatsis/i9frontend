@@ -230,7 +230,17 @@ export function unravelWO(response, type = 'Regular') {
 		}
 
 		for (let i = 0; i < round.SetCount; i++) {
+
 			const set = round.SetSlice[round.SetSequence[i]];
+
+			runningtime--;
+			script.push({
+				time: runningtime,
+				position: set.PositionInit,
+				set: script[script.length-1].set,
+				names: script[script.length-1].set,
+			});
+			runningtime++;
 
 			timescript.push({ time: runningtime, isrest: false });
 
