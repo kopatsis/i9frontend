@@ -249,6 +249,77 @@
 		startStopwatch();
 	}
 
+	function moveToStatics(){
+		loading = true;
+
+		let workingTime = time;
+		let workingStatus = status;
+		let workingPicIter = picIter;
+		let workingSrc = src;
+		let workingSet = set;
+		let workingActiveTitle = activeTitle;
+		let workingPicEndTime = picEndTime;
+		let workingScriptIter = scriptIter;
+		let workingScriptStartTime = scriptStartTime;
+		let workingScriptEndTime = scriptEndTime;
+		let workingScriptRest = scriptRest;
+		let workingRound = round;
+		let workingRoundIter = roundIter;
+
+		while (genTimes && (workingTime > genTimes.static)) {
+			workingTime += 0.01;
+
+			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
+				workingScriptStartTime = workingScriptEndTime;
+				workingScriptRest = timescript[workingScriptIter].isrest;
+				workingScriptIter++;
+				workingScriptEndTime = timescript[workingScriptIter].time;
+			}
+
+			if (script && workingTime > workingPicEndTime && workingPicIter + 1 < script.length) {
+				workingSrc = cdn + '/' + script[workingPicIter].position + angle + '-' + size + '.webp';
+				workingActiveTitle = script[workingPicIter].names[0];
+				workingSet = script[workingPicIter].set;
+				workingPicIter++;
+				workingPicEndTime = script[workingPicIter].time;
+			}
+
+			if (
+				workingRoundIter + 1 < woRounds.length &&
+				workingTime > woRounds[workingRoundIter].start
+			) {
+				workingRound = woRounds[workingRoundIter];
+				roundsSet(workingRoundIter);
+				workingRoundIter++;
+			}
+
+			if (genTimes && workingStatus === 'Dynamic' && workingTime > genTimes.exercises) {
+				workingStatus = 'Exercise';
+			} else if (genTimes && workingStatus === 'Exercise' && workingTime > genTimes.static) {
+				workingStatus = 'Static';
+			}
+		}
+		time = workingTime;
+		status = workingStatus;
+		picIter = workingPicIter;
+		src = workingSrc;
+		set = workingSet;
+		activeTitle = workingActiveTitle;
+		picEndTime = workingPicEndTime;
+		scriptIter = workingScriptIter;
+		scriptStartTime = workingScriptStartTime;
+		scriptEndTime = workingScriptEndTime;
+		scriptRest = workingScriptRest;
+		round = workingRound;
+		roundIter = workingRoundIter;
+
+		updateTime(time, '', 'Progressing', true);
+		loading = false;
+		timeMessage = false; // to new time
+
+		startStopwatch();
+	}
+
 	function startAtOld() {
 		loading = true;
 
