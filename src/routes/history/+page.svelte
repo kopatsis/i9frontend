@@ -74,6 +74,7 @@
 </script>
 
 <MainHeader />
+<div class="headerstupid">
 {#if loading}
 	<div>loading...</div>
 {:else if error}
@@ -102,4 +103,13 @@
 		<StrWorkoutHist history={strwos} />
 	{/if}
 {/if}
+</div>
 <MainFooter />
+<style>
+	.headerstupid {
+		margin-top: 49px;
+		margin-bottom: 44px;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+</style>

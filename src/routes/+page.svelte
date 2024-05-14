@@ -115,6 +115,7 @@
 </script>
 
 <MainHeader />
+<div class="headerstupid">
 {#if loading}
 	<div>loading...</div>
 {:else}
@@ -144,11 +145,18 @@
 		<UserUpdateForm bind:exists={showForm} />
 	{/if}
 
-	{#if userObj?.Assessed}<button on:click={() => workoutGen('Regular')}>Generate Workout</button
-		>{/if}
-	<button on:click={() => workoutGen('Stretch')}>Stretch Workout</button>
-	<button on:click={() => workoutGen('Intro')}>Assessment Workout</button>
-	<br />
-{/if}
 
+	<button on:click={() => workoutGen('Regular')}>Generate Workout</button
+		>
+{/if}
+</div>
 <MainFooter />
+
+<style>
+	.headerstupid {
+		margin-top: 49px;
+		margin-bottom: 44px;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+</style>

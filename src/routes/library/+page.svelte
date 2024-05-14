@@ -45,7 +45,7 @@
 		}
 	}
 
-	onMount( () => {
+	onMount(() => {
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {
@@ -74,32 +74,43 @@
 </script>
 
 <MainHeader />
-{#if loading}
-	<div>loading...</div>
-{:else if error}
-	<div>F: {error}</div>
-{:else}
-	<button
-		on:click={() => {
-			if (current !== 'Exercise') {
-				current = 'Exercise';
-			}
-		}}
-		>{#if current === 'Exercise'}+{/if}Exercises</button
-	>
-	<button
-		on:click={() => {
-			if (current !== 'Stretch') {
-				current = 'Stretch';
-			}
-		}}
-		>{#if current === 'Stretch'}+{/if}Stretches</button
-	>
-
-	{#if current === 'Exercise'}
-		<ExerLib library={exers} />
+<div class="headerstupid">
+	{#if loading}
+		<div>loading...</div>
+	{:else if error}
+		<div>F: {error}</div>
 	{:else}
-		<StrLib library={strs} />
+		<button
+			on:click={() => {
+				if (current !== 'Exercise') {
+					current = 'Exercise';
+				}
+			}}
+			>{#if current === 'Exercise'}+{/if}Exercises</button
+		>
+		<button
+			on:click={() => {
+				if (current !== 'Stretch') {
+					current = 'Stretch';
+				}
+			}}
+			>{#if current === 'Stretch'}+{/if}Stretches</button
+		>
+
+		{#if current === 'Exercise'}
+			<ExerLib library={exers} />
+		{:else}
+			<StrLib library={strs} />
+		{/if}
 	{/if}
-{/if}
+</div>
 <MainFooter />
+
+<style>
+	.headerstupid {
+		margin-top: 49px;
+		margin-bottom: 44px;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+</style>
