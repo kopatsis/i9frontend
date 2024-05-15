@@ -11,7 +11,7 @@
 		workoutType,
 		workoutTypeSession
 	} from '$lib/stores/workout';
-	import { getUser, user, getLastWO } from '$lib/stores/user';
+	import { getUser, user, getLastWO, lastWO } from '$lib/stores/user';
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
 	import { creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
@@ -37,14 +37,9 @@
 		userObj = user;
 	});
 
-	let woType;
-	const unsubscribeWO = workoutType.subscribe((workout) => {
-		woType = workout;
-	});
-
-	let woName = '';
-	const unsubscribeName = name.subscribe((name) => {
-		woName = name;
+	let recentWO;
+	const unsubWO = lastWO.subscribe((wo) => {
+		recentWO = wo;
 	});
 
 	let ratingPop = false;
@@ -60,6 +55,18 @@
 	function workoutGen(type) {
 		creationType.set(type);
 		isCreateForm.set(true);
+	}
+
+	function formatDateString(isoDateString) {
+		const date = new Date(isoDateString);
+		return date.toLocaleString('en-US', {
+			month: '2-digit',
+			day: '2-digit',
+			year: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: true
+		});
 	}
 
 	async function mountCall() {
@@ -108,8 +115,7 @@
 		afterWOMessage.set(false);
 		unsubscribeUser();
 		unsubscribe();
-		unsubscribeWO();
-		unsubscribeName();
+		unsubWO();
 		unsubscribeRating();
 		unsubscribeCreate();
 	});
@@ -145,13 +151,6 @@
 			</div>
 		{/if}
 
-		{#if woType}
-			<div>
-				<button on:click={() => goto('./review')}>Return to last {woType} workout ({woName})</button
-				>
-			</div>
-		{/if}
-
 		<div>
 			<button class="gen" on:click={() => workoutGen('Regular')}>Generate Workout</button>
 		</div>
@@ -161,6 +160,24 @@
 				<button class="edit" on:click={() => (showForm = true)}>Edit Defaults</button>
 			</div>
 		</div>
+
+		<div>
+			{#if recentWO}
+				<div>Your most recent workout details:</div>
+				<div>Name: {recentWO.name}</div>
+				<div>Type: {recentWO.type} workout</div>
+				<div>Date: {formatDateString(recentWO.date)}</div>
+				<div>Status: {recentWO.status}</div>
+				{#if recentWO.stored === true}
+				<div>
+					<button on:click={() => goto('./review')}>Return to Workout</button>
+				</div>
+				{/if}
+			{:else}
+				<div>No workouts generated (yet)</div>
+			{/if}
+		</div>
+		
 	{/if}
 </div>
 <MainFooter />
