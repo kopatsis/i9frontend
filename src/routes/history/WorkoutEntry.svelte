@@ -4,7 +4,7 @@
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
 	import { cloneWorkoutById, extractImageList, getWorkoutById } from '$lib/jshelp/fetchwo';
-	import { adaptID, creationType } from '$lib/stores/creation';
+	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
 
 	export let entry = null;
@@ -116,8 +116,11 @@
 	}
 
 	function toAdapt() {
+		loading = true;
 		adaptID.set(entry.ID);
 		creationType.set('Adapt');
+		isCreateForm.set(true);
+		goto('./');
 	}
 
 	const options = [

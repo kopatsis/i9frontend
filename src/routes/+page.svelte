@@ -4,21 +4,18 @@
 	import { goto } from '$app/navigation';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
-	import {
-		afterWOMessage,
-		name,
-		nameSession,
-		workoutType,
-		workoutTypeSession
-	} from '$lib/stores/workout';
+	import { afterWOMessage, nameSession, workoutTypeSession } from '$lib/stores/workout';
 	import { getUser, user, getLastWO, lastWO } from '$lib/stores/user';
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
-	import { creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
+	import { adaptID, creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainFooter from '../components/MainFooter.svelte';
 	import MainHeader from '../components/MainHeader.svelte';
 	import Rate from '../popups/Rate.svelte';
 	import CreateFormPop from '../popups/CreateFormPop.svelte';
+	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
+	import { preloadImages } from '$lib/jshelp/preloader';
+	import { cloneStretchWorkoutById, cloneWorkoutById, extractImageList, getStretchWorkoutById, getWorkoutById } from '$lib/jshelp/fetchwo';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -26,6 +23,7 @@
 
 	let uname = '';
 	let showForm = false;
+	let error = '';
 
 	let afterWOMTrue = false;
 	const unsubscribe = afterWOMessage.subscribe((afterWOMessage) => {
@@ -67,6 +65,83 @@
 			minute: '2-digit',
 			hour12: true
 		});
+	}
+
+	async function toReview() {
+		loading = true;
+		try {
+			const token = await getLoginToken();
+			const workout = await getWorkoutById(token, recentWO.id);
+			if (recentWO.type === 'Intro') {
+				unravelWO(workout, 'Intro');
+			} else {
+				unravelWO(workout);
+			}
+
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (err) {
+			loading = false;
+			error = err;
+			console.log(err);
+		}
+	}
+
+	async function toRestart() {
+		loading = true;
+		try {
+			const token = await getLoginToken();
+			const workout = await cloneWorkoutById(token, recentWO.id);
+			unravelWO(workout);
+
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (err) {
+			loading = false;
+			error = err;
+			console.log(err);
+		}
+	}
+
+	function toAdapt() {
+		loading = true;
+		adaptID.set(recentWO.id);
+		creationType.set('Adapt');
+		isCreateForm.set(true);
+	}
+
+	async function toReviewSt() {
+		loading = true;
+		try {
+			const token = await getLoginToken();
+			const workout = await getStretchWorkoutById(token, recentWO.id);
+			unravelstretchWO(workout);
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (err) {
+			loading = false;
+			error = err;
+			console.log(err);
+		}
+	}
+
+	async function toRestartSt() {
+		loading = true;
+		try {
+			const token = await getLoginToken();
+			const workout = await cloneStretchWorkoutById(token, recentWO.id);
+			unravelstretchWO(workout);
+			preloadImages(extractImageList(workout));
+			loading = false;
+			goto('./review');
+		} catch (err) {
+			loading = false;
+			error = err;
+			console.log(err);
+		}
 	}
 
 	async function mountCall() {
@@ -125,6 +200,8 @@
 <div class="headerstupid">
 	{#if loading}
 		<div>loading...</div>
+	{:else if error}
+		<div>F: {error}</div>
 	{:else}
 		{#if ratingPop}
 			<Rate />
@@ -169,15 +246,39 @@
 				<div>Date: {formatDateString(recentWO.date)}</div>
 				<div>Status: {recentWO.status}</div>
 				{#if recentWO.stored === true}
-				<div>
-					<button on:click={() => goto('./review')}>Return to Workout</button>
-				</div>
+					<div>
+						<button on:click={() => goto('./review')}>Return to Workout</button>
+					</div>
+				{:else if recentWO.type === 'Stretch'}
+					<div>
+						{#if recentWO.status === 'Unstarted'}
+							<button on:click={toReviewSt}>Start</button>
+						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+							<button on:click={toReviewSt}>Resume</button>
+						{:else}
+							<button on:click={toRestartSt}>Restart</button>
+						{/if}
+					</div>
+				{:else}
+					<div>
+						{#if recentWO.status === 'Unstarted'}
+							<button on:click={toReview}>Start</button>
+						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+							<button on:click={toReview}>Resume</button>
+						{:else if recentWO.type !== 'Intro'}
+							<button on:click={toRestart}>Restart</button>
+							<button on:click={toAdapt}>Adapt*</button>
+							<div>
+								*Adapt means the times and exercises/stretches will be the same, but the reps will
+								be re-calculated to your current level.
+							</div>
+						{/if}
+					</div>
 				{/if}
 			{:else}
 				<div>No workouts generated (yet)</div>
 			{/if}
 		</div>
-		
 	{/if}
 </div>
 <MainFooter />
