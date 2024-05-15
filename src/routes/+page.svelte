@@ -7,7 +7,13 @@
 	import { afterWOMessage, nameSession, workoutTypeSession } from '$lib/stores/workout';
 	import { getUser, user, getLastWO, lastWO } from '$lib/stores/user';
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
-	import { adaptID, creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
+	import {
+		adaptID,
+		creationType,
+		isCreateForm,
+		isRating,
+		ratingSession
+	} from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainFooter from '../components/MainFooter.svelte';
 	import MainHeader from '../components/MainHeader.svelte';
@@ -15,7 +21,13 @@
 	import CreateFormPop from '../popups/CreateFormPop.svelte';
 	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
 	import { preloadImages } from '$lib/jshelp/preloader';
-	import { cloneStretchWorkoutById, cloneWorkoutById, extractImageList, getStretchWorkoutById, getWorkoutById } from '$lib/jshelp/fetchwo';
+	import {
+		cloneStretchWorkoutById,
+		cloneWorkoutById,
+		extractImageList,
+		getStretchWorkoutById,
+		getWorkoutById
+	} from '$lib/jshelp/fetchwo';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -51,7 +63,7 @@
 	});
 
 	function workoutGen() {
-		if(userObj && userObj.Assessed){
+		if (userObj && userObj.Assessed) {
 			creationType.set('Regular');
 		} else {
 			creationType.set('Intro');
@@ -233,12 +245,8 @@
 		{/if}
 
 		<div>
-			<button class="gen" on:click={workoutGen}>Generate Workout</button>
-		</div>
-
-		<div>
 			<div>
-				<button class="edit" on:click={() => (showForm = true)}>Edit Defaults</button>
+				<button class="edit" on:click={() => (showForm = true)}>Edit User Defaults</button>
 			</div>
 		</div>
 
@@ -250,28 +258,28 @@
 				<div>Date: {formatDateString(recentWO.date)}</div>
 				<div>Status: {recentWO.status}</div>
 				{#if recentWO.stored === true}
-					<div>
-						<button on:click={() => goto('./review')}>Return to Workout</button>
+					<div class="recentb">
+						<button class="recentbutton" on:click={() => goto('./review')}>Resume</button>
 					</div>
 				{:else if recentWO.type === 'Stretch'}
-					<div>
+					<div class="recentb">
 						{#if recentWO.status === 'Unstarted'}
-							<button on:click={toReviewSt}>Start</button>
+							<button class="recentbutton" on:click={toReviewSt}>Start</button>
 						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-							<button on:click={toReviewSt}>Resume</button>
+							<button class="recentbutton" on:click={toReviewSt}>Resume</button>
 						{:else}
-							<button on:click={toRestartSt}>Restart</button>
+							<button class="recentbutton" on:click={toRestartSt}>Restart</button>
 						{/if}
 					</div>
 				{:else}
-					<div>
+					<div class="recentb">
 						{#if recentWO.status === 'Unstarted'}
-							<button on:click={toReview}>Start</button>
+							<button class="recentbutton" on:click={toReview}>Start</button>
 						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-							<button on:click={toReview}>Resume</button>
+							<button class="recentbutton" on:click={toReview}>Resume</button>
 						{:else if recentWO.type !== 'Intro'}
-							<button on:click={toRestart}>Restart</button>
-							<button on:click={toAdapt}>Adapt*</button>
+							<button class="recentbutton" on:click={toRestart}>Restart</button>
+							<button class="recentbutton" on:click={toAdapt}>Adapt*</button>
 							<div>
 								*Adapt means the times and exercises/stretches will be the same, but the reps will
 								be re-calculated to your current level.
@@ -280,19 +288,41 @@
 					</div>
 				{/if}
 			{:else}
+				<div>Your most recent workout details:</div>
 				<div>No workouts generated (yet)</div>
 			{/if}
+		</div>
+
+		<div class="maingen">
+			<button class="gen" on:click={workoutGen}>Generate Workout</button>
 		</div>
 	{/if}
 </div>
 <MainFooter />
 
 <style>
+	.recentb{
+		display: flex;
+		justify-content: center;
+	}
+
+	.maingen {
+		/* padding: 20px; */
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 5;
+		position: absolute;
+		bottom: 0;
+		margin-bottom: 54px;
+	}
+
 	.gen {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
-		font-size: 24px;
+		font-size: 28px;
 		margin: 10px;
 		padding-top: 6px;
 		padding-bottom: 6px;
@@ -302,9 +332,11 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
+		z-index: 6;
+		background: white;
 	}
 
-	.edit {
+	.recentbutton{
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
@@ -320,6 +352,23 @@
 		font-weight: normal;
 	}
 
+	.edit {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 18px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+		margin-bottom: 30px;
+	}
+
 	.headerstupid {
 		margin-top: 49px;
 		margin-bottom: 44px;
@@ -332,12 +381,13 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: space-around;
 	}
 
 	.greeting {
 		font-size: 48px;
 		font-weight: lighter;
 		text-align: center;
+		margin-top: 24px;
+		margin-bottom: 24px;
 	}
 </style>
