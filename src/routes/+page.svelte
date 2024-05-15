@@ -11,7 +11,7 @@
 		workoutType,
 		workoutTypeSession
 	} from '$lib/stores/workout';
-	import { getUser, user } from '$lib/stores/user';
+	import { getUser, user, getLastWO } from '$lib/stores/user';
 	import UserUpdateForm from '../popups/UserUpdateForm.svelte';
 	import { creationType, isCreateForm, isRating, ratingSession } from '$lib/stores/creation';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
@@ -65,7 +65,7 @@
 	async function mountCall() {
 		const token = await getLoginToken();
 		console.log(token);
-		await getUser(token);
+		await Promise.all([getUser(token), getLastWO(token)]);
 		uname = userObj && userObj.Name ? userObj.Name : '';
 		console.log(uname);
 		workoutTypeSession();

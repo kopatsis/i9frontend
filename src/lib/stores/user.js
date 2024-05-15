@@ -1,7 +1,21 @@
 // @ts-nocheck
 import { writable, get } from 'svelte/store';
+import { storedWorkout } from './workout';
 
 export const user = writable(null);
+export const lastWO = writable(null);
+
+export async function getLastWO(token){
+    let current = get(storedWorkout)
+    if (current){
+        lastWO.set({
+            name: current.Name
+        })
+    } else {
+        // Query real workout and save w format
+        console.log(token) // so no err for now
+    }
+}
 
 async function fetchUserData(token) {
     console.log(token)
