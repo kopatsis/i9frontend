@@ -4,9 +4,6 @@ import { writable } from "svelte/store";
 export const exercises = writable([]);
 export const stretches = writable([]);
 
-export const filterEx = writable(null);
-export const filterSt = writable(null);
-
 /**
  * Gets library from backend
  *

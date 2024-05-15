@@ -4,6 +4,11 @@ import { get } from 'svelte/store';
 import { localLogin, userStore } from './firebaseuser';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '../../auth/firebase';
+import { user } from '$lib/stores/user';
+import { strworkouts, workouts } from '$lib/stores/history';
+import { ratingFalse } from '$lib/stores/creation';
+import { exercises, stretches } from '$lib/stores/library';
+import { wipeWorkout } from '$lib/stores/workout';
 
 export async function getLoginToken() {
 	const user = get(userStore);
@@ -32,6 +37,13 @@ export function setLocalLoginState(){
 }
 
 export function setLocalLogout(){
+	user.set(null);
+	workouts.set(null);
+	strworkouts.set(null);
+	ratingFalse();
+	exercises.set([]);
+	stretches.set([]);
+	wipeWorkout();
     localStorage.setItem('DgFmTmmfMe', encryption('FALSE'));
     localLogin.set(false);
 }

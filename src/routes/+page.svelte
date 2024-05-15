@@ -65,8 +65,9 @@
 	async function mountCall() {
 		const token = await getLoginToken();
 		console.log(token);
-		getUser(token);
+		await getUser(token);
 		uname = userObj && userObj.Name ? userObj.Name : '';
+		console.log(uname);
 		workoutTypeSession();
 		nameSession();
 		ratingSession();
@@ -116,47 +117,105 @@
 
 <MainHeader />
 <div class="headerstupid">
-{#if loading}
-	<div>loading...</div>
-{:else}
-	{#if ratingPop}
-		<Rate />
-	{:else if createPop}
-		<CreateFormPop />
-	{/if}
-
-	{#if afterWOMTrue}
-		<div>
-			Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
-		</div>
+	{#if loading}
+		<div>loading...</div>
 	{:else}
+		{#if ratingPop}
+			<Rate />
+		{:else if createPop}
+			<CreateFormPop />
+		{:else if showForm}
+			<UserUpdateForm bind:exists={showForm} />
+		{/if}
+
+		{#if afterWOMTrue}
+			<div class="greeting">
+				Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
+			</div>
+		{:else}
+			<div class="greeting">
+				<div>
+					Welcome{#if !uname || uname === 'local'}!{:else},{/if}
+				</div>
+				{#if uname && uname !== 'local'}
+					<div>
+						{uname}
+					</div>
+				{/if}
+			</div>
+		{/if}
+
+		{#if woType}
+			<div>
+				<button on:click={() => goto('./review')}>Return to last {woType} workout ({woName})</button
+				>
+			</div>
+		{/if}
+
 		<div>
-			Welcome{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
+			<button class="gen" on:click={() => workoutGen('Regular')}>Generate Workout</button>
+		</div>
+
+		<div>
+			<div>
+				<button class="edit" on:click={() => (showForm = true)}>Edit Defaults</button>
+			</div>
 		</div>
 	{/if}
-
-	{#if woType}
-		<button on:click={() => goto('./review')}>Return to last {woType} workout ({woName})</button>
-	{/if}
-
-	{#if !showForm}
-		<button on:click={() => (showForm = true)}>Edit Defaults</button>
-	{:else}
-		<UserUpdateForm bind:exists={showForm} />
-	{/if}
-
-
-	<button on:click={() => workoutGen('Regular')}>Generate Workout</button
-		>
-{/if}
 </div>
 <MainFooter />
 
 <style>
+	.gen {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 24px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.edit {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
 	.headerstupid {
 		margin-top: 49px;
 		margin-bottom: 44px;
 		margin-left: 5px;
 		margin-right: 5px;
+		height: calc(100dvh - 93px);
+		width: calc(100dvw - 10px);
+		box-sizing: border-box;
+		overflow-y: scroll;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.greeting {
+		font-size: 48px;
+		font-weight: lighter;
+		text-align: center;
 	}
 </style>
