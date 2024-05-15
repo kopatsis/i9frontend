@@ -66,11 +66,11 @@
 
 	function getFirstExers() {
 		const uniqueStrings = [];
-		for (let round of entry.Exercises) {
+		loop: for (let round of entry.Exercises) {
 			for (let str of round.ExerciseIDs) {
 				if (!uniqueStrings.includes(str)) {
 					uniqueStrings.push(str);
-					if (uniqueStrings.length === 5) break;
+					if (uniqueStrings.length === 5) break loop;
 				}
 			}
 		}

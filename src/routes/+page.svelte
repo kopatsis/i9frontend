@@ -50,8 +50,12 @@
 		createPop = create;
 	});
 
-	function workoutGen(type) {
-		creationType.set(type);
+	function workoutGen() {
+		if(userObj && userObj.Assessed){
+			creationType.set('Regular');
+		} else {
+			creationType.set('Intro');
+		}
 		isCreateForm.set(true);
 	}
 
@@ -229,7 +233,7 @@
 		{/if}
 
 		<div>
-			<button class="gen" on:click={() => workoutGen('Regular')}>Generate Workout</button>
+			<button class="gen" on:click={workoutGen}>Generate Workout</button>
 		</div>
 
 		<div>
