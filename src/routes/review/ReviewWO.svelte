@@ -9,10 +9,8 @@
 		workoutRoundsStSession
 	} from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
-	import Sample from '../../popups/Sample.svelte';
 	import { goto } from '$app/navigation';
-
-	let sampleExists = false;
+	import WoDisp from './WODisp.svelte';
 
 	let error;
 	let strRounds;
@@ -20,17 +18,34 @@
 
 	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
 		strRounds = strRoundsSt;
+		console.log(strRounds)
 	});
 
 	let woRounds;
 	const unsubscribeWO = workoutRoundsSt.subscribe((workoutRoundsSt) => {
 		woRounds = workoutRoundsSt;
+		console.log(woRounds)
 	});
 
 	let woName = '';
 	const unsubscribeName = name.subscribe((name) => {
 		woName = name;
 	});
+
+	let status = 'Unpaid';
+	let iterator = 0;
+
+	function contentAdj(plus = true) {
+		if (plus) {
+			if (!(iterator === 4 && status === 'Paid') && !(iterator === 10)) {
+				iterator++;
+			}
+		} else {
+			if (!(iterator === 0)) {
+				iterator--;
+			}
+		}
+	}
 
 	onDestroy(() => {
 		unsubscribeSt();
@@ -47,14 +62,12 @@
 		if (!strRounds) {
 			error = 'No workout existing';
 		}
+
+		if (localStorage.getItem('stewresf2412sd') === '4325bbfdfgc3') {
+			status = 'Paid';
+		}
 		loading = false;
 	});
-
-	let currentSampleID = '';
-	const showCurrentSample = (sampleID) => {
-		currentSampleID = sampleID;
-		sampleExists = true;
-	};
 </script>
 
 {#if loading}
@@ -63,85 +76,33 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
-	{#if woName}<div>Workout Name: {woName}</div>{/if}
-	<div>Dynamic Stretch Warmup:</div>
-	{#each strRounds.dynamic.times as time, i}
-		<div>
-			<span>{Math.round(time)}s: &nbsp;</span>
-			<span>{strRounds.dynamic.titles[i]}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(strRounds.dynamic.samples[i]);
-				}}>&#x2139;</button
-			>
-		</div>
-	{/each}
-	<div>{Math.round(strRounds.rest)}s: Rest before workout</div>
-	<br />
-
-	<div>Workout Rounds</div>
-	{#each woRounds as round, i}
-		{#if i < 9}
-			<div>
-				<div>Round {round.round}: {round.sets} Sets</div>
-				<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
-				<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
-				<div>Type: {round.type}</div>
-				{#if round.type !== 'Combo'}
-					<span
-						>{round.reps[0]}{#if round.reps.length > 1}-{round.reps[1]}{/if}x &nbsp;</span
-					>
-				{/if}
-				{#each round.samples as sample, j}
-					<div>
-						{#if round.type === 'Combo'}
-							<span>{round.reps[j]}x &nbsp;</span>
-						{/if}
-						<span>{round.titles[j]}</span>
-						<button
-							on:click={() => {
-								showCurrentSample(sample);
-							}}>&#x2139;</button
-						>
-					</div>
-				{/each}
-				<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
-				<br><br>
-			</div>
-		{/if}
-	{/each}
-	<br />
-
-	<div>Static Stretch Cooldown:</div>
-	{#each strRounds.static.times as time, i}
-		<div>
-			<span>{Math.round(time)}s: &nbsp;</span>
-			<span>{strRounds.static.titles[i]}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(strRounds.static.samples[i]);
-				}}>&#x2139;</button
-			>
-		</div>
-	{/each}
-	{#if sampleExists}
-		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
-	{/if}
+	{#if woName}<div class="name">Workout Name: {woName}</div>{/if}
+	<div class="content">
+		<button class="back arr" on:click={() => contentAdj(false)}>
+			{#if iterator === 0}&nbsp;{:else}&lt;{/if}
+		</button>
+		<WoDisp {woRounds} {strRounds} {status} {iterator} />
+		<button class="forw arr" on:click={contentAdj}>
+			{#if (iterator === 4 && status === 'Paid') || iterator === 10}&nbsp;{:else}&gt;{/if}
+		</button>
+	</div>
 {/if}
 
-<div>
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD
-</div>
+<style>
+	.name {
+		text-align: center;
+	}
+
+	.content {
+		display: flex;
+		height: calc(100dvh - 56.25dvw - 98px - 25px);
+	}
+
+	.arr {
+		width: fit-content;
+		height: 100%;
+		background-color: beige;
+		border: none;
+		border-radius: none;
+	}
+</style>

@@ -133,6 +133,7 @@ export const workoutRoundsStSession = () => {
 }
 
 export const workoutTypeSession = () => {
+    console.log(get(workoutType))
     if (get(workoutType) === ''){
         const value = sessionStorage.getItem("workoutType")
         if (!value){
@@ -140,6 +141,7 @@ export const workoutTypeSession = () => {
         }
         workoutType.set(value)
     }
+    console.log(get(workoutType))
 }
 
 export const currenttimeSession = () => {
