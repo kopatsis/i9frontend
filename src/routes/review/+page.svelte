@@ -13,8 +13,10 @@
 	let firebaseUser = undefined;
 	let loading = true;
 
-	let type;
 	let error = '';
+	let status = 'Unpaid';
+
+	let type;
 	const unsubscribe = workoutType.subscribe((woType) => {
 		type = woType;
 		console.log(type);
@@ -24,9 +26,13 @@
 	function mountCall() {
 		workoutTypeSession();
 		if (!type) {
-			console.log('ahah!')
 			error = 'No workout type existing';
 		}
+
+		if (localStorage.getItem('stewresf2412sd') === '4325bbfdfgc3') {
+			status = 'Paid';
+		}
+
 		loading = false;
 	}
 
@@ -59,7 +65,7 @@
 </script>
 
 <MainHeader />
-<div class="headerstupid">
+<div class="headerstupid" class:hswad={status === 'Unpaid'}>
 	{#if loading}
 		<div>loading...</div>
 	{:else if error}
@@ -68,43 +74,52 @@
 	{:else if type === 'Stretch'}
 		<ReviewStrWo />
 	{:else}
-		<ReviewWo />
+		<ReviewWo {status} />
 	{/if}
 </div>
 
-<div class="submit">
-	<button on:click={() => goto('./')}>Discard</button>
-	<button on:click={() => goto('./workout')}>Proceed</button>
-</div>
+{#if !loading}
+	<div class="submit">
+		<button on:click={() => goto('./')}>Discard</button>
+		<button on:click={() => goto('./workout')}>Proceed</button>
+	</div>
+{/if}
 
-<div class="ad">
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-	AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-</div>
+{#if !loading && status === 'Unpaid'}
+	<div class="ad">
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+		AD AD AD AD AD AD AD AD AD AD AD AD AD
+	</div>
+{/if}
 
 <style>
 	.headerstupid {
 		margin-top: 49px;
 		margin-left: 5px;
 		margin-right: 5px;
-		margin-bottom: calc(56.25dvw+49px);
+		height: calc(100dvh - 98px);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hswad{
 		height: calc(100dvh - 56.25dvw - 98px);
 	}
 
 	.submit {
 		height: 49px;
-		margin-bottom: 56.25dvw;
 		display: flex;
 		align-items: center;
 		justify-content: center;

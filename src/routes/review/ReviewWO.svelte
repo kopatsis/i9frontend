@@ -12,6 +12,8 @@
 	import { goto } from '$app/navigation';
 	import WoDisp from './WODisp.svelte';
 
+	export let status = 'Unpaid';
+
 	let error;
 	let strRounds;
 	let loading = true;
@@ -32,7 +34,7 @@
 		woName = name;
 	});
 
-	let status = 'Unpaid';
+	
 	let iterator = 0;
 
 	function contentAdj(plus = true) {
@@ -63,9 +65,6 @@
 			error = 'No workout existing';
 		}
 
-		if (localStorage.getItem('stewresf2412sd') === '4325bbfdfgc3') {
-			status = 'Paid';
-		}
 		loading = false;
 	});
 </script>
@@ -95,7 +94,7 @@
 
 	.content {
 		display: flex;
-		height: calc(100dvh - 56.25dvw - 98px - 25px);
+		flex: 1;
 	}
 
 	.arr {
