@@ -57,8 +57,8 @@
 			favVals.push(3);
 		}
 		roundsSession();
-		workoutRoundsStSession();
-		if (!woRounds) {
+		check = workoutRoundsStSession();
+		if (check === null) {
 			roundsComplete = 0;
 		}
 

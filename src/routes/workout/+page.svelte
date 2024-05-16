@@ -21,7 +21,7 @@
 	onDestroy(unsubscribe);
 
 	function mountCall() {
-		workoutTypeSession();
+		let check = workoutTypeSession();
 		if (!type) {
 			error = 'No workout type existing';
 		}

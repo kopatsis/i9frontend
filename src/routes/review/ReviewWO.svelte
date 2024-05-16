@@ -56,12 +56,12 @@
 	});
 
 	onMount(() => {
-		workoutRoundsStSession();
-		if (!woRounds) {
+		let check = workoutRoundsStSession();
+		if (check === null) {
 			error = 'No workout existing';
 		}
-		strRoundsStSession();
-		if (!strRounds) {
+		check = strRoundsStSession();
+		if (check === null) {
 			error = 'No workout existing';
 		}
 

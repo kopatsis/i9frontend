@@ -56,11 +56,13 @@ export const roundsSession = () => {
     if (get(rounds) === 0){
         const value = sessionStorage.getItem("rounds")
         if (!value){
-            return
+            return null
         }
         const check = Number(value)
         rounds.set(check)
+        return check
     }
+    return get(rounds)
 }
 
 
@@ -68,11 +70,13 @@ export const storedWorkoutSession = () => {
     if (!get(storedWorkout)){
         const value = sessionStorage.getItem("storedWorkout")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
         storedWorkout.set(check)
+        return check
     }
+    return get(storedWorkout)
 }
 
 export const strRoundsStSession = () => {
@@ -80,56 +84,65 @@ export const strRoundsStSession = () => {
     if (!get(strRoundsSt)){
         const value = sessionStorage.getItem("strRoundsSt")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
-        console.log("!!!!!!!!!!", check)
         strRoundsSt.set(check)
+        return check
     }
+    return get(strRoundsSt)
 }
 
 export const scriptStSession = () => {
     if (!get(scriptSt)){
         const value = sessionStorage.getItem("scriptSt")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
         scriptSt.set(check)
+        return check
     }
+    return get(scriptSt)
 }
 
 export const genTimesStSession = () => {
     if (!get(genTimesSt)){
         const value = sessionStorage.getItem("genTimesSt")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
         genTimesSt.set(check)
+        return check
     }
+    return get(genTimesSt)
 }
 
 export const timescriptStSession = () => {
     if (!get(timescriptSt)){
         const value = sessionStorage.getItem("timescriptSt")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
         timescriptSt.set(check)
+        return check
     }
+    return get(timescriptSt)
 }
 
 export const workoutRoundsStSession = () => {
     if (!get(workoutRoundsSt)){
         const value = sessionStorage.getItem("workoutRoundsSt")
         if (!value){
-            return
+            return null
         }
         const check = JSON.parse(value)
         workoutRoundsSt.set(check)
+        return check
     }
+    return get(workoutRoundsSt)
 }
 
 export const workoutTypeSession = () => {
@@ -137,41 +150,48 @@ export const workoutTypeSession = () => {
     if (get(workoutType) === ''){
         const value = sessionStorage.getItem("workoutType")
         if (!value){
-            return
+            return null
         }
         workoutType.set(value)
+        return value
     }
-    console.log(get(workoutType))
+    return get(workoutType)
 }
 
 export const currenttimeSession = () => {
     if (get(currenttime) === 0){
         const value = sessionStorage.getItem("currenttime")
         if (!value || isNaN(Number(value))){
-            return
+            return null
         }
         currenttime.set(Number(value))
+        return value
     }
+    return get(currenttime)
 }
 
 export const woIdSession = () => {
     if (get(id) === ''){
         const value = sessionStorage.getItem("woID")
         if (!value){
-            return
+            return null
         }
         id.set(value)
+        return value
     }
+    return get(id)
 }
 
 export const nameSession = () => {
     if (get(name) === ''){
         const value = sessionStorage.getItem("woName")
         if (!value){
-            return
+            return null
         }
         name.set(value)
+        return value
     }
+    return get(name)
 }
 
 export const storedWorkoutSet = (/** @type {any} */ item) => {

@@ -26,8 +26,8 @@
 	});
 
 	onMount(() => {
-		strRoundsStSession();
-		if (!workout) {
+		let check = strRoundsStSession();
+		if (check === null) {
 			error = 'No workout existing';
 		}
 		loading = false;
