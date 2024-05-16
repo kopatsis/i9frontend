@@ -92,11 +92,13 @@
 		}
 	};
 
-	$: validTime = minutes > 8 && minutes < 240;
+	$: validTime = minutes >= 8 && minutes <= 240;
 </script>
 
 <Modal bind:open={exists}>
-	<button on:click={() => (exists = false)}>Exit</button>
+	<div class="closeline">
+		<button class="link-button" on:click={() => (exists = false)}>&times;</button>
+	</div>
 	{#if loading}
 		<div>loading...</div>
 	{:else if error || !userData}
@@ -105,62 +107,72 @@
 	{:else}
 		<form on:submit|preventDefault={submitWO}>
 			<div>
-				{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s default workout settings:
-				{:else}Your default workout settings:{/if}:
+				<b>
+					{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s default workout
+						settings:
+					{:else}Your default workout settings:{/if}
+				</b>
 			</div>
-			<label for="length">Length in minutes (8-240):</label>
-			<input
-				type="number"
-				id="length"
-				name="length input"
-				min="0.0"
-				max="1000.0"
-				step="0.01"
-				bind:value={minutes}
-			/>
-			{#if !validTime}
-				<div>Please enter a time within the range of 8-240 minutes</div>
-			{/if}
+			<div class="editline">
+				<label for="length">Length in minutes (8-240):</label>
+				<input
+					type="number"
+					id="length"
+					name="length input"
+					min="0.0"
+					max="1000.0"
+					step="0.01"
+					bind:value={minutes}
+				/>
+			</div>
 
-			<label for="difficulty">Difficulty Type:</label>
-			<select id="difficulty" bind:value={diff}>
-				<option value="1">Low Cortisol*</option>
-				<option value="2">Simple**</option>
-				<option value="3">Easy</option>
-				<option value="4">Medium</option>
-				<option value="5">Hard</option>
-				<option value="6">Extreme</option>
-			</select>
-			<div>
+			<div class="editline">
+				<label for="difficulty">Difficulty Type:</label>
+				<select id="difficulty" bind:value={diff}>
+					<option value="1">Low Cortisol</option>
+					<option value="2">Simple</option>
+					<option value="3">Easy</option>
+					<option value="4">Medium</option>
+					<option value="5">Hard</option>
+					<option value="6">Extreme</option>
+				</select>
+			</div>
+
+			<!-- <div>
 				*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving
 			</div>
 			<div>
 				**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones
 			</div>
-			<br />
+			<br /> -->
 
-			<label for="plyo">Plyo Tolerability (0 - 5):</label>
-			<input
-				type="number"
-				id="plyo"
-				name="plyo setting"
-				min="0"
-				max="5"
-				step="1"
-				bind:value={plyo}
-			/>
-			<br />
+			<div class="editline">
+				<label for="plyo">Plyo Tolerability (0 - 5):</label>
+				<input
+					type="number"
+					id="plyo"
+					name="plyo setting"
+					min="0"
+					max="5"
+					step="1"
+					bind:value={plyo}
+				/>
+			</div>
 
-			<label for="pushup">Pushup Setting:</label>
-			<select bind:value={pushup}>
-				<option value="Regular">Regular</option>
-				<option value="Knee">Knees</option>
-				<option value="Wall">Wall</option>
-			</select>
-			<br />
+			<div class="editline">
+				<label for="pushup">Pushup Setting:</label>
+				<select bind:value={pushup}>
+					<option value="Regular">Regular</option>
+					<option value="Knee">Knees</option>
+					<option value="Wall">Wall</option>
+				</select>
+			</div>
 
-			<BodyPInput bind:finalList={bannedParts} />
-			<br />
+			<div class="editline">
+				<BodyPInput bind:finalList={bannedParts} />
+			</div>
+
+			<div class="verif" class:invis={validTime}>Please enter a time in the range of 8-240 minutes</div>
 
 			{#if anyChanges()}
 				<button type="submit">Submit Changes</button>
@@ -168,3 +180,60 @@
 		</form>
 	{/if}
 </Modal>
+
+<style>
+
+	.verif.invis {
+		visibility: hidden;
+	}
+
+	.verif {
+		color: red;
+		margin-bottom: 6px;
+	}
+
+	.editline {
+		margin-top: 8px;
+	}
+
+	.link-button {
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
+		font-size: 24px;
+	}
+
+	.closeline {
+		display: flex;
+		justify-content: right;
+		width: 100%;
+	}
+
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+	select {
+		border-radius: 0;
+		color: inherit;
+		font-size: inherit;
+		border-radius: 0px;
+		border: 1px solid rgb(137, 151, 155);
+	}
+</style>

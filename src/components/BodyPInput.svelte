@@ -86,3 +86,19 @@
 		</li>
 	{/each}
 </ul>
+
+<style>
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 14px;
+		padding: 6px;
+		padding-top: 0px;
+		padding-bottom: 0px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+</style>
