@@ -46,20 +46,35 @@
 		'Planks',
 		'Supermans'
 	];
-
 </script>
 
 <select bind:value={filter}>
-	<option value="">All</option>
+	<option value="">All Exercises</option>
 	{#each exercises as exercise}
 		<option value={exercise}>{exercise}</option>
 	{/each}
 </select>
 
-{#each library.filter((entry) => filter === '' || entry.Parent === filter) as entry (entry.ID)}
-	<ExerEntry {entry} {bodyP} bind:sampleID bind:sampleEx={sampleExists} />
-{/each}
+<div class="grid">
+	{#each library.filter((entry) => filter === '' || entry.Parent === filter) as entry (entry.ID)}
+		<ExerEntry {entry} {bodyP} bind:sampleID bind:sampleEx={sampleExists} />
+	{/each}
 
-{#if sampleExists}
-	<Sample backendID={sampleID} bind:exists={sampleExists} />
-{/if}
+	{#if sampleExists}
+		<Sample backendID={sampleID} bind:exists={sampleExists} />
+	{/if}
+</div>
+
+<style>
+	select {
+		height: 32px;
+		border-radius: 0;
+	}
+
+	.grid {
+		margin-top: 5px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: 0px;
+	}
+</style>

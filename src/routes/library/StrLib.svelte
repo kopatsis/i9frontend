@@ -39,7 +39,7 @@
 </script>
 
 <select bind:value={filter}>
-	<option value="">All</option>
+	<option value="">All Stretches</option>
 	{#each types as type}
 		<option value={type}>{type}</option>
 	{/each}
@@ -52,3 +52,10 @@
 {#if sampleExists}
 	<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} />
 {/if}
+
+<style>
+	select{
+		height: 32px;
+		border-radius: 0;
+	}
+</style>

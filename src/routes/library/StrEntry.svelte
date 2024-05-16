@@ -7,7 +7,7 @@
 	import { stretches } from '$lib/stores/library';
 
 	export let entry;
-	export let bodyP;
+	// export let bodyP;
 	export let sampleID;
 	export let sampleType;
 	export let sampleEx = false;
@@ -45,7 +45,7 @@
 
 <div>Name: {entry.Name}</div>
 <div>Type: {entry.Type}</div>
-<div>
+<!-- <div>
 	Body Parts Used: {#each entry.BodyParts as p, i (p)}
 		<span
 			>{bodyP[p]}
@@ -53,7 +53,7 @@
 			{/if}</span
 		>
 	{/each}
-</div>
+</div> -->
 
 <button
 	on:click={() => {

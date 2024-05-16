@@ -29,6 +29,12 @@
 		strs = stretches;
 	});
 
+	function switchType(type) {
+		if (current !== type) {
+			current = type;
+		}
+	}
+
 	onDestroy(() => {
 		unsubscribeEx();
 		unsubscribeSt();
@@ -80,22 +86,12 @@
 	{:else if error}
 		<div>F: {error}</div>
 	{:else}
-		<button
-			on:click={() => {
-				if (current !== 'Exercise') {
-					current = 'Exercise';
-				}
-			}}
-			>{#if current === 'Exercise'}+{/if}Exercises</button
-		>
-		<button
-			on:click={() => {
-				if (current !== 'Stretch') {
-					current = 'Stretch';
-				}
-			}}
-			>{#if current === 'Stretch'}+{/if}Stretches</button
-		>
+		<button class="changebutton" on:click={() => switchType('Exercise')}>
+			{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
+		</button>
+		<button class="changebutton" on:click={() => switchType('Stretch')}>
+			{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
+		</button>
 
 		{#if current === 'Exercise'}
 			<ExerLib library={exers} />
@@ -112,5 +108,22 @@
 		margin-bottom: 44px;
 		margin-left: 5px;
 		margin-right: 5px;
+	}
+
+	.changebutton {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
 	}
 </style>
