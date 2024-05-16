@@ -81,43 +81,74 @@
 	}
 </script>
 
-{#if loading}
-	<div>loading...</div>
-{:else if error !== ''}
-	<div>F: {error}</div>
-{:else}
-	<div>Date: {formatDateString(entry.Date)}</div>
-	<div>Name: {entry.Name}</div>
-	<div>Status: {entry.Status}</div>
-	<div>
-		Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
-				entry.Minutes
-			)}{/if} / {timeString(entry.Minutes)}
-	</div>
-	{#if !expanded}
-		<div>Dynamic Stretches: {getFirst3(entry.Dynamics)}</div>
-		<div>Static Stretches: {getFirst3(entry.Statics)}</div>
-		<button on:click={() => (expanded = true)}>Expand</button>
+<div class="entry">
+	{#if loading}
+		<div>loading...</div>
+	{:else if error !== ''}
+		<div>F: {error}</div>
 	{:else}
-		<div>Dynamic Warmup:</div>
-		{#each entry.Dynamics as name, i (i)}
-			<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
-		{/each}
+		<div><b>Stretch Workout</b></div>
+		<div>Date: {formatDateString(entry.Date)}</div>
+		<div>Name: {entry.Name}</div>
+		<div>Status: {entry.Status}</div>
+		<div>
+			Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
+					entry.Minutes
+				)}{/if} / {timeString(entry.Minutes)}
+		</div>
+		{#if !expanded}
+			<div>Dynamic Stretches: {getFirst3(entry.Dynamics)}</div>
+			<div>Static Stretches: {getFirst3(entry.Statics)}</div>
+			<button on:click={() => (expanded = true)}>Expand</button>
+		{:else}
+			<br />
+			<div>Dynamic Warmup:</div>
+			{#each entry.Dynamics as name, i (i)}
+				<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
+			{/each}
 
-		<div>Static Cooldown:</div>
-		{#each entry.Statics as name, i (i)}
-			<div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
-		{/each}
-		<button on:click={() => (expanded = false)}>Collapse</button>
+			<br />
+			<div>Static Cooldown:</div>
+			{#each entry.Statics as name, i (i)}
+				<div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
+			{/each}
+			<button on:click={() => (expanded = false)}>Collapse</button>
+		{/if}
+
+		{#if entry.Status === 'Unstarted' && entry.PausedTime < entry.Minutes}
+			<button on:click={toReview}>Start</button>
+		{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
+			<button on:click={toReview}>Resume</button>
+		{:else}
+			<button on:click={toRestart}>Restart</button>
+		{/if}
 	{/if}
+</div>
 
-	{#if entry.Status === 'Unstarted' && entry.PausedTime < entry.Minutes}
-		<button on:click={toReview}>Start</button>
-	{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
-		<button on:click={toReview}>Resume</button>
-	{:else}
-		<button on:click={toRestart}>Restart</button>
-	{/if}
-{/if}
+<style>
+	.entry{
+		margin: 10px;
+		margin-top: 20px;
+		padding: 10px;
+		border-radius: 0px;
+		border: 1px solid rgb(137, 151, 155);
+	}
 
-<br /><br />
+	button {
+		margin-top: 8px;
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+</style>

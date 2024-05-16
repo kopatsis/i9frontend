@@ -1,17 +1,57 @@
 <script>
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
+	import { creationType, isCreateForm } from '$lib/stores/creation';
 
 	import WorkoutEntry from './WorkoutEntry.svelte';
 
 	export let history = null;
+
+	function startOne() {
+		isCreateForm.set(true);
+		goto('./');
+	}
 </script>
 
 {#if !history || history.length < 1}
-	<div>No workouts in your history (yet)</div>
-	<button on:click={() => goto('./')}>Start one now</button>
+	<div class="none">
+		<div class="nonemess">No stretch workouts in your history (yet)</div>
+		<button on:click={startOne}>Start one now</button>
+	</div>
 {:else}
 	{#each history as entry (entry.ID)}
 		<WorkoutEntry {entry} />
 	{/each}
 {/if}
+
+<style>
+	.none {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.nonemess {
+		margin: 4px;
+		margin-bottom: 8px;
+		margin-top: 8px;
+	}
+	
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+</style>

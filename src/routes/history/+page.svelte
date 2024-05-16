@@ -28,6 +28,12 @@
 		strwos = strworkouts;
 	});
 
+	function switchType(type) {
+		if (current !== type) {
+			current = type;
+		}
+	}
+
 	onDestroy(() => {
 		unsubscribeWO();
 		unsubscribeStrWO();
@@ -75,41 +81,63 @@
 
 <MainHeader />
 <div class="headerstupid">
-{#if loading}
-	<div>loading...</div>
-{:else if error}
-	<div>F: {error}</div>
-{:else}
-	<button
-		on:click={() => {
-			if (current !== 'Workout') {
-				current = 'Workout';
-			}
-		}}
-		>{#if current === 'Workout'}+{/if}Workouts</button
-	>
-	<button
-		on:click={() => {
-			if (current !== 'Stretch') {
-				current = 'Stretch';
-			}
-		}}
-		>{#if current === 'Stretch'}+{/if}Stretch Workouts</button
-	>
-
-	{#if current === 'Workout'}
-		<WorkoutHist history={wos} />
+	{#if loading}
+		<div>loading...</div>
+	{:else if error}
+		<div>F: {error}</div>
 	{:else}
-		<StrWorkoutHist history={strwos} />
+		<div class="tabs">
+			<button on:click={() => switchType('Workout')}>
+				{#if current === 'Workout'}
+					<b>Workouts</b>
+				{:else}
+					Workouts
+				{/if}
+			</button>
+			<button on:click={() => switchType('Stretch')}>
+				{#if current === 'Stretch'}
+					<b>Strech Workouts</b>
+				{:else}
+					Strech Workouts
+				{/if}
+			</button>
+		</div>
+
+		{#if current === 'Workout'}
+			<WorkoutHist history={wos} />
+		{:else}
+			<StrWorkoutHist history={strwos} />
+		{/if}
 	{/if}
-{/if}
 </div>
 <MainFooter />
+
 <style>
+	.tabs{
+		display: flex;
+		justify-content: center;
+	}
+
 	.headerstupid {
 		margin-top: 49px;
 		margin-bottom: 44px;
 		margin-left: 5px;
 		margin-right: 5px;
+	}
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
 	}
 </style>

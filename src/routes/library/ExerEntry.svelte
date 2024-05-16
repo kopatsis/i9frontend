@@ -177,7 +177,13 @@
 		justify-content: center;
 	}
 
-	select{
+	select {
 		margin-bottom: 5px;
+		border-radius: 0;
+		color: inherit;
+		font-size: inherit;
+		/* background-color: inherit; */
+		border-radius: 0px;
+		border: 1px solid rgb(137, 151, 155);
 	}
 </style>
