@@ -35,7 +35,6 @@
 	];
 
 	const types = ['Dynamic', 'Static'];
-
 </script>
 
 <select bind:value={filter}>
@@ -45,17 +44,26 @@
 	{/each}
 </select>
 
-{#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
-	<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType bind:sampleEx={sampleExists} />
-{/each}
+<div class="grid">
+	{#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
+		<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType bind:sampleEx={sampleExists} />
+	{/each}
 
-{#if sampleExists}
-	<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} />
-{/if}
+	{#if sampleExists}
+		<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} />
+	{/if}
+</div>
 
 <style>
-	select{
+	select {
 		height: 32px;
 		border-radius: 0;
+	}
+
+	.grid {
+		margin-top: 5px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: 0px;
 	}
 </style>
