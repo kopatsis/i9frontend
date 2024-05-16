@@ -7,11 +7,6 @@
 	export let iterator = 0;
 	export let status = 'Unpaid';
 
-	console.log(woRounds);
-	console.log(strRounds);
-	console.log(iterator);
-	console.log(status);
-
 	let sampleExists = false;
 	let currentSampleID = '';
 	const showCurrentSample = (sampleID) => {
@@ -134,5 +129,6 @@
 <style>
     .rounddisp{
         flex: 1;
+        overflow-y: scroll;
     }
 </style>

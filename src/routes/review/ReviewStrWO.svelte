@@ -3,12 +3,12 @@
 
 	import { name, strRoundsSt, strRoundsStSession } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
-	import Sample from '../../popups/Sample.svelte';
 	import { goto } from '$app/navigation';
+	import StrWoDisp from './StrWODisp.svelte';
 
 	let error = '';
-	let sampleExists = false;
 	let loading = true;
+	let disp = 'Dynamic';
 
 	let workout;
 	const unsubscribe = strRoundsSt.subscribe((strRoundsSt) => {
@@ -32,13 +32,6 @@
 		}
 		loading = false;
 	});
-
-	let currentSampleID = '';
-
-	const showCurrentSample = (sampleID) => {
-		currentSampleID = sampleID;
-		sampleExists = true;
-	};
 </script>
 
 {#if loading}
@@ -47,34 +40,34 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
-	{#if woName}<div>Workout Name: {woName}</div>{/if}
-	<div>Dynamic Stretches:</div>
-	{#each workout.dynamic.times as time, i}
-		<div>
-			<span>{Math.round(time)}s: &nbsp;</span>
-			<span>{workout.dynamic.titles[i]}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(workout.dynamic.samples[i]);
-				}}>&#x2139;</button
-			>
-		</div>
-	{/each}
-	<br />
-
-	<div>Static Stretches:</div>
-	{#each workout.static.times as time, i}
-		<div>
-			<span>{Math.round(time)}s: &nbsp;</span>
-			<span>{workout.static.titles[i]}</span>
-			<button
-				on:click={() => {
-					showCurrentSample(workout.static.samples[i]);
-				}}>&#x2139;</button
-			>
-		</div>
-	{/each}
-	{#if sampleExists}
-		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
-	{/if}
+	{#if woName}<div class="name">Workout Name: {woName}</div>{/if}
+	<div class="content">
+		<button class="back arr" on:click={() => disp = 'Dynamic'}>
+			{#if disp === 'Dynamic'}&nbsp;{:else}&lt;{/if}
+		</button>
+		<StrWoDisp strRounds={workout} {disp} />
+		<button class="forw arr" on:click={() => disp = 'Static'}>
+			{#if disp === 'Static'}&nbsp;{:else}&gt;{/if}
+		</button>
+	</div>
 {/if}
+
+<style>
+	.name {
+		text-align: center;
+	}
+
+	.content {
+		display: flex;
+		flex: 1;
+		max-height: calc(100% - 25px);
+	}
+
+	.arr {
+		width: fit-content;
+		height: 100%;
+		background-color: beige;
+		border: none;
+		border-radius: none;
+	}
+</style>
