@@ -131,7 +131,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: baseline;
-		z-index: 10;
+		z-index: 15;
 		cursor: pointer;
 	}
 
@@ -141,7 +141,7 @@
 		padding: 15px;
 		background: white;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		z-index: 11;
+		z-index: 20;
 		overflow-y: scroll;
 		cursor: default;
 		max-height: 80dvh;
