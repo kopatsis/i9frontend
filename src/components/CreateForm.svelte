@@ -143,7 +143,7 @@
 			preloadImages(extractImageList(workout));
 			setTimeout(() => {
 				loading = false;
-				isCreateForm.set(false)
+				isCreateForm.set(false);
 				goto('./review');
 			}, 1000);
 		} catch (err) {
@@ -167,7 +167,8 @@
 		}}
 	>
 		<div>
-			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Your workout{/if}: {formType}
+			{#if userData.Name && userData.Name !== 'local'}{userData.Name}'s workout{:else}Your workout{/if}:
+			{formType}
 		</div>
 		{#if formType !== 'Adapt'}
 			<label for="length"
@@ -224,9 +225,11 @@
 		<br />
 
 		{#if formType !== 'Adapt'}
-			<button type="button" on:click={() => (showAdvanced = !showAdvanced)}>
-				{#if showAdvanced}▲{:else}▼{/if} Advanced</button
-			>
+			<div class="buttonhs">
+				<button type="button" on:click={() => (showAdvanced = !showAdvanced)}>
+					{#if showAdvanced}▲{:else}▼{/if} Advanced</button
+				>
+			</div>
 
 			{#if showAdvanced}
 				{#if formType !== 'Stretch'}
@@ -258,6 +261,34 @@
 			{/if}
 		{/if}
 
-		<button type="submit">Submit</button>
+		<div class="buttonhs">
+			<button type="submit" class="submit">Submit</button>
+		</div>
 	</form>
 {/if}
+
+<style>
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.buttonhs {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 10px;
+	}
+	.submit {
+		font-size: 16px;
+		padding: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+</style>
