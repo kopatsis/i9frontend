@@ -239,20 +239,20 @@
 			document.addEventListener('visibilitychange', handleVisibilityChange);
 		}
 
-		timescriptStSession();
-		if (!timescript) {
+		let check = timescriptStSession();
+		if (check === null) {
 			error = 'Error loading workout';
 		}
-		scriptStSession();
-		if (!script) {
+		check = scriptStSession();
+		if (check === null) {
 			error = 'Error loading workout';
 		}
-		strRoundsStSession();
-		if (!strRounds) {
+		check = strRoundsStSession();
+		if (check === null) {
 			error = 'Error loading workout';
 		}
-		genTimesStSession();
-		if (!genTimes) {
+		check = genTimesStSession();
+		if (check === null) {
 			error = 'Error loading workout';
 		}
 		woIdSession();
