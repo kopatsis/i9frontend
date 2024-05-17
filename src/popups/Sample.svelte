@@ -102,51 +102,137 @@
 	} else if (time > nextTime && sampleObj) {
 		setImg();
 	}
+
+	$: if (desc){
+		desc = desc.replace(/<br>/g, '<br><br>');
+	}
 </script>
 
 <Modal bind:open={exists}>
-	<button on:click={() => (exists = false)}>Exit</button>
+	<div class="closeline">
+		<button class="link-button" on:click={() => (exists = false)}>&times;</button>
+	</div>
 	{#if loading}
 		<div>loading...</div>
 	{:else if error}
 		<div>F: {error}</div>
 	{:else}
 		<h1>{title}</h1>
-		<br />
 		<img {src} alt={title} />
 		<br />
-		<div>
+		<div class="desc">
 			{@html desc}
 		</div>
-		<button
-			on:click={() => {
-				changeAngle('01');
-			}}>Left</button
-		>
-		<button
-			on:click={() => {
-				changeAngle('02');
-			}}>Half Left</button
-		>
-		<button
-			on:click={() => {
-				changeAngle('03');
-			}}>Front</button
-		>
-		<button
-			on:click={() => {
-				changeAngle('04');
-			}}>Half Right</button
-		>
-		<button
-			on:click={() => {
-				changeAngle('05');
-			}}>Right</button
-		>
-		<button
-			on:click={() => {
-				changeAngle('06');
-			}}>Top</button
-		>
+		<br />
+		<div>Viewing Angle:</div>
+		<div class="viewbuttons">
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('01');
+				}}
+			>
+				{#if angle === '01'}
+					<b>Left</b>
+				{:else}
+					Left
+				{/if}</button
+			>
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('02');
+				}}>{#if angle === '02'}
+					<b>Half Left</b>
+				{:else}
+					Half Left
+				{/if}</button
+			>
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('03');
+				}}>{#if angle === '03'}
+					<b>Front</b>
+				{:else}
+					Front
+				{/if}</button
+			>
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('04');
+				}}>{#if angle === '04'}
+					<b>Half Right</b>
+				{:else}
+					Half Right
+				{/if}</button
+			>
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('05');
+				}}>{#if angle === '05'}
+					<b>Right</b>
+				{:else}
+					Right
+				{/if}</button
+			>
+			<button
+				class="view"
+				on:click={() => {
+					changeAngle('06');
+				}}>{#if angle === '06'}
+					<b>Top</b>
+				{:else}
+					Top
+				{/if}</button
+			>
+		</div>
 	{/if}
 </Modal>
+
+<style>
+	img {
+		max-width: 100%;
+	}
+	.viewbuttons {
+		display: flex;
+		width: 100%;
+	}
+	.view {
+		flex: 1;
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+		margin: 4px;
+	}
+	h1 {
+		margin-bottom: 0px;
+	}
+	.link-button {
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
+		font-size: 24px;
+	}
+
+	.closeline {
+		display: flex;
+		justify-content: right;
+		width: 100%;
+	}
+
+	/* :global(.desc br) {
+		display: block;
+		margin-bottom: 2rem;
+	} */
+</style>

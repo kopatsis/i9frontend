@@ -91,5 +91,7 @@
 		max-height: 90%;
 		overflow-y: scroll;
 		cursor: default;
+		max-height: 80dvh;
+		max-width: 87.5dvw;
 	}
 </style>
