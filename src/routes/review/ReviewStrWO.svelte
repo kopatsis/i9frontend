@@ -40,13 +40,13 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
-	{#if woName}<div class="name">Workout Name: {woName}</div>{/if}
+	{#if woName}<div class="name"><b>Workout Name: {woName}</b></div>{/if}
 	<div class="content">
-		<button class="back arr" on:click={() => disp = 'Dynamic'}>
+		<button class="back arr" on:click={() => (disp = 'Dynamic')}>
 			{#if disp === 'Dynamic'}&nbsp;{:else}&lt;{/if}
 		</button>
 		<StrWoDisp strRounds={workout} {disp} />
-		<button class="forw arr" on:click={() => disp = 'Static'}>
+		<button class="forw arr" on:click={() => (disp = 'Static')}>
 			{#if disp === 'Static'}&nbsp;{:else}&gt;{/if}
 		</button>
 	</div>

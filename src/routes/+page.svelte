@@ -263,7 +263,7 @@
 					</div>
 				{:else if recentWO.type === 'Stretch'}
 					<div class="recentb">
-						{#if recentWO.status === 'Unstarted'}
+						{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
 							<button class="recentbutton" on:click={toReviewSt}>Start</button>
 						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
 							<button class="recentbutton" on:click={toReviewSt}>Resume</button>
@@ -273,7 +273,7 @@
 					</div>
 				{:else}
 					<div class="recentb">
-						{#if recentWO.status === 'Unstarted'}
+						{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
 							<button class="recentbutton" on:click={toReview}>Start</button>
 						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
 							<button class="recentbutton" on:click={toReview}>Resume</button>

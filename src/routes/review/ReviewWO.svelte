@@ -75,7 +75,7 @@
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else}
-	{#if woName}<div class="name">Workout Name: {woName}</div>{/if}
+	{#if woName}<div class="name"><b>Workout Name: {woName}</b></div>{/if}
 	<div class="content">
 		<button class="back arr" on:click={() => contentAdj(false)}>
 			{#if iterator === 0}&nbsp;{:else}&lt;{/if}

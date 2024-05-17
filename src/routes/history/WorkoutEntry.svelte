@@ -194,7 +194,7 @@
 			<button on:click={() => (expanded = false)}>Collapse</button>
 		{/if}
 
-		{#if entry.Status === 'Unstarted' && entry.PausedTime < entry.Minutes}
+		{#if (entry.Status === 'Unstarted' || entry.Status === 'Not Started') && entry.PausedTime < entry.Minutes}
 			<button on:click={toReview}>Start</button>
 		{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
 			<button on:click={toReview}>Resume</button>
