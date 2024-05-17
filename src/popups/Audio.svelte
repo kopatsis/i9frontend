@@ -28,31 +28,41 @@
 		title = titleNew;
 		displayList = false;
 	}
+
+	function close() {
+		display = false;
+		displayList = false;
+	}
 </script>
 
 <Modal bind:display closeable={false}>
-	<div class={display ? '' : 'hide'}>
-		<button on:click={() => (display = false)}>Hide</button>
-		<button on:click={() => (displayList = !displayList)}
+	<div class="whole {display ? '' : 'hide'}">
+		<div class="controls">
+			<button on:click={() => (displayList = !displayList)}
 			>{#if displayList}Back to Music{:else}All Playlists{/if}</button
 		>
+		<button on:click={close}>Hide</button>
+		</div>
+		
 
 		<div class={!displayList ? '' : 'hide'}>{title}</div>
 		<iframe
 			class={!displayList ? '' : 'hide'}
 			title="audioplayer"
 			width="100%"
-			height="300"
-			scrolling="no"
+			height="500"
+			scrolling="yes"
 			frameborder="no"
 			allow="autoplay"
 			{src}
 		></iframe>
 
 		<div class={displayList ? '' : 'hide'}>
-			Playlist List
+			<div class="playlisth">Playlist List</div>
 			{#each allSrc as pl}
-				<button on:click={() => switchPlaylist(pl.src, pl.title)}>{pl.title}</button>
+				<div class="choicerow">
+					<button on:click={() => switchPlaylist(pl.src, pl.title)}>{pl.title}</button>
+				</div>
 			{/each}
 		</div>
 	</div>
@@ -62,4 +72,38 @@
 	.hide {
 		display: none;
 	}
+
+	.controls{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.whole{
+		min-width: 80dvw;
+		min-height: 65dvh;
+	}
+
+	button{
+		flex: 1;
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		margin: 6px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.choicerow{
+		width: 100%;
+		display: flex;
+	}
+
+	.playlisth{
+		font-weight: bold;
+		margin: 6px;
+	}
+
 </style>

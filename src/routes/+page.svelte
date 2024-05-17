@@ -301,7 +301,7 @@
 <MainFooter />
 
 <style>
-	.recentb{
+	.recentb {
 		display: flex;
 		justify-content: center;
 	}
@@ -336,7 +336,7 @@
 		background: white;
 	}
 
-	.recentbutton{
+	.recentbutton {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
