@@ -6,12 +6,29 @@
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../components/Logout.svelte';
 	import Setting from '../components/Setting.svelte';
-	import { goto } from '$app/navigation';
 	import SettingBackground from '../components/SettingBackground.svelte';
+
+	export let dispSettings = true;
 
 	let loading = true;
 	let error = '';
 	let retrievedSettings = null;
+
+	function closerAny() {
+		dispSettings = false;
+	}
+
+	function handleKeydown(event) {
+		if (event.key === 'Escape') {
+			closerAny();
+		}
+	}
+
+	function handleKeydownOuter(event) {
+		if (event.key === 'Enter') {
+			closerAny();
+		}
+	}
 
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
@@ -20,6 +37,8 @@
 	onDestroy(unsubscribe);
 
 	async function mountCall() {
+		window.addEventListener('keydown', handleKeydown);
+
 		try {
 			let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
 			if (!retset) {
@@ -41,6 +60,9 @@
 		} finally {
 			loading = false;
 		}
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+		};
 	}
 
 	onMount(async () => {
@@ -48,25 +70,116 @@
 	});
 </script>
 
-{#if loading}
-	<div>loading...</div>
-{:else if error}
-	<div>F: {error}</div>
-{:else if !userData}
-	<div>Error fetching user data, please try again</div>
-{:else}
-	<button on:click={() => goto('./')}>Home</button><br />
-	<Setting key={'mode'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
-	<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
-	<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
-	<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
-	<br />
-	<SettingBackground />
-	<br />
-	{#if userData.Paying}
-		<button>Cancel subscription</button>
-	{:else}
-		<button>Start subscription</button>
-	{/if}
-	<Logout />
-{/if}
+<div
+	class="backdrop"
+	on:click={closerAny}
+	tabindex="0"
+	on:keydown={handleKeydownOuter}
+	role="button"
+	aria-label="Close modal"
+>
+	<div class="modal" on:click|stopPropagation aria-hidden="true">
+		{#if loading}
+			<div>loading...</div>
+		{:else if error}
+			<div>F: {error}</div>
+		{:else if !userData}
+			<div>Error fetching user data, please try again</div>
+		{:else}
+			<div class="head">User Settings</div>
+			<Setting key={'mode'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
+			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
+			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
+			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
+			<!-- {#if userData.Paying} -->
+				<SettingBackground />
+			<!-- {/if} -->
+			<div class="plainbuttons">
+				{#if userData.Paying}
+					<button class="actionbutton">Cancel Giga Subscription</button>
+				{:else}
+					<button class="actionbutton">Start Giga Subscription</button>
+				{/if}
+			</div>
+
+			<div class="plainbuttons">
+				<Logout />
+			</div>
+		{/if}
+		<div class="plainbuttons">
+			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
+		</div>
+		
+	</div>
+</div>
+
+<style>
+	.head{
+		width: 100%;
+		text-align: center;
+		font-size: 20px;
+		font-weight: bold;
+		margin-bottom: 15px;
+	}
+	.backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.44);
+		display: flex;
+		justify-content: center;
+		align-items: baseline;
+		z-index: 10;
+		cursor: pointer;
+	}
+
+	.modal {
+		margin: 0;
+		margin-top: 44px;
+		padding: 15px;
+		background: white;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		z-index: 11;
+		overflow-y: scroll;
+		cursor: default;
+		max-height: 80dvh;
+		width: 100dvw;
+		padding-bottom: 0px;
+	}
+
+	.plainbuttons{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+	}
+
+	.actionbutton {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.closebutton {
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
+		font-size: 36px;
+	}
+</style>

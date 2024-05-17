@@ -11,8 +11,7 @@
 </div>
 
 {#if dispSettings}
-    <button on:click={() => dispSettings = false}>&times;</button>
-    <Settings />
+    <Settings bind:dispSettings />
 {/if}
 
 <style>

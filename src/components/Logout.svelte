@@ -8,7 +8,10 @@
 	};
 </script>
 
-<button class="submit" on:click={logoutBoth}>Sign Out</button>
+<div>
+	<button class="submit" on:click={logoutBoth}>Sign Out</button>
+</div>
+
 
 <style>
 	.submit {
