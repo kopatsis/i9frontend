@@ -5,9 +5,10 @@
 	import ReviewWo from './ReviewWO.svelte';
 	import ReviewStrWo from './ReviewStrWO.svelte';
 	import { goto } from '$app/navigation';
-	import { setLocalLoginState } from '$lib/jshelp/localtoken';
+	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainHeader from '../../components/MainHeader.svelte';
+	import { getUser, user } from '$lib/stores/user';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -19,19 +20,28 @@
 	let type;
 	const unsubscribe = workoutType.subscribe((woType) => {
 		type = woType;
-		console.log(type);
 	});
-	onDestroy(unsubscribe);
 
-	function mountCall() {
+	let userObj;
+	const unsubscribeUser = user.subscribe((user) => {
+		userObj = user;
+	});
+
+	onDestroy(() => {
+		unsubscribe();
+		unsubscribeUser();
+	});
+
+	async function mountCall() {
 		let check = workoutTypeSession();
 		if (check === null) {
 			error = 'No workout type existing';
 		}
 
-		if (localStorage.getItem('stewresf2412sd') === '4325bbfdfgc3') {
-			status = 'Paid';
-		}
+		const token = await getLoginToken();
+		await getUser(token);
+
+		status = userObj && userObj.Paying && userObj.Paying === true ? 'Paid' : 'Unpaid';
 
 		loading = false;
 	}
