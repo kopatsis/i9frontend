@@ -71,6 +71,10 @@
 		return true;
 	};
 
+	const calcTime = (minutes) => {
+		return Math.round(10*( minutes - 2 * (minutes < 20 ? Math.max(1.5, minutes / 8) : Math.min(5, minutes / 12))))/10;
+	};
+
 	$: if (formType !== oldFormType) {
 		oldFormType = formType;
 		if (formType === 'Regular') {
@@ -83,6 +87,7 @@
 	}
 
 	$: validTime = validateTime(minutes);
+	$: effectiveTime = calcTime(minutes);
 
 	const arraysHaveSameItems = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) {
@@ -186,6 +191,13 @@
 				step="0.01"
 				bind:value={minutes}
 			/>
+			{#if formType !== 'Stretch'}
+				<div>
+					{#if validTime}
+						Effective workout time: {effectiveTime}m
+					{/if}
+				</div>
+			{/if}
 			{#if !validTime}
 				<div>
 					Please enter a time within the range of {formType === 'Regular'
