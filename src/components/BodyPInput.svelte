@@ -40,35 +40,41 @@
 
 	const addItem = (key) => {
 		finalList.push(allParts[key]);
-        finalList = finalList;
+		finalList = finalList;
 		inlist.push(key);
 		inlist.sort();
-        inlist = inlist;
+		inlist = inlist;
 		outlist = outlist.filter((item) => item !== key);
-        current = '';
+		current = '';
 	};
 
 	const subItem = (key) => {
 		finalList = finalList.filter((item) => item !== allParts[key]);
-        finalList = finalList;
+		finalList = finalList;
 		outlist.push(key);
 		outlist.sort();
-        outlist = outlist;
+		outlist = outlist;
 		inlist = inlist.filter((item) => item !== key);
 	};
 
 	let current = '';
 </script>
 
-<label for="inputWithList">Body Parts to avoid:</label>
-<input type="text" id="inputWithList" list="optionsList" bind:value={current} />
-<button  type="button" 
-	on:click={() => {
-		if (current !== '' && outlist.includes(current)) {
-			addItem(current);
-		}
-	}}>Add</button
->
+<div>
+	<label for="inputWithList">Body Parts to avoid:</label>
+</div>
+<div class="editline">
+	<input type="text" id="inputWithList" list="optionsList" bind:value={current} />
+	<button
+		type="button"
+		on:click={() => {
+			if (current !== '' && outlist.includes(current)) {
+				addItem(current);
+			}
+		}}>+ Add</button
+	>
+</div>
+
 <datalist id="optionsList">
 	{#each outlist as item}
 		<option value={item}>{item}</option>
@@ -78,11 +84,12 @@
 <ul>
 	{#each inlist as item}
 		<li>
-			<button  type="button" 
+			<button
+				type="button"
 				on:click={() => {
 					subItem(item);
 				}}>&times;</button
-			>{item}
+			>&nbsp;{item}
 		</li>
 	{/each}
 </ul>
@@ -100,5 +107,28 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
+	}
+
+	ul{
+		list-style-type: none;
+		padding-left: 0;
+		margin-bottom: 0;
+	}
+
+	li{
+		margin-left: 0;
+	}
+
+	.editline{
+		display: flex;
+		width: 100%;
+	}
+
+	.editline button{
+		margin-left: 6px;
+	}
+
+	.editline input {
+		flex: 1;
 	}
 </style>

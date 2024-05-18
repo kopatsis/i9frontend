@@ -10,6 +10,9 @@
 
 	export let exists = true;
 
+	let strplyo = "";
+	let strdiff = "";
+
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
 		userData = value;
@@ -33,20 +36,30 @@
 
 		if (userData) {
 			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100, 8), 240);
-			diff = String(Math.max(1, userData.LastDifficulty));
+			diff = Math.max(1, userData.LastDifficulty);
+			strdiff = String(diff);
 			plyo = userData.PlyoTolerance;
+			strplyo = String(plyo);
 			pushup = userData.PushupSetting;
 			bannedParts = [...userData.BannedParts];
 		}
 	});
 
-	const anyChanges = () => {
+	const anyChanges = (plyo, pushup, diff, minutes, bannedParts) => {
+		console.log(plyo, pushup, diff, minutes, bannedParts);
+		console.log(userData.PlyoTolerance, userData.PushupSetting, Math.max(1, userData.LastDifficulty), Math.round(100 * userData.LastMinutes) / 100, userData.BannedParts);
+		console.log(plyo !== userData.PlyoTolerance)
+		console.log(pushup !== userData.PushupSetting)
+		console.log(diff !== Math.max(1, userData.LastDifficulty))
+		console.log(minutes !== Math.round(100 * userData.LastMinutes) / 100)
+		console.log(arraysHaveSameItems(bannedParts, userData.BannedParts))
+
 		return (
 			plyo !== userData.PlyoTolerance ||
 			pushup !== userData.PushupSetting ||
-			diff !== String(Math.max(1, userData.LastDifficulty)) ||
+			diff !== Math.max(1, userData.LastDifficulty) ||
 			minutes !== Math.round(100 * userData.LastMinutes) / 100 ||
-			arraysHaveSameItems(bannedParts, userData.BannedParts)
+			!(arraysHaveSameItems(bannedParts, userData.BannedParts))
 		);
 	};
 
@@ -76,8 +89,8 @@
 		if (!arraysHaveSameItems(bannedParts, userData.BannedParts)) {
 			body['banned'] = bannedParts;
 		}
-		if (diff !== String(Math.max(1, userData.LastDifficulty))) {
-			body['diff'] = Number(diff);
+		if (diff !== Math.max(1, userData.LastDifficulty)) {
+			body['diff'] = diff;
 		}
 		if (minutes !== Math.round(100 * userData.LastMinutes) / 100) {
 			body['mins'] = minutes;
@@ -93,6 +106,14 @@
 	};
 
 	$: validTime = minutes >= 8 && minutes <= 240;
+	$: if(strplyo){
+		plyo = Number(strplyo)
+		console.log(plyo)
+	}
+	$: if(strdiff){
+		diff = Number(strdiff)
+		console.log(diff)
+	}
 </script>
 
 <Modal bind:open={exists}>
@@ -114,8 +135,12 @@
 				</b>
 			</div>
 			<div class="editline">
-				<label for="length">Length in minutes (8-240):</label>
-				<input
+				<div>
+					<label for="length">Length in minutes (8-240):</label>
+				</div>
+				<div class="lengthin">
+					<input type="range" min="8" max="240" bind:value={minutes} />
+					<input
 					type="number"
 					id="length"
 					name="length input"
@@ -124,11 +149,13 @@
 					step="0.01"
 					bind:value={minutes}
 				/>
+				</div>
+				
 			</div>
 
-			<div class="editline">
+			<div class="editline row">
 				<label for="difficulty">Difficulty Type:</label>
-				<select id="difficulty" bind:value={diff}>
+				<select id="difficulty" bind:value={strdiff}>
 					<option value="1">Low Cortisol</option>
 					<option value="2">Simple</option>
 					<option value="3">Easy</option>
@@ -146,22 +173,21 @@
 			</div>
 			<br /> -->
 
-			<div class="editline">
-				<label for="plyo">Plyo Tolerability (0 - 5):</label>
-				<input
-					type="number"
-					id="plyo"
-					name="plyo setting"
-					min="0"
-					max="5"
-					step="1"
-					bind:value={plyo}
-				/>
+			<div class="editline row">
+				<label for="plyo">Plyo Tolerability:</label>
+				<select bind:value={strplyo}>
+					<option value="0">None</option>
+					<option value="1">Very Limited</option>
+					<option value="2">Limited</option>
+					<option value="3">Regular</option>
+					<option value="4">Extra</option>
+					<option value="5">Extra Extra</option>
+				</select>
 			</div>
 
-			<div class="editline">
+			<div class="editline row">
 				<label for="pushup">Pushup Setting:</label>
-				<select bind:value={pushup}>
+				<select bind:value={pushup} id="pushup">
 					<option value="Regular">Regular</option>
 					<option value="Knee">Knees</option>
 					<option value="Wall">Wall</option>
@@ -174,14 +200,45 @@
 
 			<div class="verif" class:invis={validTime}>Please enter a time in the range of 8-240 minutes</div>
 
-			{#if anyChanges()}
-				<button type="submit">Submit Changes</button>
-			{/if}
+			<div class="submit">
+				{#if anyChanges(plyo, pushup, diff, minutes, bannedParts)}
+					<button type="submit">Submit Changes</button>
+				{:else}
+					<button class="nochange" type="submit">Submit Changes</button>
+				{/if}
+				
+			</div>
+			
 		</form>
 	{/if}
 </Modal>
 
 <style>
+
+	.nochange{
+		cursor: default;
+		background-color: rgb(211, 211, 211);
+	}
+
+	.submit {
+		display: flex;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.lengthin {
+		display: flex;
+		width: 100%;
+	}
+
+	.lengthin input[type="number"] {
+		margin-left: 6px;
+	}
+
+	.lengthin input[type="range"] {
+		flex: 1;
+	}
 
 	.verif.invis {
 		visibility: hidden;
@@ -194,6 +251,11 @@
 
 	.editline {
 		margin-top: 8px;
+	}
+
+	.editline.row{
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.link-button {
