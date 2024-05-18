@@ -247,6 +247,7 @@
 	.verif {
 		color: red;
 		margin-bottom: 6px;
+		font-size: 14px;
 	}
 
 	.editline {

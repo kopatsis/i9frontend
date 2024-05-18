@@ -122,6 +122,7 @@
 	.choices button {
 		flex: 1;
 		margin: 6px;
+		font-size: 16px;
 	}
 
 	button {

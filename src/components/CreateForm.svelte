@@ -36,6 +36,8 @@
 	let loading = true;
 	let validTime;
 
+	let strplyo = '';
+
 	onMount(async () => {
 		if (!userData) {
 			const token = await getLoginToken();
@@ -54,6 +56,7 @@
 			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
 
 			plyo = userData.PlyoTolerance;
+			strplyo = String(plyo);
 			pushup = userData.PushupSetting;
 			bannedParts = [...userData.BannedParts];
 		}
@@ -63,16 +66,20 @@
 	const validateTime = (minutes) => {
 		if ((formType === 'Regular' && minutes < 8) || minutes > 240) {
 			return false;
-		} else if ((formType === 'Stretch' && minutes < 1) || minutes > 240) {
+		} else if (formType === 'Stretch' && minutes < 1) {
 			return false;
-		} else if ((formType === 'Intro' && minutes < 25) || minutes > 60) {
+		} else if ((formType === 'Intro' && minutes < 25) || (formType === 'Intro' && minutes > 60)) {
 			return false;
 		}
 		return true;
 	};
 
 	const calcTime = (minutes) => {
-		return Math.round(10*( minutes - 2 * (minutes < 20 ? Math.max(1.5, minutes / 8) : Math.min(5, minutes / 12))))/10;
+		return (
+			Math.round(
+				10 * (minutes - 2 * (minutes < 20 ? Math.max(1.5, minutes / 8) : Math.min(5, minutes / 12)))
+			) / 10
+		);
 	};
 
 	$: if (formType !== oldFormType) {
@@ -157,6 +164,11 @@
 			console.log(err);
 		}
 	};
+
+	$: if (strplyo) {
+		plyo = Number(strplyo);
+		console.log(plyo);
+	}
 </script>
 
 {#if loading}
@@ -176,65 +188,81 @@
 			{formType}
 		</div>
 		{#if formType !== 'Adapt'}
-			<label for="length"
-				>Length in minutes ({formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1} - {formType ===
-				'Intro'
-					? 60
-					: 240}):</label
-			>
-			<input
-				type="number"
-				id="length"
-				name="length input"
-				min="0.0"
-				max="1000.0"
-				step="0.01"
-				bind:value={minutes}
-			/>
+			<div class="editline">
+				<div>
+					<label for="length"
+						>Length in minutes ({formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1} - {formType ===
+						'Intro'
+							? 60
+							: 240}):</label
+					>
+				</div>
+				<div class="lengthin">
+					<input
+						type="range"
+						min={formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1}
+						max={formType === 'Intro' ? 60 : 240}
+						bind:value={minutes}
+					/>
+					<input
+						type="number"
+						id="length"
+						name="length input"
+						min="0.0"
+						max="1000.0"
+						step="0.01"
+						bind:value={minutes}
+					/>
+				</div>
+			</div>
+
 			{#if formType !== 'Stretch'}
 				<div>
 					{#if validTime}
-						Effective workout time: {effectiveTime}m
+						Effective workout time: {Math.floor(effectiveTime)}m {Math.round(
+							(effectiveTime * 60) % 60
+						)}s
+					{:else}
+						<div class="verif">
+							Please enter a time in the range of {formType === 'Regular'
+								? 8
+								: formType === 'Intro'
+									? 25
+									: 1} - {formType === 'Intro' ? 60 : 240} minutes
+						</div>
 					{/if}
 				</div>
-			{/if}
-			{#if !validTime}
-				<div>
-					Please enter a time within the range of {formType === 'Regular'
+			{:else}
+				<div class="verif" class:invis={validTime}>
+					Please enter a time in the range of {formType === 'Regular'
 						? 8
 						: formType === 'Intro'
 							? 25
 							: 1} - {formType === 'Intro' ? 60 : 240} minutes
 				</div>
 			{/if}
-			<br />
 		{/if}
 
 		{#if formType == 'Adapt' || formType == 'Regular'}
-			<label for="difficulty">Difficulty Type:</label>
-			<select id="difficulty" bind:value={diff}>
-				<option value="1">Low Cortisol*</option>
-				<option value="2">Simple**</option>
-				<option value="3">Easy</option>
-				<option value="4">Medium</option>
-				<option value="5">Hard</option>
-				<option value="6">Extreme</option>
-			</select>
-			<div>
-				*: Low Cortisol is designed to minimize spikes in heart rate while still keeping you moving
+			<div class="editline">
+				<label for="difficulty">Difficulty Type:</label>
+				<select id="difficulty" bind:value={diff}>
+					<option value="1">Low Cortisol</option>
+					<option value="2">Simple</option>
+					<option value="3">Easy</option>
+					<option value="4">Medium</option>
+					<option value="5">Hard</option>
+					<option value="6">Extreme</option>
+				</select>
 			</div>
-			<div>
-				**: Simple is the same as Easy, except there are no Combo or Split rounds, just Regular ones
-			</div>
-			<br />
 		{/if}
 
 		{#if formType == 'Adapt'}
-			<label for="asNewCheckbox">Create as new workout:</label>
-			<input type="checkbox" id="asNewCheckbox" bind:checked={asnew} />
+			<div class="editline single">
+				<label for="asNewCheckbox">Create as new workout:</label>
+				<input type="checkbox" id="asNewCheckbox" bind:checked={asnew} />
+			</div>
 		{/if}
-
-		<br />
 
 		{#if formType !== 'Adapt'}
 			<div class="buttonhs">
@@ -245,31 +273,31 @@
 
 			{#if showAdvanced}
 				{#if formType !== 'Stretch'}
-					<label for="plyo">Plyo Tolerability (0 - 5):</label>
-					<input
-						type="number"
-						id="plyo"
-						name="plyo setting"
-						min="0"
-						max="5"
-						step="1"
-						bind:value={plyo}
-					/>
-					<br />
+					<div class="editline row">
+						<label for="plyo">Plyo Tolerability (0 - 5):</label>
+						<select bind:value={strplyo}>
+							<option value="0">None</option>
+							<option value="1">Very Limited</option>
+							<option value="2">Limited</option>
+							<option value="3">Regular</option>
+							<option value="4">Extra</option>
+							<option value="5">Extra Extra</option>
+						</select>
+					</div>
 				{/if}
 
 				{#if formType === 'Regular'}
-					<label for="pushup">Pushup Setting:</label>
-					<select bind:value={pushup}>
-						<option value="Regular">Regular</option>
-						<option value="Knee">Knees</option>
-						<option value="Wall">Wall</option>
-					</select>
-					<br />
+					<div class="editline row">
+						<label for="pushup">Pushup Setting:</label>
+						<select bind:value={pushup}>
+							<option value="Regular">Regular</option>
+							<option value="Knee">Knees</option>
+							<option value="Wall">Wall</option>
+						</select>
+					</div>
 				{/if}
 
 				<BodyPInput bind:finalList={bannedParts} />
-				<br />
 			{/if}
 		{/if}
 
@@ -280,6 +308,22 @@
 {/if}
 
 <style>
+	.verif.invis {
+		visibility: hidden;
+	}
+
+	.verif {
+		color: red;
+		margin-bottom: 6px;
+		font-size: 14px;
+	}
+	select {
+		border-radius: 0;
+		color: inherit;
+		font-size: inherit;
+		border-radius: 0px;
+		border: 1px solid rgb(137, 151, 155);
+	}
 	button {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
@@ -297,10 +341,39 @@
 		align-items: center;
 		margin: 10px;
 	}
+
+	.buttonhs button {
+		font-size: 16px;
+	}
 	.submit {
 		font-size: 16px;
 		padding: 6px;
 		padding-left: 12px;
 		padding-right: 12px;
+	}
+	.lengthin {
+		display: flex;
+		width: 100%;
+	}
+
+	.lengthin input[type='number'] {
+		margin-left: 6px;
+	}
+
+	.lengthin input[type='range'] {
+		flex: 1;
+	}
+
+	.editline {
+		margin-top: 8px;
+	}
+
+	.editline.row {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.single {
+		justify-content: center;
 	}
 </style>
