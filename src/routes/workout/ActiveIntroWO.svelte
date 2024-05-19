@@ -17,7 +17,9 @@
 		roundsSet,
 		wipeWorkout,
 		currenttime,
-		woIdSession
+		woIdSession,
+		name,
+		nameSession
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -97,6 +99,11 @@
 		woRounds = workoutRoundsSt;
 	});
 
+	let nameWO = '';
+	const unsubscribeName = name.subscribe((name) => {
+		nameWO = name;
+	});
+
 	// Timing functions
 	function startStopwatch() {
 		if (intervalCountdown) clearInterval(intervalCountdown);
@@ -174,6 +181,7 @@
 		unsubscribeSt();
 		unsubscribeGen();
 		unsubscribeWO();
+		unsubscribeName();
 		clearInterval(interval);
 		document.removeEventListener('visibilitychange', handleVisibilityChange);
 		if (worker) {
@@ -181,8 +189,11 @@
 		}
 	});
 
-	function formatTime(time) {
-		return `${Math.floor(Math.round(time) / 60)} min ${Math.floor(Math.round(time) % 60)} sec`;
+	function truncateString(str) {
+		if (str.length > 40) {
+			return str.slice(0, 37) + '...';
+		}
+		return str;
 	}
 
 	// Other interactive functions
@@ -436,6 +447,11 @@
 		if (check === null) {
 			error = 'Error loading workout';
 		}
+		check = nameSession();
+		if (check === null) {
+			error = 'Error loading name';
+		}
+
 		woIdSession();
 
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
@@ -522,9 +538,19 @@
 				<div>{transitionTime}</div>
 			</div>
 		{/if}
+		<div class="head full">
+			{truncateString(nameWO)}:&nbsp;
+			{#if status === 'Dynamic'}
+				Dynamic Stretch Warmup
+			{:else if status === 'Static'}
+				Static Stretch Cooldown
+			{:else}
+				Workout Round #{roundIter + 1}
+			{/if}
+		</div>
 		{#if exitMessage}
-			<div>Are you done with this workout or do you want to keep going?</div>
-			<div class="anglerow controls">
+			<div class="full">Are you done with this workout or do you want to keep going?</div>
+			<div class="anglerow controls full">
 				<button on:click={returnNoExit}>Back to Workout</button>
 				{#if status === 'Static'}
 					<button on:click={quit}>Exit</button>
@@ -534,13 +560,13 @@
 				{/if}
 			</div>
 		{:else if resetMessage}
-			<div>Are you sure you want restart?</div>
-			<div class="anglerow controls">
+			<div class="full">Are you sure you want restart?</div>
+			<div class="anglerow controls full">
 				<button on:click={returnNoReset}>No, go back</button>
 				<button on:click={resetStopwatch}>Yes, restart</button>
 			</div>
 		{:else}
-			<div class="anglerow controls">
+			<div class="anglerow controls full">
 				{#if paused}
 					<button on:click={startStopwatch}>Start</button>
 				{:else}
@@ -553,80 +579,83 @@
 				<button on:click={audioDisplay}>Show music</button>
 			</div>
 		{/if}
-		<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
-		<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
+		<div class="full">
+			<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
+		</div>
+		
 
-		{#if status === 'Dynamic'}
-			<div>Dynamic Stretches Warmup:</div>
-			{#if activeTitle}
+		<div class="varied">
+			{#if status === 'Dynamic'}
+				{#if activeTitle}
+					<div>
+						<span
+							>{activeTitle === 'Round Rest'
+								? Math.round(strRounds.rest)
+								: Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span
+						>
+						<span>{activeTitle}</span>
+						<button
+							on:click={() => {
+								showCurrentSample(strRounds.dynamic.samples[set - 1]);
+							}}>&#x2139;</button
+						>
+					</div>
+				{/if}
+			{:else if status === 'Static'}
 				<div>
-					<span
-						>{activeTitle === 'Round Rest'
-							? Math.round(strRounds.rest)
-							: Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span
-					>
+					<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
 					<span>{activeTitle}</span>
 					<button
 						on:click={() => {
-							showCurrentSample(strRounds.dynamic.samples[set - 1]);
+							showCurrentSample(strRounds.static.samples[set - 1]);
 						}}>&#x2139;</button
 					>
 				</div>
-			{/if}
-		{:else if status === 'Static'}
-			<div>Static Stretches Cooldown:</div>
-			<div>
-				<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-				<span>{activeTitle}</span>
-				<button
-					on:click={() => {
-						showCurrentSample(strRounds.static.samples[set - 1]);
-					}}>&#x2139;</button
-				>
-			</div>
-		{:else}
-			<div>
-				{#if activeTitle === 'Round Rest' && round.round === 9}
-					<div>Nice Job! That's it for the main workout!</div>
-				{:else}
-					<div>
-						{#if activeTitle === 'Round Rest'}Up Next:{/if}
-					</div>
-					<div>Round {round.round}:</div>
-					<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
-					<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
-					<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
-					<div>Type: {round.type}</div>
-					{#if round.type !== 'Combo'}
-						{#if round.reps.length < 2}
-							<span>{round.reps[0]}x &nbsp;</span>
-						{:else if activeTitle === 'Round Rest'}
-							<span>{round.reps[0]}-{round.reps[1]}x &nbsp;</span>
-						{:else if set % 2 == 1}
-							<span>{round.reps[0]}x &nbsp;</span>
-						{:else}
-							<span>{round.reps[1]}x &nbsp;</span>
-						{/if}
-					{/if}
-					{#each round.samples as sample, j}
+			{:else}
+				<div>
+					{#if activeTitle === 'Round Rest' && round.round === 9}
+						<div>Nice Job! That's it for the main workout!</div>
+					{:else}
 						<div>
-							{#if round.type === 'Combo'}
-								<span>{round.reps[j]}x &nbsp;</span>
-							{/if}
-							<span>{round.titles[j]}</span>
-							<button
-								on:click={() => {
-									showCurrentSample(sample);
-								}}>&#x2139;</button
-							>
+							{#if activeTitle === 'Round Rest'}Up Next:{/if}
 						</div>
-					{/each}
-					<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
-				{/if}
-			</div>
-		{/if}
+						<div>Round {round.round}:</div>
+						<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
+						<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
+						<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+						<div>Type: {round.type}</div>
+						{#if round.type !== 'Combo'}
+							{#if round.reps.length < 2}
+								<span>{round.reps[0]}x &nbsp;</span>
+							{:else if activeTitle === 'Round Rest'}
+								<span>{round.reps[0]}-{round.reps[1]}x &nbsp;</span>
+							{:else if set % 2 == 1}
+								<span>{round.reps[0]}x &nbsp;</span>
+							{:else}
+								<span>{round.reps[1]}x &nbsp;</span>
+							{/if}
+						{/if}
+						{#each round.samples as sample, j}
+							<div>
+								{#if round.type === 'Combo'}
+									<span>{round.reps[j]}x &nbsp;</span>
+								{/if}
+								<span>{round.titles[j]}</span>
+								<button
+									on:click={() => {
+										showCurrentSample(sample);
+									}}>&#x2139;</button
+								>
+							</div>
+						{/each}
+						<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
 
-		<Imgframe
+		<div class="full">
+			<Imgframe
 			{time}
 			endTime={scriptEndTime}
 			startTime={scriptStartTime}
@@ -634,8 +663,10 @@
 			{src}
 			alt={activeTitle}
 		/>
+		</div>
+		
 
-		<div class="anglerow">
+		<div class="anglerow full">
 			<button
 				on:click={() => {
 					changeAngle('01');
@@ -709,6 +740,15 @@
 		width: 100dvw;
 	}
 
+	.page > .full {
+		flex-shrink: 0;
+	}
+
+	.page > .varied {
+		flex-grow: 1;
+		overflow-y: scroll;
+	}
+
 	.transition {
 		height: 100dvh;
 		width: 100dvw;
@@ -717,11 +757,18 @@
 		justify-content: center;
 		align-items: center;
 		background-color: rgba(0, 0, 0, 0.44);
+		position: fixed;
+		top: 0;
+		left: 0;
 	}
 
 	.transition > div {
 		font-size: 48px;
 		color: white;
 		z-index: 20;
+	}
+	.head {
+		width: 100%;
+		text-align: center;
 	}
 </style>
