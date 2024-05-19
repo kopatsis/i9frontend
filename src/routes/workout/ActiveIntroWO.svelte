@@ -619,10 +619,9 @@
 						<div>
 							{#if activeTitle === 'Round Rest'}Up Next:{/if}
 						</div>
-						<div>Round {round.round}:</div>
 						<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
-						<div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div>
-						<div>On: {Math.round(round.on)} / Off: {Math.round(round.off)}</div>
+						<!-- <div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div> -->
+						<div>On: {Math.round(round.on)}s / Off: {Math.round(round.off)}s</div>
 						<div>Type: {round.type}</div>
 						{#if round.type !== 'Combo'}
 							{#if round.reps.length < 2}
