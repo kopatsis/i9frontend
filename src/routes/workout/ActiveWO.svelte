@@ -482,8 +482,6 @@
 				<button on:click={returnNoReset}>No, go back</button>
 				<button on:click={resetStopwatch}>Yes, restart</button>
 			</div>
-		{:else if transitioning}
-			<div>Countdown: {transitionTime}</div>
 		{:else}
 			<div class="anglerow controls full">
 				{#if paused}

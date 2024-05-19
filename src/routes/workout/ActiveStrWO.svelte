@@ -14,7 +14,13 @@
 		currenttime,
 		currenttimeSession,
 		wipeWorkout,
-		woIdSession
+		woIdSession,
+
+		name,
+
+		nameSession
+
+
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -23,6 +29,7 @@
 	import Audio from '../../popups/Audio.svelte';
 	import { get } from 'svelte/store';
 	import TimeProgress from '../../components/TimeProgress.svelte';
+	import Modal from '../../templates/Modal.svelte';
 
 	export let size = 'mid';
 	const cdn = import.meta.env.VITE_CDN_URL;
@@ -81,6 +88,11 @@
 	let genTimes;
 	const unsubscribeGen = genTimesSt.subscribe((genTimesSt) => {
 		genTimes = genTimesSt;
+	});
+
+	let nameWO = '';
+	const unsubscribeName = name.subscribe((name) => {
+		nameWO = name;
 	});
 
 	// Timing functions
@@ -161,6 +173,7 @@
 		unsubscribeScript();
 		unsubscribeSt();
 		unsubscribeGen();
+		unsubscribeName();
 		clearInterval(interval);
 		document.removeEventListener('visibilitychange', handleVisibilityChange);
 		if (worker) {
@@ -168,8 +181,21 @@
 		}
 	});
 
-	function formatTime(time) {
-		return `${Math.floor(Math.round(time) / 60)} min ${Math.floor(Math.round(time) % 60)} sec`;
+	function truncateString(str) {
+		if (str.length > 40) {
+			return str.slice(0, 37) + '...';
+		}
+		return str;
+	}
+
+	function audioDisplay() {
+		pauseStopwatch();
+		audioDisp = true;
+	}
+
+	function goHome() {
+		isCreateForm.set(true);
+		goto('./');
 	}
 
 	// Other interactive functions
@@ -255,6 +281,11 @@
 		if (check === null) {
 			error = 'Error loading workout';
 		}
+		check = nameSession();
+		if (check === null) {
+			error = 'Error loading name';
+		}
+
 		woIdSession();
 
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
@@ -356,120 +387,219 @@
 		lastCalled = Math.floor(time);
 		updateTime(time, 'stretch');
 	}
+
+	$: if (audioDisp === false) {
+		startStopwatch();
+	}
 </script>
 
-{#if loading}
-	<div>loading...</div>
-{:else if error}
-	<div>F: {error}</div>
-	<button on:click={() => goto('./')}>Go Home</button>
-{:else if !timescript || !script || !strRounds || !genTimes}
-	<div>No workout active</div>
-	<button on:click={() => goto('./')}>Create one now</button>
-{:else if timeMessage}
-	<div>
-		Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min {Math.floor(
-			existingTime % 60
-		)} sec?
-	</div>
-	<button on:click={startAtOld}>Yes</button>
-	<button on:click={startAnew}>No</button>
-{:else}
-	{#if exitMessage}
-		<div>Are you sure you want to exit?</div>
-		<button on:click={returnNoExit}>Back to Workout</button>
-		<button on:click={() => quit('Paused')}>Exit</button>
-	{:else if resetMessage}
-		<div>Are you sure you want restart?</div>
-		<button on:click={returnNoReset}>No, go back</button>
-		<button on:click={resetStopwatch}>Yes, restart</button>
-	{:else if transitioning}
-		<div>Countdown: {transitionTime}</div>
-	{:else}
-		{#if paused}
-			<button on:click={startStopwatch}>Start</button>
-		{:else}
-			<button on:click={pauseStopwatch}>Pause</button>
-		{/if}
-		<button on:click={resetQuestion}>Restart</button>
-		<button on:click={exitQuestion}>Quit</button>
-	{/if}
-
-	<div>{formatTime(time)} // {formatTime(genTimes ? genTimes.end : 1)}</div>
-	<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
-
-	{#if status === 'Dynamic'}
-		<div>Dynamic Stretches:</div>
-		{#if activeTitle}
+<div class="page">
+	{#if loading}
+		<div>loading...</div>
+	{:else if error}
+		<Modal closerFunc={() => goto('./')}>
+			<div>F: {error}</div>
+			<button on:click={() => goto('./')}>Go Home</button>
+		</Modal>
+	{:else if !timescript || !script || !strRounds || !genTimes}
+		<Modal closerFunc={() => goto('./')}>
+			<div>No workout active</div>
+			<button on:click={goHome}>Create one now</button>
+		</Modal>
+	{:else if timeMessage}
+		<Modal>
 			<div>
-				<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
-				<span>{activeTitle}</span>
-				<button
-					on:click={() => {
-						showCurrentSample(strRounds.dynamic.samples[set - 1]);
-					}}>&#x2139;</button
-				>
+				Do you want to continue off of your previous saved time of: {Math.floor(existingTime / 60)} min
+				{Math.floor(existingTime % 60)} sec?
+			</div>
+			<div class="anglerow controls">
+				<button on:click={startAtOld}>Yes</button>
+				<button on:click={startAnew}>No</button>
+			</div>
+		</Modal>
+	{:else}
+		{#if transitioning}
+			<div class="transition">
+				<div>{transitionTime}</div>
 			</div>
 		{/if}
-	{:else if status === 'Static'}
-		<div>Static Stretches:</div>
-		<div>
-			<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-			<span>{activeTitle}</span>
+		<div class="head full">
+			{truncateString(nameWO)}:&nbsp;
+			{#if status === 'Dynamic'}
+				Dynamic Stretches
+			{:else}
+				Static Stretches
+			{/if}
+		</div>
+		{#if exitMessage}
+			<div class="full">Are you sure you want to exit?</div>
+			<div class="anglerow controls full">
+				<button on:click={returnNoExit}>Back to Workout</button>
+				<button on:click={() => quit('Paused')}>Exit</button>
+			</div>
+		{:else if resetMessage}
+			<div class="full">Are you sure you want restart?</div>
+			<div class="anglerow controls full">
+				<button on:click={returnNoReset}>No, go back</button>
+				<button on:click={resetStopwatch}>Yes, restart</button>
+			</div>
+		{:else}
+			<div class="anglerow controls full">
+				{#if paused}
+					<button on:click={startStopwatch}>Start</button>
+				{:else}
+					<button on:click={pauseStopwatch}>Pause</button>
+				{/if}
+				<button on:click={resetQuestion}>Restart</button>
+				<button on:click={exitQuestion}>Quit</button>
+				<button on:click={audioDisplay}>Show music</button>
+			</div>
+		{/if}
+
+		<div class="full">
+			<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
+		</div>
+
+		<div class="varied">
+			{#if status === 'Dynamic'}
+				{#if activeTitle}
+					<div>
+						<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
+						<span>{activeTitle}</span>
+						<button
+							on:click={() => {
+								showCurrentSample(strRounds.dynamic.samples[set - 1]);
+							}}>&#x2139;</button
+						>
+					</div>
+				{/if}
+			{:else if status === 'Static'}
+				<div>
+					<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
+					<span>{activeTitle}</span>
+					<button
+						on:click={() => {
+							showCurrentSample(strRounds.static.samples[set - 1]);
+						}}>&#x2139;</button
+					>
+				</div>
+			{/if}
+		</div>
+
+		<div class="full">
+			<Imgframe
+				{time}
+				endTime={scriptEndTime}
+				startTime={scriptStartTime}
+				reversed={scriptRest}
+				{src}
+				alt={activeTitle}
+			/>
+		</div>
+
+		<div class="anglerow full">
 			<button
 				on:click={() => {
-					showCurrentSample(strRounds.static.samples[set - 1]);
-				}}>&#x2139;</button
+					changeAngle('01');
+				}}>Left</button
+			>
+			<button
+				on:click={() => {
+					changeAngle('02');
+				}}>Half Left</button
+			>
+			<button
+				on:click={() => {
+					changeAngle('03');
+				}}>Front</button
+			>
+			<button
+				on:click={() => {
+					changeAngle('04');
+				}}>Half Right</button
+			>
+			<button
+				on:click={() => {
+					changeAngle('05');
+				}}>Right</button
+			>
+			<button
+				on:click={() => {
+					changeAngle('06');
+				}}>Top</button
 			>
 		</div>
+
+		{#if sampleExists && activeTitle}
+			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+		{/if}
+
+		<Audio bind:display={audioDisp} />
 	{/if}
+</div>
 
-	<br />
-	<Imgframe
-		{time}
-		endTime={scriptEndTime}
-		startTime={scriptStartTime}
-		reversed={scriptRest}
-		{src}
-		alt={activeTitle}
-	/>
-	<br />
+<style>
+	.anglerow {
+		display: flex;
+		width: 100%;
+	}
 
-	<button
-		on:click={() => {
-			changeAngle('01');
-		}}>Left</button
-	>
-	<button
-		on:click={() => {
-			changeAngle('02');
-		}}>Half Left</button
-	>
-	<button
-		on:click={() => {
-			changeAngle('03');
-		}}>Front</button
-	>
-	<button
-		on:click={() => {
-			changeAngle('04');
-		}}>Half Right</button
-	>
-	<button
-		on:click={() => {
-			changeAngle('05');
-		}}>Right</button
-	>
-	<button
-		on:click={() => {
-			changeAngle('06');
-		}}>Top</button
-	>
+	.anglerow button {
+		flex: 1;
+		margin-left: 3px;
+		margin-right: 3px;
+	}
 
-	{#if sampleExists && activeTitle}
-		<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
-	{/if}
+	.controls > button {
+		font-size: 16px;
+	}
 
-	<button on:click={() => (audioDisp = true)}>Show music</button>
-	<Audio bind:display={audioDisp} />
-{/if}
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.page {
+		display: flex;
+		flex-direction: column;
+		height: 100dvh;
+		width: 100dvw;
+	}
+
+	.page > .full {
+		flex-shrink: 0;
+	}
+
+	.page > .varied {
+		flex-grow: 1;
+		overflow-y: scroll;
+	}
+
+	.transition {
+		height: 100dvh;
+		width: 100dvw;
+		z-index: 19;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: rgba(0, 0, 0, 0.44);
+		position: fixed;
+		top: 0;
+		left: 0;
+	}
+
+	.transition > div {
+		font-size: 48px;
+		color: white;
+		z-index: 20;
+	}
+	.head {
+		width: 100%;
+		text-align: center;
+	}
+</style>
