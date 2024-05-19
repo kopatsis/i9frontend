@@ -57,8 +57,8 @@
 
 <style>
 	.centerimg {
-		width: 500px;
-		height: 500px;
+		width: calc(100dvw - 12px);
+		height: calc(100dvw - 12px);
 	}
 
 	.parent-container {
@@ -66,8 +66,8 @@
 		justify-content: center;
 		align-items: center;
 		position: relative;
-		width: 512px;
-		height: 512px;
+		width: 100dvw;
+		height: 100dvw;
 		color: aliceblue;
 	}
 
