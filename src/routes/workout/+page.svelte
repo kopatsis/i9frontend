@@ -22,7 +22,7 @@
 
 	function mountCall() {
 		let check = workoutTypeSession();
-		if (!type) {
+		if (check === null) {
 			error = 'No workout type existing';
 		}
 		loading = false;

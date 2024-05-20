@@ -128,7 +128,7 @@
 				paused = false;
 				transitionTime = 3;
 			}
-		}, 888);
+		}, 1000);
 	}
 
 	function pauseStopwatch() {
@@ -466,7 +466,7 @@
 			{:else if status === 'Static'}
 				Static Stretch Cooldown
 			{:else}
-				Workout Round #{roundIter + 1}
+				Workout Round #{round.round}
 			{/if}
 		</div>
 		{#if exitMessage}
@@ -583,32 +583,32 @@
 			<button
 				on:click={() => {
 					changeAngle('01');
-				}}>Left</button
+				}}>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('02');
-				}}>Half Left</button
+				}}>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
-				}}>Front</button
+				}}>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
-				}}>Half Right</button
+				}}>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
-				}}>Right</button
+				}}>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
-				}}>Top</button
+				}}>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
 			>
 		</div>
 
@@ -676,7 +676,7 @@
 	}
 
 	.transition > div {
-		font-size: 48px;
+		font-size: 72px;
 		color: white;
 		z-index: 20;
 	}

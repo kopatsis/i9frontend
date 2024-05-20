@@ -5,8 +5,13 @@
 	export let end = 1;
 
 	function formatTime(time) {
-		return `${Math.floor(Math.round(time) / 60)}:${Math.floor(Math.round(time) % 60)}`;
-	}
+    const minutes = Math.floor(Math.round(time) / 60);
+    let seconds = Math.floor(Math.round(time) % 60);
+    if (seconds < 10) {
+        seconds = `0${seconds}`;
+    }
+    return `${minutes}:${seconds}`;
+}
 </script>
 
 <div class="outerbar">
@@ -35,5 +40,6 @@
 		height: 20px;
 		width: 100%;
 		border: 1px solid #000;
+		box-sizing: border-box;
 	}
 </style>
