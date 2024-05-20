@@ -530,7 +530,7 @@
 							>
 						</div>
 					</div>
-					<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
+					<div>Stretch Set {set} / {strRounds.static.times.length}</div>
 				</div>
 			{:else}
 				<div class="inner">

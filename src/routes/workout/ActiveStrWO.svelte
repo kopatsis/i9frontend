@@ -463,25 +463,39 @@
 		<div class="varied">
 			{#if status === 'Dynamic'}
 				{#if activeTitle}
-					<div>
-						<span>{Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span>
-						<span>{activeTitle}</span>
-						<button
-							on:click={() => {
-								showCurrentSample(strRounds.dynamic.samples[set - 1]);
-							}}>&#x2139;</button
-						>
+					<div class="inner">
+						<div class="grid">
+							<div>
+								{activeTitle === 'Round Rest'
+									? Math.round(strRounds.rest)
+									: Math.round(strRounds.dynamic.times[set - 1])}s
+							</div>
+							<div>{activeTitle}</div>
+							<div>
+								<button
+									on:click={() => {
+										showCurrentSample(strRounds.dynamic.samples[set - 1]);
+									}}>&#x2139;</button
+								>
+							</div>
+						</div>
+						<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
 					</div>
 				{/if}
 			{:else if status === 'Static'}
-				<div>
-					<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-					<span>{activeTitle}</span>
-					<button
-						on:click={() => {
-							showCurrentSample(strRounds.static.samples[set - 1]);
-						}}>&#x2139;</button
-					>
+				<div class="inner">
+					<div class="grid">
+						<div>{Math.round(strRounds.static.times[set - 1])}s</div>
+						<div>{activeTitle}</div>
+						<div>
+							<button
+								on:click={() => {
+									showCurrentSample(strRounds.static.samples[set - 1]);
+								}}>&#x2139;</button
+							>
+						</div>
+					</div>
+					<div>Stretch Set {set} / {strRounds.static.times.length}</div>
 				</div>
 			{/if}
 		</div>
@@ -601,5 +615,15 @@
 	.head {
 		width: 100%;
 		text-align: center;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: max-content 1fr max-content;
+		gap: 1px;
+		background-color: rgb(228, 228, 228);
+	}
+	.grid > div {
+		padding: 6px;
+		background: white;
 	}
 </style>
