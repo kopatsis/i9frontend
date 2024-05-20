@@ -112,7 +112,7 @@
 				clearInterval(intervalCountdown);
 
 				if (worker) {
-					worker.postMessage({ command: 'start' });
+					worker.postMessage({ command: 'start', time: time });
 				} else {
 					if (interval === null) {
 						interval = setInterval(() => {
@@ -162,6 +162,10 @@
 
 		lastCalled = 0;
 		interval = null;
+
+		timeMessage = false;
+		resetMessage = false;
+		startStopwatch();
 	}
 
 	function handleVisibilityChange() {
@@ -196,6 +200,11 @@
 	function audioDisplay() {
 		pauseStopwatch();
 		audioDisp = true;
+	}
+
+	const audioUndisplay = () => {
+		audioDisp = false;
+		startStopwatch();
 	}
 
 	function goHome() {
@@ -420,9 +429,6 @@
 		updateTime(time);
 	}
 
-	$: if (audioDisp === false) {
-		startStopwatch();
-	}
 </script>
 
 <div class="page">
@@ -635,7 +641,7 @@
 			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 		{/if}
 
-		<Audio bind:display={audioDisp} />
+		<Audio bind:display={audioDisp} closer={audioUndisplay} />
 	{/if}
 </div>
 

@@ -15,12 +15,8 @@
 		currenttimeSession,
 		wipeWorkout,
 		woIdSession,
-
 		name,
-
 		nameSession
-
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -106,7 +102,7 @@
 				clearInterval(intervalCountdown);
 
 				if (worker) {
-					worker.postMessage({ command: 'start' });
+					worker.postMessage({ command: 'start', time: time });
 				} else {
 					if (interval === null) {
 						interval = setInterval(() => {
@@ -155,6 +151,7 @@
 		interval = null;
 
 		resetMessage = false;
+		timeMessage = false;
 
 		startStopwatch();
 		updateTime(time, 'stretch');
@@ -191,6 +188,11 @@
 	function audioDisplay() {
 		pauseStopwatch();
 		audioDisp = true;
+	}
+
+	const audioUndisplay = () => {
+		audioDisp = false;
+		startStopwatch();
 	}
 
 	function goHome() {
@@ -388,9 +390,6 @@
 		updateTime(time, 'stretch');
 	}
 
-	$: if (audioDisp === false) {
-		startStopwatch();
-	}
 </script>
 
 <div class="page">
@@ -548,7 +547,7 @@
 			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 		{/if}
 
-		<Audio bind:display={audioDisp} />
+		<Audio bind:display={audioDisp} closer={audioUndisplay} />
 	{/if}
 </div>
 
@@ -591,9 +590,15 @@
 
 	.page > .varied {
 		flex-grow: 1;
-		overflow-y: scroll;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
+	.varied > .inner {
+		overflow-y: scroll;
+		overflow-x: scroll;
+	}
 	.transition {
 		height: 100dvh;
 		width: 100dvw;

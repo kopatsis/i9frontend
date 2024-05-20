@@ -1,7 +1,13 @@
 <script>
+// @ts-nocheck
+
 	import Modal from '../templates/Modal.svelte';
 
 	export let display = false;
+	/**
+	 * @type {(() => void) | null}
+	 */
+	 export let closer = null;
 
 	let displayList = false;
 	let src =
@@ -30,12 +36,12 @@
 	}
 
 	function close() {
-		display = false;
 		displayList = false;
+		closer();
 	}
 </script>
 
-<Modal bind:display closeable={false}>
+<Modal bind:display closeable={false} closerFunc={closer}>
 	<div class="whole {display ? '' : 'hide'}">
 		<div class="controls">
 			<button on:click={() => (displayList = !displayList)}

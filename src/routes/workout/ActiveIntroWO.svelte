@@ -8,14 +8,12 @@
 		genTimesSt,
 		updateTime,
 		workoutRoundsSt,
-		afterWOMessage,
 		timescriptStSession,
 		scriptStSession,
 		strRoundsStSession,
 		genTimesStSession,
 		workoutRoundsStSession,
 		roundsSet,
-		wipeWorkout,
 		currenttime,
 		woIdSession,
 		name,
@@ -106,6 +104,7 @@
 
 	// Timing functions
 	function startStopwatch() {
+		clearInterval(interval);
 		if (intervalCountdown) clearInterval(intervalCountdown);
 		transitioning = true;
 		intervalCountdown = setInterval(() => {
@@ -115,7 +114,8 @@
 				clearInterval(intervalCountdown);
 
 				if (worker) {
-					worker.postMessage({ command: 'start' });
+					console.log(time);
+					worker.postMessage({ command: 'start', time: time });
 				} else {
 					if (interval === null) {
 						interval = setInterval(() => {
@@ -167,6 +167,7 @@
 		interval = null;
 
 		timeMessage = false;
+		resetMessage = false;
 		startStopwatch();
 	}
 
@@ -266,6 +267,11 @@
 	function audioDisplay() {
 		pauseStopwatch();
 		audioDisp = true;
+	}
+
+	const audioUndisplay = () => {
+		audioDisp = false;
+		startStopwatch();
 	}
 
 	function goHome() {
@@ -506,9 +512,6 @@
 		updateTime(time);
 	}
 
-	$: if (audioDisp === false) {
-		startStopwatch();
-	}
 </script>
 
 <div class="page">
@@ -585,7 +588,7 @@
 		<div class="full">
 			<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 		</div>
-		
+
 		<div class="varied">
 			{#if status === 'Dynamic'}
 				{#if activeTitle}
@@ -674,46 +677,51 @@
 
 		<div class="full">
 			<Imgframe
-			{time}
-			endTime={scriptEndTime}
-			startTime={scriptStartTime}
-			reversed={scriptRest}
-			{src}
-			alt={activeTitle}
-		/>
+				{time}
+				endTime={scriptEndTime}
+				startTime={scriptStartTime}
+				reversed={scriptRest}
+				{src}
+				alt={activeTitle}
+			/>
 		</div>
-		
 
 		<div class="anglerow full">
 			<button
 				on:click={() => {
 					changeAngle('01');
-				}}>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
+				}}
+				>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('02');
-				}}>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
+				}}
+				>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
-				}}>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
+				}}
+				>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
-				}}>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
+				}}
+				>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
-				}}>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
+				}}
+				>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
-				}}>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
+				}}
+				>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
 			>
 		</div>
 
@@ -721,7 +729,7 @@
 			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 		{/if}
 
-		<Audio bind:display={audioDisp} />
+		<Audio bind:display={audioDisp} closer={audioUndisplay} />
 	{/if}
 </div>
 
@@ -764,7 +772,16 @@
 
 	.page > .varied {
 		flex-grow: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.varied > .inner {
 		overflow-y: scroll;
+		overflow-x: scroll;
+		max-height: 100%;
+		max-width: 100%;
 	}
 
 	.transition {

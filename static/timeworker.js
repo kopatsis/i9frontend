@@ -5,6 +5,10 @@ let interval = null;
 self.onmessage = function (event) {
 	switch (event.data.command) {
 		case 'start':
+			if (typeof event.data.time === 'number') {
+				time = event.data.time;
+				self.postMessage(time.toFixed(2));
+			}
 			if (!interval) {
 				interval = setInterval(() => {
 					time += 0.01;
