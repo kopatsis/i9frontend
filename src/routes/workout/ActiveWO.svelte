@@ -17,12 +17,8 @@
 		strRoundsStSession,
 		genTimesStSession,
 		woIdSession,
-
 		name,
-
 		nameSession
-
-
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -502,66 +498,83 @@
 		<div class="varied">
 			{#if status === 'Dynamic'}
 				{#if activeTitle}
-					<div>
-						<span
-							>{activeTitle === 'Round Rest'
-								? Math.round(strRounds.rest)
-								: Math.round(strRounds.dynamic.times[set - 1])}s: &nbsp;</span
-						>
-						<span>{activeTitle}</span>
-						<button
-							on:click={() => {
-								showCurrentSample(strRounds.dynamic.samples[set - 1]);
-							}}>&#x2139;</button
-						>
+					<div class="inner">
+						<div class="grid">
+							<div>
+								{activeTitle === 'Round Rest'
+									? Math.round(strRounds.rest)
+									: Math.round(strRounds.dynamic.times[set - 1])}s
+							</div>
+							<div>{activeTitle}</div>
+							<div>
+								<button
+									on:click={() => {
+										showCurrentSample(strRounds.dynamic.samples[set - 1]);
+									}}>&#x2139;</button
+								>
+							</div>
+						</div>
+						<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
 					</div>
 				{/if}
 			{:else if status === 'Static'}
-				<div>
-					<span>{Math.round(strRounds.static.times[set - 1])}s: &nbsp;</span>
-					<span>{activeTitle}</span>
-					<button
-						on:click={() => {
-							showCurrentSample(strRounds.static.samples[set - 1]);
-						}}>&#x2139;</button
-					>
+				<div class="inner">
+					<div class="grid">
+						<div>{Math.round(strRounds.static.times[set - 1])}s</div>
+						<div>{activeTitle}</div>
+						<div>
+							<button
+								on:click={() => {
+									showCurrentSample(strRounds.static.samples[set - 1]);
+								}}>&#x2139;</button
+							>
+						</div>
+					</div>
+					<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
 				</div>
 			{:else}
-				<div>
+				<div class="inner">
 					{#if activeTitle === 'Round Rest' && round.round === 9}
 						<div>Nice Job! That's it for the main workout!</div>
+						<div>Up Next: Static Stretch Cooldown</div>
 					{:else}
 						<div>
 							{#if activeTitle === 'Round Rest'}Up Next:{/if}
 						</div>
-						<div>Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}</div>
-						<!-- <div>Start: {Math.floor(round.start / 60)}m {Math.round(round.start % 60)}s</div> -->
-						<div>On: {Math.round(round.on)}s / Off: {Math.round(round.off)}s</div>
-						<div>Type: {round.type}</div>
-						{#if round.type !== 'Combo'}
-							{#if round.reps.length < 2}
-								<span>{round.reps[0]}x &nbsp;</span>
-							{:else if activeTitle === 'Round Rest'}
-								<span>{round.reps[0]}-{round.reps[1]}x &nbsp;</span>
-							{:else if set % 2 == 1}
-								<span>{round.reps[0]}x &nbsp;</span>
-							{:else}
-								<span>{round.reps[1]}x &nbsp;</span>
-							{/if}
-						{/if}
-						{#each round.samples as sample, j}
-							<div>
-								{#if round.type === 'Combo'}
-									<span>{round.reps[j]}x &nbsp;</span>
+						<div class="grid">
+							{#if round.type !== 'Combo'}
+								{#if round.reps.length < 2}
+									<div>{round.reps[0]}x</div>
+								{:else if activeTitle === 'Round Rest'}
+									<div>{round.reps[0]}-{round.reps[1]}x</div>
+								{:else if set % 2 == 1}
+									<div>{round.reps[0]}x</div>
+								{:else}
+									<div>{round.reps[1]}x</div>
 								{/if}
-								<span>{round.titles[j]}</span>
-								<button
-									on:click={() => {
-										showCurrentSample(sample);
-									}}>&#x2139;</button
-								>
-							</div>
-						{/each}
+							{/if}
+							{#each round.samples as sample, j}
+								{#if round.type === 'Combo'}
+									<div>{round.reps[j]}x</div>
+								{:else if j !== 0}
+									<div>&nbsp;</div>
+								{/if}
+								<div>{round.titles[j]}</div>
+								<div>
+									<button
+										on:click={() => {
+											showCurrentSample(sample);
+										}}>&#x2139;</button
+									>
+								</div>
+							{/each}
+						</div>
+						<div>
+							Type: {round.type} || Set {activeTitle === 'Round Rest' ? 0 : set} / {round.sets}
+						</div>
+						<div>
+							Exercise Per Set: {Math.round(round.on)}s / Rest Per Set: {Math.round(round.off)}s
+						</div>
 						<div>Rest before next round: {Math.round(round.roundrest + round.off)}</div>
 					{/if}
 				</div>
@@ -583,32 +596,38 @@
 			<button
 				on:click={() => {
 					changeAngle('01');
-				}}>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
+				}}
+				>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('02');
-				}}>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
+				}}
+				>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
-				}}>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
+				}}
+				>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
-				}}>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
+				}}
+				>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
-				}}>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
+				}}
+				>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
-				}}>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
+				}}
+				>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
 			>
 		</div>
 
@@ -659,7 +678,14 @@
 
 	.page > .varied {
 		flex-grow: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.varied > .inner {
 		overflow-y: scroll;
+		overflow-x: scroll;
 	}
 
 	.transition {
@@ -683,5 +709,15 @@
 	.head {
 		width: 100%;
 		text-align: center;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: max-content 1fr max-content;
+		gap: 1px;
+		background-color: rgb(228, 228, 228);
+	}
+	.grid > div {
+		padding: 6px;
+		background: white;
 	}
 </style>
