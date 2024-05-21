@@ -1,5 +1,5 @@
 /**
- * Makes a POST request to the server for a workout status update
+ * Makes a PATCH request to the server for a workout status update
  *
  * @param {string} token - The token
  * @param {string} id - The wo ID

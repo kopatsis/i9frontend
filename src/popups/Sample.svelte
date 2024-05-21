@@ -230,9 +230,4 @@
 		justify-content: right;
 		width: 100%;
 	}
-
-	/* :global(.desc br) {
-		display: block;
-		margin-bottom: 2rem;
-	} */
 </style>

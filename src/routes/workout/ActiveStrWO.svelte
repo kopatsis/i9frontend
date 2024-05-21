@@ -593,11 +593,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		overflow-y: scroll;
 	}
 
 	.varied > .inner {
-		overflow-y: scroll;
-		overflow-x: scroll;
+		max-height: 100%;
+		max-width: 100%;
 	}
 	.transition {
 		height: 100dvh;
