@@ -6,11 +6,15 @@
 	import { cloneWorkoutById, extractImageList, getWorkoutById } from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
+	import { rename, workouts } from '$lib/stores/history';
 
 	export let entry = null;
 	let loading = false;
 	let error = '';
 	let expanded = false;
+
+	let editing = false;
+	let newname = '';
 
 	function formatDateString(isoDateString) {
 		const date = new Date(isoDateString);
@@ -123,6 +127,21 @@
 		goto('./');
 	}
 
+	async function nameChange() {
+		if (newname != entry.Name) {
+			try {
+				const token = await getLoginToken();
+				await rename(token, entry.ID, newname, 'exercise');
+				workouts.update((items) =>
+					items.map((i) => (i.ID === entry.ID ? { ...i, Name: newname } : i))
+				);
+			} catch (err) {
+				error = err;
+			}
+		}
+		editing = false;
+	}
+
 	const options = [
 		'Intro',
 		'Stretch',
@@ -147,7 +166,28 @@
 			<div><b>Workout</b></div>
 		{/if}
 		<div>Date: {formatDateString(entry.Date)}</div>
-		<div>Name: {entry.Name}</div>
+		<div>
+			{#if !editing}
+				Name: {entry.Name}&nbsp; 
+				<button
+					on:click={() => {
+						editing = !editing;
+						newname = entry.Name;
+					}}>Edit</button
+				>
+			{:else}
+				New Name:&nbsp;<input type="text" length="100" />
+				<div>
+					<button
+						on:click={() => {
+							editing = false;
+							newname = entry.Name;
+						}}>Discard</button
+					>
+					<button on:click={nameChange}>Save</button>
+				</div>
+			{/if}
+		</div>
 		<div>Status: {entry.Status}</div>
 		<div>Difficulty: {options[entry.Difficulty + 1]}</div>
 		<div>
@@ -164,28 +204,28 @@
 			<div>Static Stretches: {getFirst3(entry.Statics)}</div>
 			<button on:click={() => (expanded = true)}>Expand</button>
 		{:else}
-			<br>
+			<br />
 			<div>Dynamic Warmup:</div>
 			{#each entry.Dynamics as name, i (i)}
 				<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
 			{/each}
 
-			<br>
+			<br />
 
 			{#each entry.Exercises as round, i (i)}
 				<div>Round {i + 1}: {round.Status}</div>
 				<div>
-					 - {Math.round(round.Times.ExercisePerSet)}s on / {Math.round(round.Times.RestPerSet)}s off
+					- {Math.round(round.Times.ExercisePerSet)}s on / {Math.round(round.Times.RestPerSet)}s off
 				</div>
 				<div>
-					 - {round.ExerciseIDs.join(', ')}
+					- {round.ExerciseIDs.join(', ')}
 				</div>
 				{#if round.Rating > 0}
-					<div> - Rating: {Math.round(round.Rating)}</div>
+					<div>- Rating: {Math.round(round.Rating)}</div>
 				{/if}
 			{/each}
 
-			<br>
+			<br />
 
 			<div>Static Cooldown:</div>
 			{#each entry.Statics as name, i (i)}
@@ -210,7 +250,7 @@
 </div>
 
 <style>
-	.entry{
+	.entry {
 		margin: 10px;
 		margin-top: 20px;
 		padding: 10px;
