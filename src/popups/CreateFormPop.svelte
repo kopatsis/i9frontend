@@ -1,7 +1,6 @@
 <script>
 	// @ts-nocheck
 
-	import { goto } from '$app/navigation';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { onDestroy, onMount } from 'svelte';
 	import CreateForm from '../components/CreateForm.svelte';
