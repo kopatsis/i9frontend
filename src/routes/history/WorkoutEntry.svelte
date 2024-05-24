@@ -171,17 +171,17 @@
 				Name: {entry.Name}&nbsp; 
 				<button
 					on:click={() => {
-						editing = !editing;
 						newname = entry.Name;
+						editing = !editing;
 					}}>Edit</button
 				>
 			{:else}
-				New Name:&nbsp;<input type="text" length="100" />
+				New Name:&nbsp;<input type="text" length="100" bind:value={newname} />
 				<div>
 					<button
 						on:click={() => {
-							editing = false;
 							newname = entry.Name;
+							editing = false;
 						}}>Discard</button
 					>
 					<button on:click={nameChange}>Save</button>

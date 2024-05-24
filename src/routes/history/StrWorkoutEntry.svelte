@@ -16,6 +16,9 @@
 	let loading = false;
 	let error = '';
 
+	let editing = false;
+	let newname = "";
+
 	function formatDateString(isoDateString) {
 		const date = new Date(isoDateString);
 		return date.toLocaleString('en-US', {
@@ -79,6 +82,22 @@
 			console.log(err);
 		}
 	}
+
+	async function nameChange() {
+		if (newname != entry.Name) {
+			try {
+				const token = await getLoginToken();
+				await rename(token, entry.ID, newname, 'stretch');
+				workouts.update((items) =>
+					items.map((i) => (i.ID === entry.ID ? { ...i, Name: newname } : i))
+				);
+			} catch (err) {
+				error = err;
+			}
+		}
+		editing = false;
+	}
+
 </script>
 
 <div class="entry">
@@ -89,7 +108,28 @@
 	{:else}
 		<div><b>Stretch Workout</b></div>
 		<div>Date: {formatDateString(entry.Date)}</div>
-		<div>Name: {entry.Name}</div>
+		<div>
+			{#if !editing}
+				Name: {entry.Name}&nbsp; 
+				<button
+					on:click={() => {
+						newname = entry.Name;
+						editing = !editing;
+					}}>Edit</button
+				>
+			{:else}
+				New Name:&nbsp;<input type="text" length="100" bind:value={newname}/>
+				<div>
+					<button
+						on:click={() => {
+							newname = entry.Name;
+							editing = false;
+						}}>Discard</button
+					>
+					<button on:click={nameChange}>Save</button>
+				</div>
+			{/if}
+		</div>
 		<div>Status: {entry.Status}</div>
 		<div>
 			Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
