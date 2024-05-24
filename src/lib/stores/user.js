@@ -68,9 +68,9 @@ async function fetchUserData(token) {
     }
 }
 
-export async function getUser(token) {
+export async function getUser(token, force=false) {
     console.log(token)
-    if (!get(user)) {
+    if (force || !get(user)) {
         try{
             const currentUser = await fetchUserData(token);
             console.log(currentUser);

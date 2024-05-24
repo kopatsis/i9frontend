@@ -98,6 +98,7 @@
 
 		try {
 			await patchUser(token, body);
+			await getUser(token, true);
 			exists = false;
 		} catch (err) {
 			error = err;

@@ -39,7 +39,7 @@
 		}
 
 		const token = await getLoginToken();
-		await getUser(token);
+		await getUser(token, true);
 
 		status = userObj && userObj.Paying && userObj.Paying === true ? 'Paid' : 'Unpaid';
 

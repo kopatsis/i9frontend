@@ -163,7 +163,7 @@
 	async function mountCall() {
 		const token = await getLoginToken();
 		console.log(token);
-		await Promise.all([getUser(token), getLastWO(token)]);
+		await Promise.all([getUser(token, true), getLastWO(token)]);
 		uname = userObj && userObj.Name ? userObj.Name : '';
 		console.log(uname);
 		workoutTypeSession();
