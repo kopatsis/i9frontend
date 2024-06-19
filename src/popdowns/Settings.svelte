@@ -6,13 +6,19 @@
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../components/Logout.svelte';
 	import Setting from '../components/Setting.svelte';
-	import SettingBackground from '../components/SettingBackground.svelte';
+	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	// import SettingBackground from '../components/SettingBackground.svelte';
 
 	export let dispSettings = true;
 
 	let loading = true;
 	let error = '';
 	let retrievedSettings = null;
+
+	let localuser = false;
+	const unsubLocalLogin = localLogin.subscribe((value) => {
+		localuser = value;
+	});
 
 	function closerAny() {
 		dispSettings = false;
@@ -30,22 +36,81 @@
 		}
 	}
 
+	async function getCode() {
+		try {
+			const response = await fetch(`${import.meta.env.VITE_ADMIN_URL}/code`);
+			if (!response.ok) {
+				throw new Error('Failed to fetch code');
+			}
+			const data = await response.json();
+			return data.code;
+		} catch (err) {
+			throw new Error(`Error fetching code: ${err.message}`);
+		}
+	}
+
+	async function getToken() {
+		try {
+			const token = await getLoginToken();
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refresh`, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			});
+			if (!response.ok) {
+				throw new Error('Failed to fetch code');
+			}
+			const data = await response.json();
+			return data.token;
+		} catch (err) {
+			throw new Error(`Error fetching code: ${err.message}`);
+		}
+	}
+
+	async function adminPage() {
+		if (!localuser) {
+			try {
+				const userPromise = getToken();
+				const codePromise = getCode();
+
+				let [refreshToken, code] = await Promise.all([userPromise, codePromise]);
+
+				refreshToken = refreshToken === "" ? "x1" : refreshToken;
+
+				if (refreshToken && code) {
+					const url = new URL(`${import.meta.env.VITE_ADMIN_URL}/multipass`);
+					url.searchParams.set('multipass', refreshToken);
+					url.searchParams.set('code', code);
+
+					window.open(url.toString(), '_blank');
+				} else {
+					throw new Error('Failed to get refresh token or code');
+				}
+			} catch (err) {
+				console.error(`Error opening admin page: ${err.message}`);
+			}
+		}
+	}
+
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
 		userData = value;
 	});
-	onDestroy(unsubscribe);
+	onDestroy(() => {
+		unsubscribe;
+		unsubLocalLogin();
+	});
 
 	async function mountCall() {
 		window.addEventListener('keydown', handleKeydown);
 
 		try {
 			let retset = {
-				theme: JSON.parse(localStorage.getItem('theme')),
-				sound: JSON.parse(localStorage.getItem('sound')),
-				motion: JSON.parse(localStorage.getItem('motion')),
-				data: JSON.parse(localStorage.getItem('data')),
-				back: JSON.parse(localStorage.getItem('back'))
+				theme: localStorage.getItem('theme'),
+				sound: localStorage.getItem('sound'),
+				motion: localStorage.getItem('motion'),
+				data: localStorage.getItem('data'),
+				back: localStorage.getItem('back')
 			};
 			if (!retset.theme || !retset.sound || !retset.motion || !retset.data || !retset.back) {
 				retset = {
@@ -122,20 +187,26 @@
 			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
 			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
-			<Setting key={'back'} options={['Workout Pauses', 'Workout Continutes']} bind:data={retrievedSettings} />
+			<Setting
+				key={'back'}
+				options={['Workout Pauses', 'Workout Continutes']}
+				bind:data={retrievedSettings}
+			/>
 			<!-- {#if userData.Paying} -->
 			<!-- <SettingBackground /> -->
 			<!-- {/if} -->
+			{#if !localuser}
+				<button on:click={adminPage}>Account Admin Page</button>
+			{/if}
 			<div class="plainbuttons">
-				{#if userData.Paying}
-					<button class="actionbutton">Cancel Giga Subscription</button>
-				{:else}
-					<button class="actionbutton">Start Giga Subscription</button>
+				{#if !localuser}
+					{#if userData.Paying}
+						<button class="actionbutton">Cancel Giga Subscription</button>
+					{:else}
+						<button class="actionbutton">Start Giga Subscription</button>
+					{/if}
 				{/if}
 			</div>
-
-			<a href="https://admin.i9fit.co/multipass">Account Admin Page</a>
-			
 		{/if}
 		<div class="plainbuttons">
 			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
