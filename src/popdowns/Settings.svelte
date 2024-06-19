@@ -53,7 +53,7 @@
 					sound: 'Regular',
 					motion: 'Regular',
 					data: 'Regular',
-					back: 'Paused'
+					back: 'WO Pauses'
 				};
 				localStorage.setItem('theme', retset.mode);
 				localStorage.setItem('sound', retset.sound);
@@ -68,7 +68,7 @@
 				sound: 'Regular',
 				motion: 'Regular',
 				data: 'Regular',
-				back: 'Paused'
+				back: 'WO Pauses'
 			};
 			localStorage.setItem('theme', retset.mode);
 			localStorage.setItem('sound', retset.sound);
@@ -117,6 +117,7 @@
 			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
 			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
+			<Setting key={'back'} options={['Workout Pauses', 'Workout Continutes']} bind:data={retrievedSettings} />
 			<!-- {#if userData.Paying} -->
 			<SettingBackground />
 			<!-- {/if} -->

@@ -1,20 +1,27 @@
 <script>
 	// @ts-nocheck
 
-	export let key = 'mode';
-	export let data = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
+	export let key = 'theme';
+	export let data = {
+		theme: 'Dark Mode',
+		sound: 'Regular',
+		motion: 'Regular',
+		data: 'Regular',
+		back: 'Paused'
+	};
 	export let options = ['Dark Mode', 'Light Mode'];
 
 	let labelMap = {
-		mode: 'Appearance Theme',
+		theem: 'Appearance Theme',
 		sound: 'Sound Settings',
 		motion: 'Motion Setings',
-		data: 'Data Usage'
+		data: 'Data Usage',
+		back: 'In Background'
 	};
 
 	function updatePair(newvalue) {
 		data = { ...data, [key]: newvalue };
-		localStorage.setItem('yZgvPlBiFb', JSON.stringify(data));
+		localStorage.setItem(key, newvalue);
 	}
 </script>
 
@@ -31,16 +38,16 @@
 </div>
 
 <style>
-	.ask{
+	.ask {
 		margin-left: 5px;
 	}
-	.options{
+	.options {
 		display: flex;
 		width: 100%;
 		margin-bottom: 10px;
 	}
 
-	.options button{
+	.options button {
 		flex: 1;
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
