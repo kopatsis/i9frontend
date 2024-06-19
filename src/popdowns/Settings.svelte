@@ -40,15 +40,41 @@
 		window.addEventListener('keydown', handleKeydown);
 
 		try {
-			let retset = JSON.parse(localStorage.getItem('yZgvPlBiFb'));
-			if (!retset) {
-				retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
-				localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
+			let retset = {
+				theme: JSON.parse(localStorage.getItem('theme')),
+				sound: JSON.parse(localStorage.getItem('sound')),
+				motion: JSON.parse(localStorage.getItem('motion')),
+				data: JSON.parse(localStorage.getItem('data')),
+				back: JSON.parse(localStorage.getItem('back'))
+			};
+			if (!retset.theme || !retset.sound || !retset.motion || !retset.data || !retset.back) {
+				retset = {
+					theme: 'Dark Mode',
+					sound: 'Regular',
+					motion: 'Regular',
+					data: 'Regular',
+					back: 'Paused'
+				};
+				localStorage.setItem('theme', retset.mode);
+				localStorage.setItem('sound', retset.sound);
+				localStorage.setItem('motion', retset.motion);
+				localStorage.setItem('data', retset.data);
+				localStorage.setItem('back', retset.back);
 			}
 			retrievedSettings = retset;
 		} catch (error) {
-			let retset = { mode: 'Dark Mode', sound: 'Regular', motion: 'Regular', data: 'Regular' };
-			localStorage.setItem('yZgvPlBiFb', JSON.stringify(retset));
+			let retset = {
+				theme: 'Dark Mode',
+				sound: 'Regular',
+				motion: 'Regular',
+				data: 'Regular',
+				back: 'Paused'
+			};
+			localStorage.setItem('theme', retset.mode);
+			localStorage.setItem('sound', retset.sound);
+			localStorage.setItem('motion', retset.motion);
+			localStorage.setItem('data', retset.data);
+			localStorage.setItem('back', retset.back);
 			retrievedSettings = retset;
 		}
 
@@ -87,12 +113,12 @@
 			<div>Error fetching user data, please try again</div>
 		{:else}
 			<div class="head">User Settings</div>
-			<Setting key={'mode'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
+			<Setting key={'theme'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
 			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
 			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
 			<!-- {#if userData.Paying} -->
-				<SettingBackground />
+			<SettingBackground />
 			<!-- {/if} -->
 			<div class="plainbuttons">
 				{#if userData.Paying}
@@ -109,12 +135,11 @@
 		<div class="plainbuttons">
 			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
 		</div>
-		
 	</div>
 </div>
 
 <style>
-	.head{
+	.head {
 		width: 100%;
 		text-align: center;
 		font-size: 20px;
@@ -149,7 +174,7 @@
 		padding-bottom: 0px;
 	}
 
-	.plainbuttons{
+	.plainbuttons {
 		display: flex;
 		justify-content: center;
 		align-items: center;
