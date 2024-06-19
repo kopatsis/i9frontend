@@ -112,7 +112,12 @@
 		{:else if !userData}
 			<div>Error fetching user data, please try again</div>
 		{:else}
-			<div class="head">User Settings</div>
+			<div class="head">Device Settings</div>
+
+			<div class="plainbuttons">
+				<Logout />
+			</div>
+
 			<Setting key={'theme'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
 			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
 			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
@@ -129,9 +134,8 @@
 				{/if}
 			</div>
 
-			<div class="plainbuttons">
-				<Logout />
-			</div>
+			<a href="https://admin.i9fit.co/multipass">Account Admin Page</a>
+			
 		{/if}
 		<div class="plainbuttons">
 			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
