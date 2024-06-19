@@ -257,7 +257,7 @@
 		const oldTime = get(currenttime);
 		console.log(oldTime);
 
-		if (localStorage.getItem('iDIzeJzvXq') === 'dIGdXauHOI') {
+		if (localStoragegetItem('back') === 'Workout Continutes') {
 			worker = new Worker(new URL('/timeworker.js', import.meta.url));
 
 			worker.onmessage = function (event) {

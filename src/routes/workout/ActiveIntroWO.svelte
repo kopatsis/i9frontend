@@ -426,7 +426,7 @@
 		currenttimeSession();
 		const oldTime = get(currenttime);
 
-		if (localStorage.getItem('iDIzeJzvXq') === 'dIGdXauHOI') {
+		if (localStorage.getItem('back') === 'Workout Continutes') {
 			worker = new Worker(new URL('/timeworker.js', import.meta.url));
 
 			worker.onmessage = function (event) {

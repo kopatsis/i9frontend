@@ -119,7 +119,7 @@
 			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
 			<Setting key={'back'} options={['Workout Pauses', 'Workout Continutes']} bind:data={retrievedSettings} />
 			<!-- {#if userData.Paying} -->
-			<SettingBackground />
+			<!-- <SettingBackground /> -->
 			<!-- {/if} -->
 			<div class="plainbuttons">
 				{#if userData.Paying}
