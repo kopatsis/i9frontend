@@ -67,7 +67,7 @@
 		}
 	}
 
-	async function adminPage() {
+	async function adminPage(dest="home") {
 		if (!localuser) {
 			try {
 				const userPromise = getToken();
@@ -81,6 +81,7 @@
 					const url = new URL(`${import.meta.env.VITE_ADMIN_URL}/multipass`);
 					url.searchParams.set('multipass', refreshToken);
 					url.searchParams.set('code', code);
+					url.searchParams.set('dest', dest);
 
 					window.open(url.toString(), '_blank');
 				} else {
@@ -201,9 +202,9 @@
 			<div class="plainbuttons">
 				{#if !localuser}
 					{#if userData.Paying}
-						<button class="actionbutton">Cancel Giga Subscription</button>
+						<button class="actionbutton" on:click={() => adminPage('pay')}>Cancel Giga Subscription</button>
 					{:else}
-						<button class="actionbutton">Start Giga Subscription</button>
+						<button class="actionbutton" on:click={() => adminPage('pay')}>Start Giga Subscription</button>
 					{/if}
 				{/if}
 			</div>
