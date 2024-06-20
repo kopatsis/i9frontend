@@ -197,7 +197,9 @@
 			<!-- <SettingBackground /> -->
 			<!-- {/if} -->
 			{#if !localuser}
-				<button on:click={adminPage}>Account Admin Page</button>
+			<div class="plainbuttons">
+				<button on:click={adminPage} class="link-button">Account Admin Page</button>
+			</div>
 			{/if}
 			<div class="plainbuttons">
 				{#if !localuser}
@@ -216,6 +218,16 @@
 </div>
 
 <style>
+	.link-button {
+		background: none;
+		border: none;
+		color: rgb(59, 59, 59);
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
+	}
 	.head {
 		width: 100%;
 		text-align: center;

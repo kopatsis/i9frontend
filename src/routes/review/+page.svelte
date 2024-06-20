@@ -90,7 +90,7 @@
 
 {#if !loading}
 	<div class="submit">
-		<button on:click={() => goto('./')}>Discard</button>
+		<button on:click={() => goto('./')}>Exit Home</button>
 		<button on:click={() => goto('./workout')}>Proceed</button>
 	</div>
 {/if}
