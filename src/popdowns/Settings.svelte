@@ -119,7 +119,7 @@
 					sound: 'Regular',
 					motion: 'Regular',
 					data: 'Regular',
-					back: 'WO Pauses'
+					back: 'Workout Pauses'
 				};
 				localStorage.setItem('theme', retset.mode);
 				localStorage.setItem('sound', retset.sound);
@@ -134,7 +134,7 @@
 				sound: 'Regular',
 				motion: 'Regular',
 				data: 'Regular',
-				back: 'WO Pauses'
+				back: 'Workout Pauses'
 			};
 			localStorage.setItem('theme', retset.mode);
 			localStorage.setItem('sound', retset.sound);

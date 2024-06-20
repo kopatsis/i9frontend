@@ -3,9 +3,10 @@
  *
  * @param {string} token - The token
  * @param {string} email - What will be used for the name attribute
+ * @param {string} refresh - The refresh token
  * @returns {Promise<Object>} A promise that resolves with the full response object.
  */
-export async function postNewUser(token, email) {
+export async function postNewUser(token, email, refresh) {
 	// @ts-ignore
 	const url = import.meta.env.VITE_BACKEND_URL + '/users';
 	const options = {
@@ -14,7 +15,7 @@ export async function postNewUser(token, email) {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
 		},
-		body: JSON.stringify({ name: email})
+		body: JSON.stringify({ name: email, token: refresh})
 	};
 
 	try {

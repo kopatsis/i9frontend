@@ -25,7 +25,7 @@
 			const user = userCredential.user;
 			const name = '';
 			const token = await user.getIdToken();
-			await postNewUser(token, name);
+			await postNewUser(token, name, user.refreshToken);
 			setLocalLogout();
 			goto('./');
 		} catch (error) {
