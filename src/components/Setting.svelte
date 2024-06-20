@@ -12,7 +12,7 @@
 	export let options = ['Dark Mode', 'Light Mode'];
 
 	let labelMap = {
-		theem: 'Theme',
+		theme: 'Theme',
 		sound: 'Sounds',
 		motion: 'Motion',
 		data: 'Data Usage',

@@ -1,4 +1,5 @@
 <script>
+    import { fly } from 'svelte/transition';
 	import Settings from "../popdowns/Settings.svelte";
 
     let dispSettings = false
@@ -11,7 +12,10 @@
 </div>
 
 {#if dispSettings}
+<div transition:fly="{{ y: -200, duration: 300 }}" >
     <Settings bind:dispSettings />
+</div>
+    
 {/if}
 
 <style>
