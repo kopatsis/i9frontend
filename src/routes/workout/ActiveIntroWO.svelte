@@ -17,6 +17,7 @@
 		currenttime,
 		woIdSession,
 		name,
+		afterWOMessage,
 		nameSession
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
@@ -218,6 +219,8 @@
 		loading = true;
 		if (saveTime) {
 			await updateTime(time, '', 'Paused', true);
+		} else {
+			afterWOMessage.set(true);
 		}
 		goto('./');
 		return;
@@ -272,7 +275,7 @@
 	const audioUndisplay = () => {
 		audioDisp = false;
 		startStopwatch();
-	}
+	};
 
 	function goHome() {
 		isCreateForm.set(true);
@@ -511,7 +514,6 @@
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
-
 </script>
 
 <div class="page">

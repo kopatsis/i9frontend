@@ -37,6 +37,8 @@
 	let showForm = false;
 	let error = '';
 
+	let greeting = 'Welcome';
+
 	let afterWOMTrue = false;
 	const unsubscribe = afterWOMessage.subscribe((afterWOMessage) => {
 		afterWOMTrue = afterWOMessage;
@@ -61,6 +63,13 @@
 	const unsubscribeCreate = isCreateForm.subscribe((create) => {
 		createPop = create;
 	});
+
+	function getRandomGreeting() {
+		const greetings = ['Welcome', 'Hello', 'Hey', 'Howdy', 'Hi', 'Heyy', 'Heyyy'];
+		const random = Math.random();
+		return random < 0.5 ? greetings[0] : greetings[Math.floor(random * (greetings.length - 1)) + 1];
+	}
+	greeting = getRandomGreeting();
 
 	function workoutGen() {
 		if (userObj && userObj.Assessed) {
@@ -239,7 +248,7 @@
 				{:else}
 					<div class="greeting">
 						<div>
-							Welcome{#if !uname || uname === 'local'}!{:else},{/if}
+							{greeting}{#if !uname || uname === 'local'}!{:else},{/if}
 						</div>
 						{#if uname && uname !== 'local'}
 							<div>
