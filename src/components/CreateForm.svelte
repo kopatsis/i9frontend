@@ -51,7 +51,7 @@
 			} else if (formType === 'Stretch') {
 				minutes = Math.max(minutes, 1);
 			} else if (formType === 'Intro') {
-				minutes = Math.max(minutes, 25);
+				minutes = Math.max(minutes, 20);
 			}
 			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
 
@@ -68,7 +68,7 @@
 			return false;
 		} else if (formType === 'Stretch' && minutes < 1) {
 			return false;
-		} else if ((formType === 'Intro' && minutes < 25) || (formType === 'Intro' && minutes > 60)) {
+		} else if ((formType === 'Intro' && minutes < 20) || (formType === 'Intro' && minutes > 60)) {
 			return false;
 		}
 		return true;
@@ -89,7 +89,7 @@
 		} else if (formType === 'Stretch') {
 			minutes = Math.min(Math.max(minutes, 1), 240);
 		} else if (formType === 'Intro') {
-			minutes = Math.min(Math.max(minutes, 25), 60);
+			minutes = Math.min(Math.max(minutes, 20), 60);
 		}
 	}
 
@@ -191,7 +191,7 @@
 			<div class="editline">
 				<div>
 					<label for="length"
-						>Length in minutes ({formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1} - {formType ===
+						>Length in minutes ({formType === 'Regular' ? 8 : formType === 'Intro' ? 20 : 1} - {formType ===
 						'Intro'
 							? 60
 							: 240}):</label
@@ -200,7 +200,7 @@
 				<div class="lengthin">
 					<input
 						type="range"
-						min={formType === 'Regular' ? 8 : formType === 'Intro' ? 25 : 1}
+						min={formType === 'Regular' ? 8 : formType === 'Intro' ? 20 : 1}
 						max={formType === 'Intro' ? 60 : 240}
 						bind:value={minutes}
 					/>
@@ -227,7 +227,7 @@
 							Please enter a time in the range of {formType === 'Regular'
 								? 8
 								: formType === 'Intro'
-									? 25
+									? 20
 									: 1} - {formType === 'Intro' ? 60 : 240} minutes
 						</div>
 					{/if}
@@ -237,7 +237,7 @@
 					Please enter a time in the range of {formType === 'Regular'
 						? 8
 						: formType === 'Intro'
-							? 25
+							? 20
 							: 1} - {formType === 'Intro' ? 60 : 240} minutes
 				</div>
 			{/if}
