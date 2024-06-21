@@ -21,20 +21,19 @@
 <style>
     .loghead {
 		width: 100%;
-        max-width: 600px;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-        position: fixed;
+        /* position: fixed; */
         z-index: 1000;
         top: 0;
         background: white;
-        height: 44px;
+        margin: 3px;
 	}
 
 	.logheadtxt {
-		font-size: 28px;
+		font-size: clamp(20px, 10dvw, 60px);
 	}
 
     .link-button {
@@ -45,7 +44,7 @@
         margin-left: 10px;
         margin-right: 10px;
         font-family: inherit;
-		font-size: 28px;
+		font-size: clamp(20px, 10dvw, 60px);
         font-weight: bold;
 	}
 </style>
