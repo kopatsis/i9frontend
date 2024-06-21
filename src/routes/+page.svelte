@@ -212,110 +212,163 @@
 	});
 </script>
 
-<MainHeader />
-<div class="headerstupid">
-	{#if loading}
-		<div>loading...</div>
-	{:else if error}
-		<div>F: {error}</div>
-	{:else}
-		{#if ratingPop}
-			<Rate />
-		{:else if createPop}
-			<CreateFormPop />
-		{:else if showForm}
-			<UserUpdateForm bind:exists={showForm} />
-		{/if}
+{#if ratingPop}
+	<Rate />
+{:else if createPop}
+	<CreateFormPop />
+{:else if showForm}
+	<UserUpdateForm bind:exists={showForm} />
+{/if}
 
-		{#if afterWOMTrue}
-			<div class="greeting">
-				Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
-			</div>
+<div class="wholepage">
+	<div class="header">
+		<MainHeader />
+	</div>
+
+	<div class="headerstupid">
+		{#if loading}
+			<div>loading...</div>
+		{:else if error}
+			<div>F: {error}</div>
 		{:else}
-			<div class="greeting">
-				<div>
-					Welcome{#if !uname || uname === 'local'}!{:else},{/if}
-				</div>
-				{#if uname && uname !== 'local'}
-					<div>
-						{uname}
-					</div>
-				{/if}
-			</div>
-		{/if}
-
-		<div>
-			<div>
-				<button class="edit" on:click={() => (showForm = true)}>Edit User Defaults</button>
-			</div>
-		</div>
-
-		<div>
-			{#if recentWO}
-				<div>Your most recent workout details:</div>
-				<div>Name: {recentWO.name}</div>
-				<div>Type: {recentWO.type} workout</div>
-				<div>Date: {formatDateString(recentWO.date)}</div>
-				<div>Status: {recentWO.status}</div>
-				{#if recentWO.stored === true}
-					<div class="recentb">
-						<button class="recentbutton" on:click={() => goto('./review')}>Resume</button>
-					</div>
-				{:else if recentWO.type === 'Stretch'}
-					<div class="recentb">
-						{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
-							<button class="recentbutton" on:click={toReviewSt}>Start</button>
-						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-							<button class="recentbutton" on:click={toReviewSt}>Resume</button>
-						{:else}
-							<button class="recentbutton" on:click={toRestartSt}>Restart</button>
-						{/if}
+			<div class="innercontent">
+				{#if afterWOMTrue}
+					<div class="greeting">
+						Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
 					</div>
 				{:else}
-					<div class="recentb">
-						{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
-							<button class="recentbutton" on:click={toReview}>Start</button>
-						{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-							<button class="recentbutton" on:click={toReview}>Resume</button>
-						{:else if recentWO.type !== 'Intro'}
-							<button class="recentbutton" on:click={toRestart}>Restart</button>
-							<button class="recentbutton" on:click={toAdapt}>Adapt*</button>
+					<div class="greeting">
+						<div>
+							Welcome{#if !uname || uname === 'local'}!{:else},{/if}
+						</div>
+						{#if uname && uname !== 'local'}
 							<div>
-								*Adapt means the times and exercises/stretches will be the same, but the reps will
-								be re-calculated to your current level.
+								{uname}
 							</div>
 						{/if}
 					</div>
 				{/if}
-			{:else}
-				<div>Your most recent workout details:</div>
-				<div>No workouts generated (yet)</div>
-			{/if}
-		</div>
 
-		<div class="maingen">
-			<button class="gen" on:click={workoutGen}>Generate Workout</button>
-		</div>
-	{/if}
+				<div>
+					<div>
+						<button class="edit" on:click={() => (showForm = true)}>Edit User Defaults</button>
+					</div>
+				</div>
+
+				<div>
+					{#if recentWO}
+						<div>Your most recent workout details:</div>
+						<div>Name: {recentWO.name}</div>
+						<div>Type: {recentWO.type} workout</div>
+						<div>Date: {formatDateString(recentWO.date)}</div>
+						<div>Status: {recentWO.status}</div>
+						{#if recentWO.stored === true}
+							<div class="recentb">
+								<button class="recentbutton" on:click={() => goto('./review')}>Resume</button>
+							</div>
+						{:else if recentWO.type === 'Stretch'}
+							<div class="recentb">
+								{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
+									<button class="recentbutton" on:click={toReviewSt}>Start</button>
+								{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+									<button class="recentbutton" on:click={toReviewSt}>Resume</button>
+								{:else}
+									<button class="recentbutton" on:click={toRestartSt}>Restart</button>
+								{/if}
+							</div>
+						{:else}
+							<div class="recentb">
+								{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
+									<button class="recentbutton" on:click={toReview}>Start</button>
+								{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+									<button class="recentbutton" on:click={toReview}>Resume</button>
+								{:else if recentWO.type !== 'Intro'}
+									<button class="recentbutton" on:click={toRestart}>Restart</button>
+									<button class="recentbutton" on:click={toAdapt}>Adapt*</button>
+									<div>
+										*Adapt means the times and exercises/stretches will be the same, but the reps
+										will be re-calculated to your current level.
+									</div>
+								{/if}
+							</div>
+						{/if}
+					{:else}
+						<div>Your most recent workout details:</div>
+						<div>No workouts generated (yet)</div>
+					{/if}
+				</div>
+
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+				<div>Chungustest</div>
+			</div>
+			<div class="maingen">
+				<button class="gen" on:click={workoutGen}>Generate Workout</button>
+			</div>
+		{/if}
+	</div>
+	<div class="footer">
+		<MainFooter />
+	</div>
 </div>
-<MainFooter />
 
 <style>
+	.wholepage {
+		height: 100dvh;
+		width: 100dvw;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+	}
+
 	.recentb {
 		display: flex;
 		justify-content: center;
 	}
 
 	.maingen {
-		/* padding: 20px; */
 		width: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		z-index: 5;
-		position: absolute;
-		bottom: 0;
-		margin-bottom: 54px;
+		margin-top: 0px;
+		padding-top: 20px;
+		background:
+			linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%) padding-box,
+			white;
+		background-clip: content-box, padding-box;
+		background-origin: padding-box;
 	}
 
 	.gen {
@@ -324,6 +377,7 @@
 		outline: none;
 		font-size: 28px;
 		margin: 10px;
+		margin-top: 00px;
 		padding-top: 6px;
 		padding-bottom: 6px;
 		padding-left: 12px;
@@ -370,17 +424,17 @@
 	}
 
 	.headerstupid {
-		margin-top: 49px;
-		margin-bottom: 44px;
+		margin-top: 5px;
+		margin-bottom: 5px;
 		margin-left: 5px;
 		margin-right: 5px;
-		height: calc(100dvh - 93px);
-		width: calc(100dvw - 10px);
+		height: 100%;
 		box-sizing: border-box;
 		overflow-y: scroll;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		flex: 1;
 	}
 
 	.greeting {
@@ -389,5 +443,21 @@
 		text-align: center;
 		margin-top: 24px;
 		margin-bottom: 24px;
+	}
+
+	.header,
+	.footer {
+		width: 100%;
+	}
+
+	.innercontent {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow-y: scroll;
+		width: 100%;
+		align-items: center;
+		margin-bottom: -20px;
+		padding-bottom: 25px;
 	}
 </style>
