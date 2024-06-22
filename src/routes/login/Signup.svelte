@@ -70,20 +70,23 @@
 {/if}
 
 <div class="loginouter">
-	<div class="logintxt">Sign up</div>
 	{#if merging}
-		<div class="signinopt">
+		<div class="signinopt centerit">
 			Creating account w/ Existing History<br />
-			<button class="link-button" type="button" on:click={() => (merging = false)}
+			<button class="link-button centerit" type="button" on:click={() => (merging = false)}
 				>Create Blank Account Instead</button
 			>
 		</div>
 	{/if}
+	<div class="logintxt">Sign up</div>
+
+	{#if !merging}
 	<div class="signinopt">
 		or <button class="link-button" type="button" on:click={() => (signUp = false)}
 			>use an existing account</button
 		>
 	</div>
+	{/if}
 </div>
 
 <form>
@@ -141,6 +144,10 @@
 </form>
 
 <style>
+	.centerit{
+		text-align: center;
+	}
+
 	.verif.invis {
 		visibility: hidden;
 	}
@@ -226,7 +233,7 @@
 	}
 
 	.verif {
-		font-size: 12px;
+		font-size: 14px;
 		color: red;
 	}
 

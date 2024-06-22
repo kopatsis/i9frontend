@@ -33,7 +33,7 @@
 	}
 
 	.logheadtxt {
-		font-size: clamp(20px, 10dvw, 60px);
+		font-size: clamp(20px, 10dvw, 54px);
 	}
 
     .link-button {
@@ -44,7 +44,7 @@
         margin-left: 10px;
         margin-right: 10px;
         font-family: inherit;
-		font-size: clamp(20px, 10dvw, 60px);
+		font-size: clamp(20px, 10dvw, 54px);
         font-weight: bold;
 	}
 </style>

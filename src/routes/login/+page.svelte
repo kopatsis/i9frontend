@@ -50,7 +50,7 @@
 	onMount(() => {
 		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== ''){
 			merging = true;
-			token = getLocalToken();
+			localToken = getLocalToken();
 			signUpForm = true;
 		}
 	})
@@ -65,7 +65,7 @@
 {:else}
 	<Signup bind:signUp={signUpForm} bind:merging={merging} localToken={localToken}/>
 {/if}
-<button class="link-button" on:click={localLogin}>Use without account</button>
+<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
 
 <style>
 	.link-button {
@@ -97,6 +97,6 @@
 	}
 
 	.logheadtxt {
-		font-size: 28px;
+		font-size: clamp(20px, 10dvw, 54px);
 	}
 </style>

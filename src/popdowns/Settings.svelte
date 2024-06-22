@@ -129,7 +129,7 @@
 					data: 'Regular',
 					back: 'Workout Pauses'
 				};
-				localStorage.setItem('theme', retset.mode);
+				localStorage.setItem('theme', retset.theme);
 				localStorage.setItem('sound', retset.sound);
 				localStorage.setItem('motion', retset.motion);
 				localStorage.setItem('data', retset.data);
@@ -144,7 +144,7 @@
 				data: 'Regular',
 				back: 'Workout Pauses'
 			};
-			localStorage.setItem('theme', retset.mode);
+			localStorage.setItem('theme', retset.theme);
 			localStorage.setItem('sound', retset.sound);
 			localStorage.setItem('motion', retset.motion);
 			localStorage.setItem('data', retset.data);
