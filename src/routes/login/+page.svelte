@@ -48,12 +48,13 @@
 	};
 
 	onMount(() => {
-		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== ''){
+		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== '') {
 			merging = true;
 			localToken = getLocalToken();
+			sessionStorage.removeItem('merginglocal')
 			signUpForm = true;
 		}
-	})
+	});
 </script>
 
 <div class="loghead">
@@ -63,9 +64,14 @@
 {#if !signUpForm}
 	<Signin bind:signUp={signUpForm} />
 {:else}
-	<Signup bind:signUp={signUpForm} bind:merging={merging} localToken={localToken}/>
+	<Signup bind:signUp={signUpForm} bind:merging {localToken} />
 {/if}
-<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
+
+{#if merging}
+	<button class="link-button" on:click={localLogin}>Back to i9 App</button>
+{:else}
+	<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
+{/if}
 
 <style>
 	.link-button {
