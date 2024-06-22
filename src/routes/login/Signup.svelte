@@ -47,6 +47,8 @@
 
 				if (merging) {
 					await mergeLocalUser(token, localToken, name, user.refreshToken);
+					sessionStorage.removeItem('merginglocal');
+					merging = false;
 				} else {
 					await postNewUser(token, name, user.refreshToken);
 				}
