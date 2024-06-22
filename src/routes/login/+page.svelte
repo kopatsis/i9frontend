@@ -3,10 +3,13 @@
 
 	import { goto } from '$app/navigation';
 	import { getLocalToken, loginLocally, setLoginToken } from '$lib/jshelp/localtoken';
+	import { onMount } from 'svelte';
 	import Signin from './Signin.svelte';
 	import Signup from './Signup.svelte';
 
 	let signUpForm = false;
+	let merging = false;
+	let localToken = '';
 
 	async function createLocalUser() {
 		const url = `${import.meta.env.VITE_BACKEND_URL}/users/local`;
@@ -43,6 +46,14 @@
 		loginLocally();
 		goto('./');
 	};
+
+	onMount(() => {
+		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== ''){
+			merging = true;
+			token = getLocalToken();
+			signUpForm = true;
+		}
+	})
 </script>
 
 <div class="loghead">
@@ -52,7 +63,7 @@
 {#if !signUpForm}
 	<Signin bind:signUp={signUpForm} />
 {:else}
-	<Signup bind:signUp={signUpForm} />
+	<Signup bind:signUp={signUpForm} bind:merging={merging} localToken={localToken}/>
 {/if}
 <button class="link-button" on:click={localLogin}>Use without account</button>
 

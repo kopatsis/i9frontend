@@ -7,6 +7,8 @@
 	import Logout from '../components/Logout.svelte';
 	import Setting from '../components/Setting.svelte';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import { goto } from '$app/navigation';
+	import { logout } from '$lib/jshelp/localtoken';
 	// import SettingBackground from '../components/SettingBackground.svelte';
 
 	export let dispSettings = true;
@@ -91,6 +93,12 @@
 				console.error(`Error opening admin page: ${err.message}`);
 			}
 		}
+	}
+
+	function localMerge(){
+		sessionStorage.setItem('merginglocal', 'true');
+		logout();
+		goto('./login');
 	}
 
 	let userData;
@@ -208,6 +216,8 @@
 					{:else}
 						<button class="actionbutton" on:click={() => adminPage('pay')}>Start Giga Subscription</button>
 					{/if}
+				{:else}
+					<button class="actionbutton" on:click={localMerge}>Create Account w/ Existing History</button>
 				{/if}
 			</div>
 		{/if}

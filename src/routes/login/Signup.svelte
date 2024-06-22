@@ -8,6 +8,8 @@
 	import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 	export let signUp = true;
+	export let merging = false;
+	export let localToken = '';
 
 	let password = '';
 	let confirmPassword = '';
@@ -42,7 +44,12 @@
 				const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 				const user = userCredential.user;
 				const token = await user.getIdToken();
-				await postNewUser(token, name, user.refreshToken);
+
+				if (merging) {
+					await mergeLocalUser(token, localToken, name, user.refreshToken);
+				} else {
+					await postNewUser(token, name, user.refreshToken);
+				}
 				setLocalLogout();
 				goto('./');
 			} catch (err) {
@@ -62,6 +69,14 @@
 
 <div class="loginouter">
 	<div class="logintxt">Sign up</div>
+	{#if merging}
+		<div class="signinopt">
+			Creating account w/ Existing History<br />
+			<button class="link-button" type="button" on:click={() => (merging = false)}
+				>Create Blank Account Instead</button
+			>
+		</div>
+	{/if}
 	<div class="signinopt">
 		or <button class="link-button" type="button" on:click={() => (signUp = false)}
 			>use an existing account</button
@@ -106,7 +121,9 @@
 		required
 	/>
 
-	<div class="verif" class:invis={(passwordActive && !isValidPassword) || passwordsMatch}>Passwords do not match</div>
+	<div class="verif" class:invis={(passwordActive && !isValidPassword) || passwordsMatch}>
+		Passwords do not match
+	</div>
 
 	{#if isValidPassword && passwordsMatch && emailValid && name !== ''}
 		<button class="submit" on:click|preventDefault={signupFirebase}>Sign Up</button>
@@ -114,7 +131,7 @@
 	{:else}
 		<button class="submit" type="button">Sign Up</button>
 		{#if isValidPassword && passwordsMatch && name !== ''}
-		<div class="verif">Please enter a valid email address</div>
+			<div class="verif">Please enter a valid email address</div>
 		{:else}
 			<div class="verif">Please complete all required fields</div>
 		{/if}
