@@ -223,6 +223,7 @@
 		margin: 4px;
 		padding-left: 10px;
 		padding-right: 10px;
+		min-width: min(444px, calc(100dvw - 60px));
 	}
 
 	form {

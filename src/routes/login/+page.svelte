@@ -51,41 +51,78 @@
 		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== '') {
 			merging = true;
 			localToken = getLocalToken();
-			sessionStorage.removeItem('merginglocal')
+			sessionStorage.removeItem('merginglocal');
 			signUpForm = true;
 		}
 	});
 </script>
 
-<div class="loghead">
-	<b class="logheadtxt">i9 Fitness</b>
+<div class="wholepage">
+	<div class="loghead header">
+		<b class="logheadtxt">i9 Fitness</b>
+	</div>
+
+	<div class="innercontent">
+		{#if !signUpForm}
+			<Signin bind:signUp={signUpForm} />
+		{:else}
+			<Signup bind:signUp={signUpForm} bind:merging {localToken} />
+		{/if}
+	</div>
+
+	<div class="footer">
+		{#if merging}
+			<button class="link-button" on:click={localLogin}>Back to i9 App</button>
+		{:else}
+			<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
+		{/if}
+	</div>
 </div>
 
-{#if !signUpForm}
-	<Signin bind:signUp={signUpForm} />
-{:else}
-	<Signup bind:signUp={signUpForm} bind:merging {localToken} />
-{/if}
-
-{#if merging}
-	<button class="link-button" on:click={localLogin}>Back to i9 App</button>
-{:else}
-	<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
-{/if}
-
 <style>
+	.wholepage {
+		height: 100dvh;
+		width: 100dvw;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+	}
+
+	.header,
+	.footer {
+		width: 100%;
+	}
+
+	.footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.innercontent {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow-y: scroll;
+		width: 100%;
+		align-items: center;
+		margin-bottom: -20px;
+		padding-bottom: 25px;
+	}
+
 	.link-button {
-		background: none;
+		background: white;
 		border: none;
 		color: rgb(59, 59, 59);
 		text-decoration: underline;
 		cursor: pointer;
-		padding: 0;
+		/* padding: 0; */
 		font-family: inherit;
-		position: fixed;
+		/* position: fixed;
 		bottom: 20px;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translateX(-50%); */
 		font-size: 16px;
 	}
 
