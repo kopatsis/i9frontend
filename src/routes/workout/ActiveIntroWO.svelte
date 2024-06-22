@@ -301,7 +301,7 @@
 		let workingRound = round;
 		let workingRoundIter = roundIter;
 
-		while (genTimes && workingTime < genTimes.static) {
+		while (genTimes && woRounds && workingTime < (genTimes.static - woRounds[woRounds.length-2].roundrest - woRounds[woRounds.length-2].off)) {
 			workingTime += 0.01;
 
 			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
