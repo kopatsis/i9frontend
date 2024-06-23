@@ -234,6 +234,8 @@
 
 	.verif {
 		font-size: 14px;
+		margin-top: -1px;
+		margin-bottom: -1px;
 		color: red;
 	}
 

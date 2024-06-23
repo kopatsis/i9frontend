@@ -95,9 +95,11 @@
 	}
 
 	.footer {
+		padding-top: 10px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background: linear-gradient(to top, white 67%, transparent);
 	}
 
 	.innercontent {
@@ -112,7 +114,7 @@
 	}
 
 	.link-button {
-		background: white;
+		background: transparent;
 		border: none;
 		color: rgb(59, 59, 59);
 		text-decoration: underline;
