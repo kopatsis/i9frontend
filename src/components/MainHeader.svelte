@@ -29,7 +29,7 @@
         z-index: 1000;
         top: 0;
         background: white;
-        margin: 3px;
+        /* margin: 3px; */
 	}
 
 	.logheadtxt {
