@@ -5,7 +5,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import ExerLib from './ExerLib.svelte';
 	import StrLib from './StrLib.svelte';
-	import Logout from '../../components/Logout.svelte';
 	import { getLoginToken, setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import { goto } from '$app/navigation';
@@ -79,35 +78,75 @@
 	});
 </script>
 
-<MainHeader />
-<div class="headerstupid">
-	{#if loading}
-		<div>loading...</div>
-	{:else if error}
-		<div>F: {error}</div>
-	{:else}
-		<button class="changebutton" on:click={() => switchType('Exercise')}>
-			{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
-		</button>
-		<button class="changebutton" on:click={() => switchType('Stretch')}>
-			{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
-		</button>
+<div class="centerpage">
+	<div class="wholepage">
+		<div class="header">
+			<MainHeader />
+		</div>
 
-		{#if current === 'Exercise'}
-			<ExerLib library={exers} />
-		{:else}
-			<StrLib library={strs} />
-		{/if}
-	{/if}
+		<div class="headerstupid">
+			{#if loading}
+				<div>loading...</div>
+			{:else if error}
+				<div>F: {error}</div>
+			{:else}
+				<button class="changebutton" on:click={() => switchType('Exercise')}>
+					{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
+				</button>
+				<button class="changebutton" on:click={() => switchType('Stretch')}>
+					{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
+				</button>
+
+				{#if current === 'Exercise'}
+					<ExerLib library={exers} />
+				{:else}
+					<StrLib library={strs} />
+				{/if}
+			{/if}
+		</div>
+
+		<div class="footer">
+			<MainFooter />
+		</div>
+	</div>
 </div>
-<MainFooter />
 
 <style>
+	.centerpage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
+	}
+
+	.wholepage {
+		height: 100dvh;
+		width: min(100dvw, 960px);
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		background-color: white;
+	}
+	
+	.header,
+	.footer {
+		width: 100%;
+	}
+
 	.headerstupid {
-		margin-top: 49px;
-		margin-bottom: 44px;
+		margin-top: 5px;
+		margin-bottom: 5px;
 		margin-left: 5px;
 		margin-right: 5px;
+		height: 100%;
+		box-sizing: border-box;
+		overflow-y: scroll;
+		flex: 1;
 	}
 
 	.changebutton {

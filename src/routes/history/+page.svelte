@@ -79,41 +79,75 @@
 	});
 </script>
 
-<MainHeader />
-<div class="headerstupid">
-	{#if loading}
-		<div>loading...</div>
-	{:else if error}
-		<div>F: {error}</div>
-	{:else}
-		<div class="tabs">
-			<button on:click={() => switchType('Workout')}>
-				{#if current === 'Workout'}
-					<b>Workouts</b>
-				{:else}
-					Workouts
-				{/if}
-			</button>
-			<button on:click={() => switchType('Stretch')}>
-				{#if current === 'Stretch'}
-					<b>Strech Workouts</b>
-				{:else}
-					Strech Workouts
-				{/if}
-			</button>
+<div class="centerpage">
+	<div class="wholepage">
+		<div class="header">
+			<MainHeader />
 		</div>
+		<div class="headerstupid">
+			{#if loading}
+				<div>loading...</div>
+			{:else if error}
+				<div>F: {error}</div>
+			{:else}
+				<div class="tabs">
+					<button on:click={() => switchType('Workout')}>
+						{#if current === 'Workout'}
+							<b>Workouts</b>
+						{:else}
+							Workouts
+						{/if}
+					</button>
+					<button on:click={() => switchType('Stretch')}>
+						{#if current === 'Stretch'}
+							<b>Strech Workouts</b>
+						{:else}
+							Strech Workouts
+						{/if}
+					</button>
+				</div>
 
-		{#if current === 'Workout'}
-			<WorkoutHist history={wos} />
-		{:else}
-			<StrWorkoutHist history={strwos} />
-		{/if}
-	{/if}
+				{#if current === 'Workout'}
+					<WorkoutHist history={wos} />
+				{:else}
+					<StrWorkoutHist history={strwos} />
+				{/if}
+			{/if}
+		</div>
+		<div class="footer">
+			<MainFooter />
+		</div>
+	</div>
 </div>
-<MainFooter />
 
 <style>
-	.tabs{
+	.centerpage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
+	}
+
+	.wholepage {
+		height: 100dvh;
+		width: min(100dvw, 960px);
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		background-color: white;
+	}
+
+	.header,
+	.footer {
+		width: 100%;
+	}
+
+	.tabs {
 		display: flex;
 		justify-content: center;
 	}
@@ -123,7 +157,9 @@
 		margin-bottom: 44px;
 		margin-left: 5px;
 		margin-right: 5px;
+		flex: 1;
 	}
+	
 	button {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
