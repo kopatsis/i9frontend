@@ -133,6 +133,30 @@
 		justify-content: center;
 	}
 
+	@media (max-height: 700px) {
+		.loginouter {
+			min-height: 34.2857dvh;
+		}
+	}
+
+	@media (max-height: 600px) {
+		.loginouter {
+			min-height: 28.5714dvh;
+		}
+	}
+
+	@media (max-height: 500px) {
+		.loginouter {
+			min-height: 25dvh;
+		}
+	}
+
+	@media (max-height: 400px) {
+		.loginouter {
+			min-height: fit-content;
+		}
+	}
+
 	.submit {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;

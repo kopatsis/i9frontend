@@ -57,36 +57,50 @@
 	});
 </script>
 
-<div class="wholepage">
-	<div class="loghead header">
-		<b class="logheadtxt">i9 Fitness</b>
-	</div>
+<div class="centerpage">
+	<div class="wholepage">
+		<div class="loghead header">
+			<b class="logheadtxt">i9 Fitness</b>
+		</div>
 
-	<div class="innercontent">
-		{#if !signUpForm}
-			<Signin bind:signUp={signUpForm} />
-		{:else}
-			<Signup bind:signUp={signUpForm} bind:merging {localToken} />
-		{/if}
-	</div>
+		<div class="innercontent">
+			{#if !signUpForm}
+				<Signin bind:signUp={signUpForm} />
+			{:else}
+				<Signup bind:signUp={signUpForm} bind:merging {localToken} />
+			{/if}
+		</div>
 
-	<div class="footer">
-		{#if merging}
-			<button class="link-button" on:click={localLogin}>Back to i9 App</button>
-		{:else}
-			<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
-		{/if}
+		<div class="footer">
+			{#if merging}
+				<button class="link-button" on:click={localLogin}>Back to i9 App</button>
+			{:else}
+				<button class="link-button" on:click={localLogin}>Use without account (anonymous)</button>
+			{/if}
+		</div>
 	</div>
 </div>
 
 <style>
+	.centerpage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
+	}
+
 	.wholepage {
 		height: 100dvh;
-		width: 100dvw;
+		width: min(100dvw, 960px);
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
 		position: fixed;
+		background: white;
 	}
 
 	.header,
