@@ -29,6 +29,7 @@
         z-index: 1000;
         top: 0;
         background: white;
+        height: clamp(53px, 12dvw, 86px);
         /* margin: 3px; */
 	}
 

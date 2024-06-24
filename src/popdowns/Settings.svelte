@@ -261,14 +261,14 @@
 
 	.modal {
 		margin: 0;
-		margin-top: 44px;
+		margin-top: clamp(53px, 12dvw, 86px);
 		padding: 15px;
 		background: white;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		z-index: 20;
 		overflow-y: scroll;
 		cursor: default;
-		max-height: 80dvh;
+		height: calc(100dvh - clamp(53px, 12dvw, 86px));
 		width: 100dvw;
 		padding-bottom: 0px;
 	}
