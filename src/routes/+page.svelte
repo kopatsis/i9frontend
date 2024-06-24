@@ -454,6 +454,7 @@
 		flex-direction: column;
 		align-items: center;
 		flex: 1;
+		scrollbar-width: none;
 	}
 
 	.greeting {

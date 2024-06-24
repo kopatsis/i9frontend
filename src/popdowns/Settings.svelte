@@ -69,7 +69,7 @@
 		}
 	}
 
-	async function adminPage(dest="home") {
+	async function adminPage(dest = 'home') {
 		if (!localuser) {
 			try {
 				const userPromise = getToken();
@@ -77,7 +77,7 @@
 
 				let [refreshToken, code] = await Promise.all([userPromise, codePromise]);
 
-				refreshToken = refreshToken === "" ? "x1" : refreshToken;
+				refreshToken = refreshToken === '' ? 'x1' : refreshToken;
 
 				if (refreshToken && code) {
 					const url = new URL(`${import.meta.env.VITE_ADMIN_URL}/multipass`);
@@ -95,7 +95,7 @@
 		}
 	}
 
-	function localMerge(){
+	function localMerge() {
 		sessionStorage.setItem('merginglocal', 'true');
 		logout();
 		goto('./login');
@@ -179,49 +179,61 @@
 	aria-label="Close modal"
 >
 	<div class="modal" on:click|stopPropagation aria-hidden="true">
-		{#if loading}
-			<div>loading...</div>
-		{:else if error}
-			<div>F: {error}</div>
-		{:else if !userData}
-			<div>Error fetching user data, please try again</div>
-		{:else}
-			<div class="head">Device Settings</div>
+		<div class="innercontent">
+			{#if loading}
+				<div>loading...</div>
+			{:else if error}
+				<div>F: {error}</div>
+			{:else if !userData}
+				<div>Error fetching user data, please try again</div>
+			{:else}
+				<div class="head">Device Settings</div>
 
-			<div class="plainbuttons">
-				<Logout />
-			</div>
+				<div class="plainbuttons">
+					<Logout />
+				</div>
 
-			<Setting key={'theme'} options={['Dark Mode', 'Light Mode']} bind:data={retrievedSettings} />
-			<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
-			<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
-			<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
-			<Setting
-				key={'back'}
-				options={['Workout Pauses', 'Workout Continutes']}
-				bind:data={retrievedSettings}
-			/>
-			<!-- {#if userData.Paying} -->
-			<!-- <SettingBackground /> -->
-			<!-- {/if} -->
-			{#if !localuser}
-			<div class="plainbuttons">
-				<button on:click={adminPage} class="link-button">Account Admin Page</button>
-			</div>
-			{/if}
-			<div class="plainbuttons">
+				<Setting
+					key={'theme'}
+					options={['Dark Mode', 'Light Mode']}
+					bind:data={retrievedSettings}
+				/>
+				<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
+				<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
+				<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
+				<Setting
+					key={'back'}
+					options={['Workout Pauses', 'Workout Continutes']}
+					bind:data={retrievedSettings}
+				/>
+				<!-- {#if userData.Paying} -->
+				<!-- <SettingBackground /> -->
+				<!-- {/if} -->
 				{#if !localuser}
-					{#if userData.Paying}
-						<button class="actionbutton" on:click={() => adminPage('pay')}>Cancel Giga Subscription</button>
-					{:else}
-						<button class="actionbutton" on:click={() => adminPage('pay')}>Start Giga Subscription</button>
-					{/if}
-				{:else}
-					<button class="actionbutton" on:click={localMerge}>Create Account w/ Existing History</button>
+					<div class="plainbuttons">
+						<button on:click={adminPage} class="link-button">Account Admin Page</button>
+					</div>
 				{/if}
-			</div>
-		{/if}
-		<div class="plainbuttons">
+				<div class="plainbuttons">
+					{#if !localuser}
+						{#if userData.Paying}
+							<button class="actionbutton" on:click={() => adminPage('pay')}
+								>Cancel Giga Subscription</button
+							>
+						{:else}
+							<button class="actionbutton" on:click={() => adminPage('pay')}
+								>Start Giga Subscription</button
+							>
+						{/if}
+					{:else}
+						<button class="actionbutton" on:click={localMerge}
+							>Create Account w/ Existing History</button
+						>
+					{/if}
+				</div>
+			{/if}
+		</div>
+		<div class="plainbuttons bottom">
 			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
 		</div>
 	</div>
@@ -262,15 +274,18 @@
 	.modal {
 		margin: 0;
 		margin-top: clamp(53px, 12dvw, 86px);
-		padding: 15px;
+		/* padding: 15px; */
 		background: white;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		z-index: 20;
 		overflow-y: scroll;
 		cursor: default;
 		height: calc(100dvh - clamp(53px, 12dvw, 86px));
-		width: 100dvw;
+		width: min(100dvw, 960px);
 		padding-bottom: 0px;
+		display: flex;
+		flex-direction: column;
+
 	}
 
 	.plainbuttons {
@@ -278,6 +293,11 @@
 		justify-content: center;
 		align-items: center;
 		width: 100%;
+	}
+
+	.innercontent {
+		flex: 1;
+		overflow-y: scroll;
 	}
 
 	.actionbutton {
