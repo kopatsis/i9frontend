@@ -308,38 +308,7 @@
 						{/if}
 					</div>
 
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
-					<div>Chungustest</div>
+					
 				</div>
 				<div class="maingen">
 					<button class="gen" on:click={workoutGen}>Generate Workout</button>
@@ -449,7 +418,7 @@
 		margin-right: 5px;
 		height: 100%;
 		box-sizing: border-box;
-		overflow-y: scroll;
+		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -474,7 +443,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		overflow-y: scroll;
+		overflow-y: auto;
 		width: 100%;
 		align-items: center;
 		margin-bottom: -20px;

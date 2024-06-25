@@ -89,7 +89,7 @@
 		align-items: center;
 		max-width: 90%;
 		max-height: 90%;
-		overflow-y: scroll;
+		overflow-y: auto;
 		cursor: default;
 		max-height: 80dvh;
 		max-width: 87.5dvw;

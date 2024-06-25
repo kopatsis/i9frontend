@@ -115,40 +115,40 @@
 
 		try {
 			let retset = {
-				theme: localStorage.getItem('theme'),
-				sound: localStorage.getItem('sound'),
-				motion: localStorage.getItem('motion'),
-				data: localStorage.getItem('data'),
-				back: localStorage.getItem('back')
+				theme: localStorage.getItem('bWEemu'),
+				sound: localStorage.getItem('W8xMSC'),
+				motion: localStorage.getItem('wJJgce'),
+				data: localStorage.getItem('RMrC28'),
+				back: localStorage.getItem('szsY0s')
 			};
 			if (!retset.theme || !retset.sound || !retset.motion || !retset.data || !retset.back) {
 				retset = {
-					theme: 'Dark Mode',
-					sound: 'Regular',
-					motion: 'Regular',
-					data: 'Regular',
-					back: 'Workout Pauses'
+					theme: 'DceYdZ',
+					sound: 'DceYdZ',
+					motion: '3ojnKb',
+					data: '3ojnKb',
+					back: 'DceYdZ'
 				};
-				localStorage.setItem('theme', retset.theme);
-				localStorage.setItem('sound', retset.sound);
-				localStorage.setItem('motion', retset.motion);
-				localStorage.setItem('data', retset.data);
-				localStorage.setItem('back', retset.back);
+				localStorage.setItem('bWEemu', retset.theme);
+				localStorage.setItem('W8xMSC', retset.sound);
+				localStorage.setItem('wJJgce', retset.motion);
+				localStorage.setItem('RMrC28', retset.data);
+				localStorage.setItem('szsY0s', retset.back);
 			}
 			retrievedSettings = retset;
 		} catch (error) {
 			let retset = {
-				theme: 'Dark Mode',
-				sound: 'Regular',
-				motion: 'Regular',
-				data: 'Regular',
-				back: 'Workout Pauses'
+				theme: 'DceYdZ',
+				sound: 'DceYdZ',
+				motion: '3ojnKb',
+				data: '3ojnKb',
+				back: 'DceYdZ'
 			};
-			localStorage.setItem('theme', retset.theme);
-			localStorage.setItem('sound', retset.sound);
-			localStorage.setItem('motion', retset.motion);
-			localStorage.setItem('data', retset.data);
-			localStorage.setItem('back', retset.back);
+			localStorage.setItem('bWEemu', retset.theme);
+			localStorage.setItem('W8xMSC', retset.sound);
+			localStorage.setItem('wJJgce', retset.motion);
+			localStorage.setItem('RMrC28', retset.data);
+			localStorage.setItem('szsY0s', retset.back);
 			retrievedSettings = retset;
 		}
 
@@ -208,19 +208,11 @@
 				</div>
 
 				<div class="allopts">
-					<Setting
-						key={'theme'}
-						options={['Dark Mode', 'Light Mode']}
-						bind:data={retrievedSettings}
-					/>
-					<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
-					<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
-					<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
-					<Setting
-						key={'back'}
-						options={['Workout Pauses', 'Workout Continutes']}
-						bind:data={retrievedSettings}
-					/>
+					<Setting key={'theme'} bind:data={retrievedSettings} />
+					<Setting key={'sound'} bind:data={retrievedSettings} />
+					<Setting key={'motion'} bind:data={retrievedSettings} />
+					<Setting key={'data'} bind:data={retrievedSettings} />
+					<Setting key={'back'} bind:data={retrievedSettings} />
 				</div>
 
 				<!-- {#if userData.Paying} -->
@@ -244,7 +236,7 @@
 </div>
 
 <style>
-	.allopts{
+	.allopts {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -289,7 +281,7 @@
 		background: white;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		z-index: 20;
-		overflow-y: scroll;
+		overflow-y: auto;
 		cursor: default;
 		height: calc(100dvh - clamp(53px, 12dvw, 86px));
 		width: min(100dvw, 960px);

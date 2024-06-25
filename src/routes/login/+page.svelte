@@ -120,7 +120,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		overflow-y: scroll;
+		overflow-y: auto;
 		width: 100%;
 		align-items: center;
 		margin-bottom: -20px;

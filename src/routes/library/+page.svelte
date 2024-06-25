@@ -145,7 +145,7 @@
 		margin-right: 5px;
 		height: 100%;
 		box-sizing: border-box;
-		overflow-y: scroll;
+		overflow-y: auto;
 		flex: 1;
 	}
 

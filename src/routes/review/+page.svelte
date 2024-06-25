@@ -138,7 +138,7 @@
 	.ad {
 		width: 100dvw;
 		height: 56.25dvw;
-		overflow-y: scroll;
+		overflow-y: auto;
 		position: absolute;
 		bottom: 0;
 	}

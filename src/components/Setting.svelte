@@ -3,30 +3,38 @@
 
 	export let key = 'theme';
 	export let data = {
-		theme: 'Dark Mode',
-		sound: 'Regular',
-		motion: 'Regular',
-		data: 'Regular',
-		back: 'Paused'
+		theme: 'DceYdZ',
+		sound: 'DceYdZ',
+		motion: '3ojnKb',
+		data: '3ojnKb',
+		back: 'DceYdZ'
 	};
-	export let options = ['Dark Mode', 'Light Mode'];
 
 	let labelMap = {
-		theme: 'Theme',
-		sound: 'Sounds',
-		motion: 'Motion',
-		data: 'Data Usage',
-		back: 'In Background'
+		theme: 'Dark Mode Theme',
+		sound: 'In-App Sounds',
+		motion: 'Motion Reduction',
+		data: 'Data Saver Mode',
+		back: 'Workouts Continue in Background'
 	};
 
-	function updatePair(newvalue) {
-		console.log(options);
-		data = { ...data, [key]: newvalue };
-		localStorage.setItem(key, newvalue);
-		console.log(data);
-	}
+	let keyMap = {
+		theme: 'bWEemu',
+		sound: 'W8xMSC',
+		motion: 'wJJgce',
+		data: 'RMrC28',
+		back: 'szsY0s'
+	};
 
-	console.log(key, options, data[key])
+	let isChecked = data[key] === 'DceYdZ';
+
+	$: if (isChecked) {
+		data = { ...data, [key]: 'DceYdZ' };
+		localStorage.setItem(keyMap[key], 'DceYdZ');
+	} else {
+		data = { ...data, [key]: '3ojnKb' };
+		localStorage.setItem(keyMap[key], '3ojnKb');
+	}
 </script>
 
 <div class="main">
@@ -35,18 +43,7 @@
 	</div>
 
 	<div class="options">
-		{#each options as option}
-			<label>
-				<input
-					type="radio"
-					name={key}
-					value={option}
-					checked={option === data[key]}
-					on:change={() => updatePair(option)}
-				/>
-				{option}
-			</label>
-		{/each}
+		<input type="checkbox" id={key} bind:checked={isChecked} /><label for={key}>Toggle</label>
 	</div>
 </div>
 
@@ -57,7 +54,6 @@
 
 	.ask {
 		margin-left: 5px;
-		width: min(125px, 24dvw);
 	}
 	.options {
 		display: flex;
@@ -65,10 +61,47 @@
 		margin-bottom: 10px;
 	}
 
-	label {
-		width: min(200px, 38dvw);
+	input[type='checkbox'] {
+		height: 0;
+		width: 0;
+		visibility: hidden;
 	}
 
+	label {
+		cursor: pointer;
+		text-indent: -9999px;
+		width: 50px;
+		height: 25px;
+		background: #dedcdc;
+		display: block;
+		border-radius: 25px;
+		position: relative;
+	}
+
+	label:after {
+		content: '';
+		position: absolute;
+		top: 3px;
+		left: 3px;
+		width: 19px;
+		height: 19px;
+		background: #fff;
+		border-radius: 19px;
+		transition: 0.15s;
+	}
+
+	input:checked + label {
+		background: #bada55;
+	}
+
+	input:checked + label:after {
+		left: calc(100% - 3px);
+		transform: translateX(-100%);
+	}
+
+	label:active:after {
+		width: 26px;
+	}
 	/* .options button {
 		flex: 1;
 		border-radius: 0px;
