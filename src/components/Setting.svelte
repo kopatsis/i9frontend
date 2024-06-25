@@ -50,15 +50,20 @@
 <style>
 	.main {
 		display: flex;
+		width: 100%;
+		justify-content: space-between;
+		border: 1px solid grey;
+		margin-bottom: -1px;
 	}
 
 	.ask {
 		margin-left: 5px;
+		align-self: center;
 	}
 	.options {
 		display: flex;
-		/* width: 100%; */
-		margin-bottom: 10px;
+		margin: 6px;
+		margin-left: 10px;
 	}
 
 	input[type='checkbox'] {
@@ -87,7 +92,7 @@
 		height: 19px;
 		background: #fff;
 		border-radius: 19px;
-		transition: 0.15s;
+		transition: 0.2s;
 	}
 
 	input:checked + label {
@@ -100,7 +105,7 @@
 	}
 
 	label:active:after {
-		width: 26px;
+		width: 28px;
 	}
 	/* .options button {
 		flex: 1;

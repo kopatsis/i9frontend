@@ -241,6 +241,8 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		width: fit-content;
+		margin: 10px;
 	}
 
 	.link-button {
@@ -283,7 +285,7 @@
 		z-index: 20;
 		overflow-y: auto;
 		cursor: default;
-		height: calc(100dvh - clamp(53px, 12dvw, 86px));
+		/* height: calc(100dvh - clamp(53px, 12dvw, 86px)); */
 		width: min(100dvw, 960px);
 		padding-bottom: 0px;
 		display: flex;
@@ -301,6 +303,9 @@
 	.innercontent {
 		flex: 1;
 		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.actionbutton {
