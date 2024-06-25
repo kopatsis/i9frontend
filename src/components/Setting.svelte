@@ -20,34 +20,56 @@
 	};
 
 	function updatePair(newvalue) {
+		console.log(options);
 		data = { ...data, [key]: newvalue };
 		localStorage.setItem(key, newvalue);
+		console.log(data);
 	}
+
+	console.log(key, options, data[key])
 </script>
 
-<div class="ask">
-	{labelMap[key]}:
-</div>
+<div class="main">
+	<div class="ask">
+		{labelMap[key]}:
+	</div>
 
-<div class="options">
-	{#each options as option}
-		<button on:click={() => updatePair(option)}
-			>{#if option === data[key]}<b>{option}</b>{:else}{option}{/if}</button
-		>
-	{/each}
+	<div class="options">
+		{#each options as option}
+			<label>
+				<input
+					type="radio"
+					name={key}
+					value={option}
+					checked={option === data[key]}
+					on:change={() => updatePair(option)}
+				/>
+				{option}
+			</label>
+		{/each}
+	</div>
 </div>
 
 <style>
+	.main {
+		display: flex;
+	}
+
 	.ask {
 		margin-left: 5px;
+		width: min(125px, 24dvw);
 	}
 	.options {
 		display: flex;
-		width: 100%;
+		/* width: 100%; */
 		margin-bottom: 10px;
 	}
 
-	.options button {
+	label {
+		width: min(200px, 38dvw);
+	}
+
+	/* .options button {
 		flex: 1;
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;
@@ -58,5 +80,5 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
-	}
+	} */
 </style>

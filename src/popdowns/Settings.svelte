@@ -190,38 +190,13 @@
 				<div class="head">Device Settings</div>
 
 				<div class="plainbuttons">
-					<Logout />
-				</div>
-
-				<Setting
-					key={'theme'}
-					options={['Dark Mode', 'Light Mode']}
-					bind:data={retrievedSettings}
-				/>
-				<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
-				<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
-				<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
-				<Setting
-					key={'back'}
-					options={['Workout Pauses', 'Workout Continutes']}
-					bind:data={retrievedSettings}
-				/>
-				<!-- {#if userData.Paying} -->
-				<!-- <SettingBackground /> -->
-				<!-- {/if} -->
-				{#if !localuser}
-					<div class="plainbuttons">
-						<button on:click={adminPage} class="link-button">Account Admin Page</button>
-					</div>
-				{/if}
-				<div class="plainbuttons">
 					{#if !localuser}
 						{#if userData.Paying}
 							<button class="actionbutton" on:click={() => adminPage('pay')}
 								>Cancel Giga Subscription</button
 							>
 						{:else}
-							<button class="actionbutton" on:click={() => adminPage('pay')}
+							<button class="actionbutton bigger" on:click={() => adminPage('pay')}
 								>Start Giga Subscription</button
 							>
 						{/if}
@@ -230,6 +205,35 @@
 							>Create Account w/ Existing History</button
 						>
 					{/if}
+				</div>
+
+				<div class="allopts">
+					<Setting
+						key={'theme'}
+						options={['Dark Mode', 'Light Mode']}
+						bind:data={retrievedSettings}
+					/>
+					<Setting key={'sound'} options={['Regular', 'Silent']} bind:data={retrievedSettings} />
+					<Setting key={'motion'} options={['Regular', 'Reduced']} bind:data={retrievedSettings} />
+					<Setting key={'data'} options={['Regular', 'Data Saver']} bind:data={retrievedSettings} />
+					<Setting
+						key={'back'}
+						options={['Workout Pauses', 'Workout Continutes']}
+						bind:data={retrievedSettings}
+					/>
+				</div>
+
+				<!-- {#if userData.Paying} -->
+				<!-- <SettingBackground /> -->
+				<!-- {/if} -->
+				{#if !localuser}
+					<div class="plainbuttons">
+						<button on:click={adminPage} class="link-button">Account Admin Page</button>
+					</div>
+				{/if}
+
+				<div class="plainbuttons">
+					<Logout />
 				</div>
 			{/if}
 		</div>
@@ -240,6 +244,13 @@
 </div>
 
 <style>
+	.allopts{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
 	.link-button {
 		background: none;
 		border: none;
@@ -253,7 +264,7 @@
 	.head {
 		width: 100%;
 		text-align: center;
-		font-size: 20px;
+		font-size: 26px;
 		font-weight: bold;
 		margin-bottom: 15px;
 	}
@@ -285,7 +296,7 @@
 		padding-bottom: 0px;
 		display: flex;
 		flex-direction: column;
-
+		scrollbar-width: none;
 	}
 
 	.plainbuttons {
@@ -297,7 +308,7 @@
 
 	.innercontent {
 		flex: 1;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 
 	.actionbutton {
@@ -314,6 +325,10 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
+	}
+
+	.actionbutton.bigger {
+		font-size: 24px;
 	}
 
 	.closebutton {
