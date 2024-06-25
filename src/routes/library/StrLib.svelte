@@ -46,7 +46,7 @@
 
 <div class="grid">
 	{#each library.filter((entry) => filter === '' || entry.Type === filter) as entry (entry.ID)}
-		<StrEntry {entry} {bodyP} bind:sampleID bind:sampleType bind:sampleEx={sampleExists} />
+		<StrEntry {entry} bind:sampleID bind:sampleType bind:sampleEx={sampleExists} />
 	{/each}
 
 	{#if sampleExists}
@@ -70,5 +70,6 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		gap: 0px;
+		width: 100%;
 	}
 </style>

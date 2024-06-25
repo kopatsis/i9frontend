@@ -90,18 +90,23 @@
 			{:else if error}
 				<div>F: {error}</div>
 			{:else}
-				<button class="changebutton" on:click={() => switchType('Exercise')}>
-					{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
-				</button>
-				<button class="changebutton" on:click={() => switchType('Stretch')}>
-					{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
-				</button>
+				<h1>
+					Full {#if current === 'Exercise'}Exercise{:else}Stretch{/if} List
+				</h1>
+				<div class="maincontent">
+					<button class="changebutton" on:click={() => switchType('Exercise')}>
+						{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
+					</button>
+					<button class="changebutton" on:click={() => switchType('Stretch')}>
+						{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
+					</button>
 
-				{#if current === 'Exercise'}
-					<ExerLib library={exers} />
-				{:else}
-					<StrLib library={strs} />
-				{/if}
+					{#if current === 'Exercise'}
+						<ExerLib library={exers} />
+					{:else}
+						<StrLib library={strs} />
+					{/if}
+				</div>
 			{/if}
 		</div>
 
@@ -112,6 +117,10 @@
 </div>
 
 <style>
+	.maincontent {
+		width: 100%;
+	}
+
 	.centerpage {
 		display: flex;
 		align-items: center;
@@ -132,7 +141,7 @@
 		position: fixed;
 		background-color: white;
 	}
-	
+
 	.header,
 	.footer {
 		width: 100%;
@@ -147,6 +156,9 @@
 		box-sizing: border-box;
 		overflow-y: auto;
 		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.changebutton {
@@ -164,5 +176,9 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
+	}
+
+	h1 {
+		margin-top: 0px;
 	}
 </style>
