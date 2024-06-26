@@ -74,58 +74,84 @@
 	});
 </script>
 
-<MainHeader />
-<div class="headerstupid" class:hswad={status === 'Unpaid'}>
-	{#if loading}
-		<div>loading...</div>
-	{:else if error}
-		<div>F: {error}</div>
-		<button on:click={() => goto('./')}>Go Home</button>
-	{:else if type === 'Stretch'}
-		<ReviewStrWo />
-	{:else}
-		<ReviewWo {status} />
-	{/if}
+<div class="centerpage">
+	<div class="wholepage">
+		<div div class="header">
+			<MainHeader />
+		</div>
+
+		<div class="headerstupid">
+			{#if loading}
+				<div>loading...</div>
+			{:else if error}
+				<div>F: {error}</div>
+				<button on:click={() => goto('./')}>Go Home</button>
+			{:else if type === 'Stretch'}
+				<ReviewStrWo />
+			{:else}
+				<ReviewWo {status} />
+			{/if}
+			{#if !loading && !error}
+				<div class="submit">
+					<button on:click={() => goto('./')}>Exit Home</button>
+					<button on:click={() => goto('./workout')}>Proceed</button>
+				</div>
+			{/if}
+		</div>
+
+		{#if !loading && !error && status === 'Unpaid'}
+			<div class="ad">
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+			</div>
+		{/if}
+	</div>
 </div>
 
-{#if !loading}
-	<div class="submit">
-		<button on:click={() => goto('./')}>Exit Home</button>
-		<button on:click={() => goto('./workout')}>Proceed</button>
-	</div>
-{/if}
-
-{#if !loading && status === 'Unpaid'}
-	<div class="ad">
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-		AD AD AD AD AD AD AD AD AD AD AD AD AD
-	</div>
-{/if}
-
 <style>
-	.headerstupid {
-		margin-top: 49px;
-		margin-left: 5px;
-		margin-right: 5px;
-		height: calc(100dvh - 98px);
+	.centerpage {
 		display: flex;
-		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
 	}
 
-	.hswad{
-		height: calc(100dvh - 56.25dvw - 98px);
+	.wholepage {
+		height: 100dvh;
+		width: min(100dvw, 960px);
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		background-color: white;
+	}
+
+	.header {
+		width: 100%;
+	}
+
+	.headerstupid {
+		margin: 5px;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow-y: hidden;
 	}
 
 	.submit {
@@ -137,10 +163,8 @@
 
 	.ad {
 		width: 100dvw;
-		height: 56.25dvw;
+		height: 50dvw;
 		overflow-y: auto;
-		position: absolute;
-		bottom: 0;
 	}
 
 	button {

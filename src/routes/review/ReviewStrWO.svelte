@@ -60,7 +60,7 @@
 	.content {
 		display: flex;
 		flex: 1;
-		max-height: calc(100% - 25px);
+		overflow-y: hidden;
 	}
 
 	.arr {

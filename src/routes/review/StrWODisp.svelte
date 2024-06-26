@@ -74,6 +74,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		overflow-y: hidden;
 	}
 
 	.inner {
@@ -81,7 +82,7 @@
 		transition: border-color 150ms ease-in-out 0s;
 		border: 1px solid rgb(137, 151, 155);
 		overflow-y: auto;
-		max-height: 100%;
+		flex: 1;
 		padding: 6px;
 	}
 </style>
