@@ -87,8 +87,9 @@
 <style>
 	.strentry {
 		padding: 5px;
-		margin: 5px;
-		width: 175px;
+		/* margin-left: -1px;
+		margin-bottom: -1px; */
+		/* width: 175px; */
 		border-radius: 0px;
 		border: 1px solid rgb(137, 151, 155);
 	}

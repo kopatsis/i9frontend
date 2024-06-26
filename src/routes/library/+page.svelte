@@ -28,12 +28,6 @@
 		strs = stretches;
 	});
 
-	function switchType(type) {
-		if (current !== type) {
-			current = type;
-		}
-	}
-
 	onDestroy(() => {
 		unsubscribeEx();
 		unsubscribeSt();
@@ -94,17 +88,10 @@
 					Full {#if current === 'Exercise'}Exercise{:else}Stretch{/if} List
 				</h1>
 				<div class="maincontent">
-					<button class="changebutton" on:click={() => switchType('Exercise')}>
-						{#if current === 'Exercise'}<b>Exercises</b>{:else}Exercises{/if}
-					</button>
-					<button class="changebutton" on:click={() => switchType('Stretch')}>
-						{#if current === 'Stretch'}<b>Stretches</b>{:else}Stretches{/if}
-					</button>
-
 					{#if current === 'Exercise'}
-						<ExerLib library={exers} />
+						<ExerLib library={exers} bind:current />
 					{:else}
-						<StrLib library={strs} />
+						<StrLib library={strs} bind:current />
 					{/if}
 				</div>
 			{/if}
@@ -119,6 +106,7 @@
 <style>
 	.maincontent {
 		width: 100%;
+		place-items: center;
 	}
 
 	.centerpage {
@@ -159,23 +147,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	.changebutton {
-		border-radius: 0px;
-		transition: border-color 150ms ease-in-out 0s;
-		outline: none;
-		font-size: 16px;
-		margin-left: 4px;
-		margin-right: 4px;
-		padding-top: 6px;
-		padding-bottom: 6px;
-		padding-left: 12px;
-		padding-right: 12px;
-		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
-		background-color: transparent;
-		font-weight: normal;
 	}
 
 	h1 {

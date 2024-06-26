@@ -74,7 +74,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 10;
+		z-index: 2000;
 		cursor: pointer;
 	}
 
@@ -83,7 +83,7 @@
 		background: white;
 		border-radius: 5px;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		z-index: 11;
+		z-index: 2001;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
