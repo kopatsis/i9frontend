@@ -18,7 +18,8 @@
 		woIdSession,
 		name,
 		afterWOMessage,
-		nameSession
+		nameSession,
+		wipeWorkout
 	} from '$lib/stores/workout.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -220,6 +221,7 @@
 		if (saveTime) {
 			await updateTime(time, '', 'Paused', true);
 		} else {
+			wipeWorkout();
 			afterWOMessage.set(true);
 		}
 		goto('./');

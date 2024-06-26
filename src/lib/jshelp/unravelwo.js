@@ -11,10 +11,14 @@ import {
 	workoutRoundsStSet,
 	idSet,
 	nameSet,
-	currenttimeSet
+	currenttimeSet,
+	wipeWorkout
 } from '$lib/stores/workout';
 
 export function unravelstretchWO(response) {
+
+	wipeWorkout();
+
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -115,7 +119,7 @@ export function unravelstretchWO(response) {
 
 	if (response.workout.PausedTime !== 0) {
 		currenttimeSet(response.workout.PausedTime*60);
-	}
+	} 
 
 	strRoundsStSet(strRounds);
 	genTimesStSet(genTimes);
@@ -129,6 +133,9 @@ export function unravelstretchWO(response) {
 
 // @ts-ignore
 export function unravelWO(response, type = 'Regular') {
+
+	wipeWorkout();
+
 	let runningtime = 0.0;
 
 	const workout = response.positions?.workout;
@@ -370,7 +377,7 @@ export function unravelWO(response, type = 'Regular') {
 
 	if (response.workout.PausedTime !== 0) {
 		currenttimeSet(response.workout.PausedTime*60);
-	}
+	} 
 
 	strRoundsStSet(strRounds);
 	genTimesStSet(genTimes);
