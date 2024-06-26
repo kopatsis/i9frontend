@@ -153,11 +153,9 @@
 	}
 
 	.headerstupid {
-		margin-top: 49px;
-		margin-bottom: 44px;
-		margin-left: 5px;
-		margin-right: 5px;
+		margin: 5px;
 		flex: 1;
+		overflow-y: auto;
 	}
 	
 	button {
