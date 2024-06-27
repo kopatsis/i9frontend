@@ -632,7 +632,7 @@
 				</div>
 			{:else}
 				<div class="inner">
-					{#if activeTitle === 'Round Rest' && round.round === 9}
+					{#if activeTitle === 'Round Rest' && round.round === 10}
 						<div>Nice Job! That's it for the main workout!</div>
 						<div>Up Next: Static Stretch Cooldown</div>
 					{:else}
