@@ -205,7 +205,7 @@
 	const audioUndisplay = () => {
 		audioDisp = false;
 		startStopwatch();
-	}
+	};
 
 	function goHome() {
 		isCreateForm.set(true);
@@ -359,10 +359,7 @@
 				workingPicEndTime = script[workingPicIter].time;
 			}
 
-			if (
-				workingRoundIter + 1 < woRounds.length &&
-				workingTime > woRounds[workingRoundIter].start
-			) {
+			if (workingRoundIter < woRounds.length && workingTime > woRounds[workingRoundIter].start) {
 				workingRound = woRounds[workingRoundIter];
 				roundsSet(workingRoundIter);
 				workingRoundIter++;
@@ -410,7 +407,7 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (woRounds && roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
+	$: if (woRounds && roundIter < woRounds.length && time > woRounds[roundIter].start) {
 		round = woRounds[roundIter];
 		roundsSet(roundIter);
 		roundIter++;
@@ -428,7 +425,6 @@
 		lastCalled = Math.floor(time);
 		updateTime(time);
 	}
-
 </script>
 
 <div class="page">

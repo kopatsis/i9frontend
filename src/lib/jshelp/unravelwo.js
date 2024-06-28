@@ -330,6 +330,7 @@ export function unravelWO(response, type = 'Regular') {
 		roundrest: 0,
 		start: runningtime
 	});
+	workoutRounds[workoutRounds.length-1].start -= (workoutRounds[workoutRounds.length-2].roundrest + workoutRounds[workoutRounds.length-2].off);
 
 	genTimes.static = runningtime;
 

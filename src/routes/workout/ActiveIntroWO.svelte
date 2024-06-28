@@ -303,7 +303,14 @@
 		let workingRound = round;
 		let workingRoundIter = roundIter;
 
-		while (genTimes && woRounds && workingTime < (genTimes.static - woRounds[woRounds.length-2].roundrest - woRounds[woRounds.length-2].off)) {
+		while (
+			genTimes &&
+			woRounds &&
+			workingTime <
+				genTimes.static -
+					woRounds[woRounds.length - 2].roundrest -
+					woRounds[woRounds.length - 2].off
+		) {
 			workingTime += 0.01;
 
 			if (workingTime > workingScriptEndTime && workingScriptIter + 1 < timescript.length) {
@@ -321,10 +328,7 @@
 				workingPicEndTime = script[workingPicIter].time;
 			}
 
-			if (
-				workingRoundIter + 1 < woRounds.length &&
-				workingTime > woRounds[workingRoundIter].start
-			) {
+			if (workingRoundIter < woRounds.length && workingTime > woRounds[workingRoundIter].start) {
 				workingRound = woRounds[workingRoundIter];
 				roundsSet(workingRoundIter);
 				workingRoundIter++;
@@ -391,10 +395,7 @@
 				workingPicEndTime = script[workingPicIter].time;
 			}
 
-			if (
-				workingRoundIter + 1 < woRounds.length &&
-				workingTime > woRounds[workingRoundIter].start
-			) {
+			if (workingRoundIter < woRounds.length && workingTime > woRounds[workingRoundIter].start) {
 				workingRound = woRounds[workingRoundIter];
 				roundsSet(workingRoundIter);
 				workingRoundIter++;
@@ -493,7 +494,7 @@
 		picEndTime = script[picIter].time;
 	}
 
-	$: if (woRounds && roundIter + 1 < woRounds.length && time > woRounds[roundIter].start) {
+	$: if (woRounds && roundIter < woRounds.length && time > woRounds[roundIter].start) {
 		round = woRounds[roundIter];
 		roundsSet(roundIter);
 		roundIter++;
