@@ -21,12 +21,15 @@ export async function fetchWorkout(token, time, diff) {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
+	} finally {
+		sessionStorage.setItem('reqType', 'Regular');
+		sessionStorage.setItem('reqBody', JSON.stringify({ time: time, diff: diff }));
 	}
 }
 
@@ -51,12 +54,15 @@ export async function fetchStretchWorkout(token, time) {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
+	} finally {
+		sessionStorage.setItem('reqType', 'Stretch');
+		sessionStorage.setItem('reqBody', JSON.stringify({ time: time }));
 	}
 }
 
@@ -81,12 +87,15 @@ export async function fetchIntroWorkout(token, time) {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
+	} finally {
+		sessionStorage.setItem('reqType', 'Intro');
+		sessionStorage.setItem('reqBody', JSON.stringify({ time: time }));
 	}
 }
 
@@ -113,12 +122,15 @@ export async function fetchAdaptWorkout(token, diff, asnew, workoutID) {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
+	} finally {
+		sessionStorage.setItem('reqType', 'Stretch');
+		sessionStorage.setItem('reqBody', JSON.stringify({ diff: diff, asnew: asnew }));
 	}
 }
 
@@ -142,8 +154,8 @@ export async function patchUser(token, payload) {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
@@ -181,20 +193,20 @@ export function extractImageList(response) {
  */
 export async function getWorkoutById(token, id) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
-	const url = baseUrl + '/workouts/' +id + '?script=true';
+	const url = baseUrl + '/workouts/' + id + '?script=true';
 	const options = {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
-		},
+		}
 	};
 
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
@@ -211,20 +223,20 @@ export async function getWorkoutById(token, id) {
  */
 export async function getStretchWorkoutById(token, id) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
-	const url = baseUrl + '/workouts/stretch/' +id + '?script=true';
+	const url = baseUrl + '/workouts/stretch/' + id + '?script=true';
 	const options = {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
-		},
+		}
 	};
 
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
@@ -241,20 +253,20 @@ export async function getStretchWorkoutById(token, id) {
  */
 export async function cloneWorkoutById(token, id) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
-	const url = baseUrl + '/workouts/clone/' +id;
+	const url = baseUrl + '/workouts/clone/' + id;
 	const options = {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
-		},
+		}
 	};
 
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
@@ -271,25 +283,23 @@ export async function cloneWorkoutById(token, id) {
  */
 export async function cloneStretchWorkoutById(token, id) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
-	const url = baseUrl + '/workouts/stretch/clone/' +id;
+	const url = baseUrl + '/workouts/stretch/clone/' + id;
 	const options = {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
-		},
+		}
 	};
 
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
 	}
 }
-
-
