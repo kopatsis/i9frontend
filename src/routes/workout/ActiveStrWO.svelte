@@ -35,6 +35,7 @@
 	// Variables in presentation section
 	let interval = null;
 	let time = 0;
+	let startTime;
 	let loading = true;
 	let error = false;
 
@@ -92,6 +93,16 @@
 	});
 
 	// Timing functions
+
+	function step() {
+		let now = performance.now();
+		let dt = now - startTime;
+
+		time = dt / 1000;
+
+		interval = setTimeout(step, Math.max(0, 10 - (dt % 10)));
+	}
+
 	function startStopwatch() {
 		if (intervalCountdown) clearInterval(intervalCountdown);
 		transitioning = true;
@@ -105,9 +116,10 @@
 					worker.postMessage({ command: 'start', time: time });
 				} else {
 					if (interval === null) {
-						interval = setInterval(() => {
-							time += 0.01;
-						}, 10);
+						if (interval === null) {
+							startTime = performance.now() - time * 1000;
+							interval = setTimeout(step, 10);
+						}
 					}
 				}
 
@@ -122,8 +134,11 @@
 		if (worker) {
 			worker.postMessage({ command: 'pause' });
 		} else {
-			clearInterval(interval);
-			interval = null;
+			if (interval !== null) {
+				clearTimeout(interval);
+				interval = null;
+				time = (performance.now() - startTime) / 1000;
+			}
 		}
 	}
 
@@ -193,7 +208,7 @@
 	const audioUndisplay = () => {
 		audioDisp = false;
 		startStopwatch();
-	}
+	};
 
 	function goHome() {
 		isCreateForm.set(true);
@@ -389,7 +404,6 @@
 		lastCalled = Math.floor(time);
 		updateTime(time, 'stretch');
 	}
-
 </script>
 
 <div class="page">
@@ -514,32 +528,38 @@
 			<button
 				on:click={() => {
 					changeAngle('01');
-				}}>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
+				}}
+				>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('02');
-				}}>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
+				}}
+				>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
-				}}>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
+				}}
+				>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
-				}}>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
+				}}
+				>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
-				}}>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
+				}}
+				>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
-				}}>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
+				}}
+				>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
 			>
 		</div>
 

@@ -41,6 +41,7 @@
 	// Variables in presentation section
 	let interval = null;
 	let time = 0;
+	let startTime;
 	let loading = true;
 	let error = '';
 
@@ -105,8 +106,17 @@
 	});
 
 	// Timing functions
+
+	function step() {
+		let now = performance.now();
+		let dt = now - startTime;
+
+		time = dt / 1000;
+
+		interval = setTimeout(step, Math.max(0, 10 - (dt % 10)));
+	}
+
 	function startStopwatch() {
-		clearInterval(interval);
 		if (intervalCountdown) clearInterval(intervalCountdown);
 		transitioning = true;
 		intervalCountdown = setInterval(() => {
@@ -116,13 +126,13 @@
 				clearInterval(intervalCountdown);
 
 				if (worker) {
-					console.log(time);
 					worker.postMessage({ command: 'start', time: time });
 				} else {
 					if (interval === null) {
-						interval = setInterval(() => {
-							time += 0.01;
-						}, 10);
+						if (interval === null) {
+							startTime = performance.now() - time * 1000;
+							interval = setTimeout(step, 10);
+						}
 					}
 				}
 
@@ -131,14 +141,17 @@
 			}
 		}, 1000);
 	}
-
+	
 	function pauseStopwatch() {
 		paused = true;
 		if (worker) {
 			worker.postMessage({ command: 'pause' });
 		} else {
-			clearInterval(interval);
-			interval = null;
+			if (interval !== null) {
+				clearTimeout(interval);
+				interval = null;
+				time = (performance.now() - startTime) / 1000;
+			}
 		}
 	}
 
