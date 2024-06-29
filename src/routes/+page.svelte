@@ -67,7 +67,7 @@
 	function getRandomGreeting() {
 		const greetings = ['Welcome', 'Hello', 'Hey', 'Howdy', 'Hi', 'Heyy', 'Heyyy'];
 		const random = Math.random();
-		return random < 0.5 ? greetings[0] : greetings[Math.floor(random * (greetings.length - 1)) + 1];
+		return random < 0.5 ? greetings[0] : greetings[Math.floor(Math.random() * (greetings.length - 1)) + 1];
 	}
 	greeting = getRandomGreeting();
 

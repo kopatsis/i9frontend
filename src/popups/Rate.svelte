@@ -17,6 +17,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import Modal from '../templates/Modal.svelte';
+	import { getLastWO } from '$lib/stores/user';
 
 	let loading = true;
 	let retVals = [];
@@ -75,6 +76,7 @@
 		const woID = get(id);
 		await postRating(token, woID, retVals, favVals);
 		wipeWorkout();
+		await getLastWO(token);
 		afterWOMessage.set(true);
 		ratingFalse();
 	}
