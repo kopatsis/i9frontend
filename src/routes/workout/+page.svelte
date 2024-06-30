@@ -25,6 +25,10 @@
 		if (check === null) {
 			error = 'No workout type existing';
 		}
+
+		sessionStorage.removeItem('reqType');
+		sessionStorage.removeItem('reqBody');
+
 		loading = false;
 	}
 

@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { workoutType, workoutTypeSession } from '$lib/stores/workout.js';
+	import { wipeWorkout, workoutType, workoutTypeSession } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
 	import ReviewWo from './ReviewWO.svelte';
 	import ReviewStrWo from './ReviewStrWO.svelte';
@@ -16,6 +16,8 @@
 
 	let error = '';
 	let status = 'Unpaid';
+	let reversable = false;
+	let retryType = 'Regular';
 
 	let type;
 	const unsubscribe = workoutType.subscribe((woType) => {
@@ -43,7 +45,16 @@
 
 		status = userObj && userObj.Paying && userObj.Paying === true ? 'Paid' : 'Unpaid';
 
+		retryType = sessionStorage.getItem('reqType');
+		if (retryType === 'Regular' || retryType === 'Intro' || retryType === 'Stretch') {
+			reversable = true;
+		}
+
 		loading = false;
+	}
+
+	async function retryRequest() {
+		wipeWorkout();
 	}
 
 	onMount(() => {
@@ -93,7 +104,10 @@
 			{/if}
 			{#if !loading && !error}
 				<div class="submit">
-					<button on:click={() => goto('./')}>Exit Home</button>
+					<button on:click={() => goto('./')}>Exit</button>
+					{#if reversable}
+						<button on:click={retryRequest}>Discard & Try Again</button>
+					{/if}
 					<button on:click={() => goto('./workout')}>Proceed</button>
 				</div>
 			{/if}

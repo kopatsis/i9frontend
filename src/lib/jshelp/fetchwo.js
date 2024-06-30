@@ -128,9 +128,6 @@ export async function fetchAdaptWorkout(token, diff, asnew, workoutID) {
 		return await response.json();
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
-	} finally {
-		sessionStorage.setItem('reqType', 'Stretch');
-		sessionStorage.setItem('reqBody', JSON.stringify({ diff: diff, asnew: asnew }));
 	}
 }
 
