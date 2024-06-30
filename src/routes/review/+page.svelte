@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { wipeWorkout, workoutType, workoutTypeSession } from '$lib/stores/workout.js';
+	import { id, wipeWorkout, workoutType, workoutTypeSession } from '$lib/stores/workout.js';
 	import { onDestroy, onMount } from 'svelte';
 	import ReviewWo from './ReviewWO.svelte';
 	import ReviewStrWo from './ReviewStrWO.svelte';
@@ -9,6 +9,8 @@
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainHeader from '../../components/MainHeader.svelte';
 	import { getUser, user } from '$lib/stores/user';
+	import { fetchRetryIntroWorkout, fetchRetryWorkout } from '$lib/jshelp/discardretry';
+	import { get } from 'svelte/store';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -46,7 +48,7 @@
 		status = userObj && userObj.Paying && userObj.Paying === true ? 'Paid' : 'Unpaid';
 
 		retryType = sessionStorage.getItem('reqType');
-		if (retryType === 'Regular' || retryType === 'Intro' || retryType === 'Stretch') {
+		if ((retryType === 'Regular' || retryType === 'Intro' || retryType === 'Stretch') && sessionStorage.getItem('reqBody')) {
 			reversable = true;
 		}
 
@@ -54,7 +56,52 @@
 	}
 
 	async function retryRequest() {
-		wipeWorkout();
+		loading = true;
+
+		try {
+			let workout;
+
+			let oldID = get(id)
+			if (!oldID) {
+				throw new Error('Error properly fetching initial workout id in attempt to discard and retry');
+			}
+
+			if (retryType === 'Regular') {
+				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				if (!body || !body.time || !body.diff) {
+					throw new Error('Error properly fetching initial workout request body in attempt to discard and retry');
+				}
+				workout = await fetchRetryWorkout(token, body.time, body.diff, oldID);
+			} else if (retryType === 'Stretch') {
+				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				if (!body || !body.time) {
+					throw new Error('Error properly fetching initial stretch workout request body in attempt to discard and retry');
+				}
+				workout = await fetchRetryIntroWorkout(token, body.time, oldID);
+			} else {
+				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				if (!body || !body.time) {
+					throw new Error('Error properly fetching initial intro workout request body in attempt to discard and retry');
+				}
+				workout = await fetchRetryIntroWorkout(token, body.time, oldID);
+			}
+
+			wipeWorkout();
+
+			if (retryType === 'Regular') {
+				unravelWO(workout);
+			} else if (retryType === 'Stretch') {
+				unravelstretchWO(workout);
+			} else {
+				unravelWO(workout, 'Intro');
+			}
+
+			preloadImages(extractImageList(workout));
+		} catch (err) {
+			error = err
+		} finally {
+			loading = false;
+		}
 	}
 
 	onMount(() => {
