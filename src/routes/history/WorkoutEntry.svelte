@@ -3,7 +3,7 @@
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
-	import { cloneWorkoutById, extractImageList, getWorkoutById } from '$lib/jshelp/fetchwo';
+	import { cloneWorkoutById, extractImageList, getWorkoutById, restartIntroWorkoutByID, restartWorkoutByID } from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
 	import { rename, workouts } from '$lib/stores/history';
@@ -85,10 +85,12 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getWorkoutById(token, entry.ID);
-			if (entry.IsIntro) {
+			let workout;
+			if (recentWO.type === 'Intro') {
+				workout = await restartIntroWorkoutByID(token, recentWO.id);
 				unravelWO(workout, 'Intro');
 			} else {
+				workout = await restartWorkoutByID(token, recentWO.id);
 				unravelWO(workout);
 			}
 

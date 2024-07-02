@@ -5,7 +5,10 @@
 	import {
 		cloneStretchWorkoutById,
 		extractImageList,
-		getStretchWorkoutById
+		getStretchWorkoutById,
+
+		restartStretchWorkoutByID
+
 	} from '$lib/jshelp/fetchwo';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader';
@@ -55,7 +58,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getStretchWorkoutById(token, entry.ID);
+			const workout = await restartStretchWorkoutByID(token, entry.ID);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;

@@ -26,7 +26,15 @@
 		cloneWorkoutById,
 		extractImageList,
 		getStretchWorkoutById,
-		getWorkoutById
+		getWorkoutById,
+
+		restartIntroWorkoutByID,
+
+		restartStretchWorkoutByID,
+
+		restartWorkoutByID
+
+
 	} from '$lib/jshelp/fetchwo';
 
 	let local = false;
@@ -96,10 +104,12 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getWorkoutById(token, recentWO.id);
+			let workout;
 			if (recentWO.type === 'Intro') {
+				workout = await restartIntroWorkoutByID(token, recentWO.id);
 				unravelWO(workout, 'Intro');
 			} else {
+				workout = await restartWorkoutByID(token, recentWO.id);
 				unravelWO(workout);
 			}
 
@@ -141,7 +151,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getStretchWorkoutById(token, recentWO.id);
+			const workout = await restartStretchWorkoutByID(token, recentWO.id);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
