@@ -104,12 +104,10 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			let workout;
-			if (recentWO.type === 'Intro') {
-				workout = await restartIntroWorkoutByID(token, recentWO.id);
+			const workout = await getWorkoutById(token, entry.ID);
+			if (entry.IsIntro) {
 				unravelWO(workout, 'Intro');
 			} else {
-				workout = await restartWorkoutByID(token, recentWO.id);
 				unravelWO(workout);
 			}
 
@@ -127,8 +125,14 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await cloneWorkoutById(token, recentWO.id);
-			unravelWO(workout);
+			let workout;
+			if (recentWO.type === 'Intro') {
+				workout = await restartIntroWorkoutByID(token, recentWO.id);
+				unravelWO(workout, 'Intro');
+			} else {
+				workout = await restartWorkoutByID(token, recentWO.id);
+				unravelWO(workout);
+			}
 
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -151,7 +155,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await restartStretchWorkoutByID(token, recentWO.id);
+			const workout = await getStretchWorkoutById(token, entry.ID);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -167,7 +171,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await cloneStretchWorkoutById(token, recentWO.id);
+			const workout = await restartStretchWorkoutByID(token, recentWO.id);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -292,6 +296,7 @@
 										<button class="recentbutton" on:click={toReviewSt}>Start</button>
 									{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
 										<button class="recentbutton" on:click={toReviewSt}>Resume</button>
+										<button class="recentbutton" on:click={toRestartSt}>Restart</button>
 									{:else}
 										<button class="recentbutton" on:click={toRestartSt}>Restart</button>
 									{/if}
@@ -302,13 +307,14 @@
 										<button class="recentbutton" on:click={toReview}>Start</button>
 									{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
 										<button class="recentbutton" on:click={toReview}>Resume</button>
+										<button class="recentbutton" on:click={toRestart}>Restart</button>
 									{:else if recentWO.type !== 'Intro'}
 										<button class="recentbutton" on:click={toRestart}>Restart</button>
-										<button class="recentbutton" on:click={toAdapt}>Adapt*</button>
+										<!-- <button class="recentbutton" on:click={toAdapt}>Adapt*</button>
 										<div>
 											*Adapt means the times and exercises/stretches will be the same, but the reps
 											will be re-calculated to your current level.
-										</div>
+										</div> -->
 									{/if}
 								</div>
 							{/if}

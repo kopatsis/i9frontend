@@ -58,7 +58,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await restartStretchWorkoutByID(token, entry.ID);
+			const workout = await getStretchWorkoutById(token, entry.ID);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -74,7 +74,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await cloneStretchWorkoutById(token, entry.ID);
+			const workout = await restartStretchWorkoutByID(token, entry.ID);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
@@ -162,6 +162,7 @@
 			<button on:click={toReview}>Start</button>
 		{:else if (entry.Status === 'Progressing' || entry.Status === 'Paused') && entry.PausedTime < entry.Minutes}
 			<button on:click={toReview}>Resume</button>
+			<button on:click={toRestart}>Restart</button>
 		{:else}
 			<button on:click={toRestart}>Restart</button>
 		{/if}
