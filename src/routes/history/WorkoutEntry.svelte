@@ -165,7 +165,7 @@
 		{:else}
 			<div><b>Workout</b></div>
 		{/if}
-		<div>Date: {formatDateString(entry.Date)}</div>
+		<div>Date: {formatDateString(entry.Created)}</div>
 		<div>
 			{#if !editing}
 				Name: {entry.Name}&nbsp; 

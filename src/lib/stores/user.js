@@ -34,11 +34,11 @@ export async function getLastWO(token) {
     } catch (err) {
         console.log(err)
         let current = get(storedWorkout)
-        if (current && current.workout && current.workout.Name && current.workout.ID && current.workout.Date && current.workout.Status) {
+        if (current && current.workout && current.workout.Name && current.workout.ID && current.workout.Created && current.workout.Status) {
             lastWO.set({
                 name: current.workout.Name,
                 id: current.workout.ID,
-                date: current.workout.Date,
+                date: current.workout.Created,
                 status: current.workout.Status,
                 type: !current.workout.CardioRating ? "Stretch" : current.workout.IsIntro ? "Intro" : "Regular",
                 stored: true

@@ -107,7 +107,7 @@
 		<div>F: {error}</div>
 	{:else}
 		<div><b>Stretch Workout</b></div>
-		<div>Date: {formatDateString(entry.Date)}</div>
+		<div>Date: {formatDateString(entry.Created)}</div>
 		<div>
 			{#if !editing}
 				Name: {entry.Name}&nbsp; 
