@@ -104,8 +104,8 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getWorkoutById(token, entry.ID);
-			if (entry.IsIntro) {
+			const workout = await getWorkoutById(token, recentWO.ID);
+			if (recentWO.IsIntro) {
 				unravelWO(workout, 'Intro');
 			} else {
 				unravelWO(workout);
@@ -155,7 +155,7 @@
 		loading = true;
 		try {
 			const token = await getLoginToken();
-			const workout = await getStretchWorkoutById(token, entry.ID);
+			const workout = await getStretchWorkoutById(token, recentWO.ID);
 			unravelstretchWO(workout);
 			preloadImages(extractImageList(workout));
 			loading = false;
