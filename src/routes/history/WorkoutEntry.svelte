@@ -107,11 +107,11 @@
 		try {
 			const token = await getLoginToken();
 			let workout;
-			if (recentWO.type === 'Intro') {
-				workout = await restartIntroWorkoutByID(token, recentWO.id);
+			if (entry.type === 'Intro') {
+				workout = await restartIntroWorkoutByID(token, entry.id);
 				unravelWO(workout, 'Intro');
 			} else {
-				workout = await restartWorkoutByID(token, recentWO.id);
+				workout = await restartWorkoutByID(token, entry.id);
 				unravelWO(workout);
 			}
 
