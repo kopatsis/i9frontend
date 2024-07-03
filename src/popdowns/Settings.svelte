@@ -51,7 +51,7 @@
 		}
 	}
 
-	async function getToken() {
+	async function getTokenID() {
 		try {
 			const token = await getLoginToken();
 			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refresh`, {
@@ -63,7 +63,7 @@
 				throw new Error('Failed to fetch code');
 			}
 			const data = await response.json();
-			return data.token;
+			return data.idcode;
 		} catch (err) {
 			throw new Error(`Error fetching code: ${err.message}`);
 		}
@@ -72,7 +72,7 @@
 	async function adminPage(dest = 'home') {
 		if (!localuser) {
 			try {
-				const userPromise = getToken();
+				const userPromise = getTokenID();
 				const codePromise = getCode();
 
 				let [refreshToken, code] = await Promise.all([userPromise, codePromise]);
