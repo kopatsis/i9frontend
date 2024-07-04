@@ -118,7 +118,7 @@
 	}
 </script>
 
-<div class="entry">
+<div class="entry" class:pinned={entry.IsPinned}>
 	{#if loading}
 		<div>loading...</div>
 	{:else if error !== ''}

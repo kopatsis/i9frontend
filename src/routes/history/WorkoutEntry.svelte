@@ -154,7 +154,7 @@
 	];
 </script>
 
-<div class="entry">
+<div class="entry" class:pinned={entry.IsPinned}>
 	{#if loading}
 		<div>loading...</div>
 	{:else if error !== ''}
@@ -278,6 +278,10 @@
 		padding: 10px;
 		border-radius: 0px;
 		border: 1px solid rgb(137, 151, 155);
+	}
+
+	.pinned {
+		border: 3px solid rgb(72, 77, 79);
 	}
 
 	button {
