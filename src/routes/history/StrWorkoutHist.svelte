@@ -2,7 +2,6 @@
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
 	import { creationType, isCreateForm } from '$lib/stores/creation';
-	import { onMount } from 'svelte';
 
 	import StrWorkoutEntry from './StrWorkoutEntry.svelte';
 
@@ -15,17 +14,13 @@
 		goto('./');
 	}
 
-	onMount(() => {
+	$: if (history && history.length > 0) {
 		let ct = 0;
-		if (history && history.length < 1) {
-			for (const entry of history) {
-				if (entry.IsPinned) ct++;
-			}
+		for (const entry of history) {
+			if (entry.IsPinned) ct++;
 		}
-		if (ct > 2) {
-			pinnable = false;
-		}
-	});
+		pinnable = ct <= 2;
+	}
 </script>
 
 {#if !history || history.length < 1}

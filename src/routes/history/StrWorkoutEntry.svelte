@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 
 	import {
-		cloneStretchWorkoutById,
 		extractImageList,
 		getStretchWorkoutById,
 		restartStretchWorkoutByID

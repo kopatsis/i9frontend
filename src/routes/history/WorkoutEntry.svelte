@@ -4,13 +4,11 @@
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
 	import {
-		cloneWorkoutById,
 		extractImageList,
 		getWorkoutById,
 		restartIntroWorkoutByID,
 		restartWorkoutByID
 	} from '$lib/jshelp/fetchwo';
-	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
 	import { getHistory, pinWorkout, rename, workouts } from '$lib/stores/history';
 
