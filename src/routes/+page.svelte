@@ -22,19 +22,12 @@
 	import { unravelWO, unravelstretchWO } from '$lib/jshelp/unravelwo';
 	import { preloadImages } from '$lib/jshelp/preloader';
 	import {
-		cloneStretchWorkoutById,
-		cloneWorkoutById,
 		extractImageList,
 		getStretchWorkoutById,
 		getWorkoutById,
-
 		restartIntroWorkoutByID,
-
 		restartStretchWorkoutByID,
-
 		restartWorkoutByID
-
-
 	} from '$lib/jshelp/fetchwo';
 
 	let local = false;
@@ -75,7 +68,9 @@
 	function getRandomGreeting() {
 		const greetings = ['Welcome', 'Hello', 'Hey', 'Howdy', 'Hi', 'Heyy', 'Heyyy'];
 		const random = Math.random();
-		return random < 0.5 ? greetings[0] : greetings[Math.floor(Math.random() * (greetings.length - 1)) + 1];
+		return random < 0.5
+			? greetings[0]
+			: greetings[Math.floor(Math.random() * (greetings.length - 1)) + 1];
 	}
 	greeting = getRandomGreeting();
 
@@ -142,13 +137,6 @@
 			error = err;
 			console.log(err);
 		}
-	}
-
-	function toAdapt() {
-		loading = true;
-		adaptID.set(recentWO.id);
-		creationType.set('Adapt');
-		isCreateForm.set(true);
 	}
 
 	async function toReviewSt() {
@@ -280,6 +268,33 @@
 					</div>
 
 					<div>
+						{#if userObj && userObj.ID}
+							<div>Quick User Information:</div>
+							{#if userObj.DisplayLevel}
+								<div>Progress Level: {userObj.DisplayLevel}</div>
+							{/if}
+							{#if userObj.WOGeneratedCt}
+								<div>Workouts Generated: {userObj.WOGeneratedCt}</div>
+							{/if}
+							{#if userObj.StrWOGeneratedCt}
+								<div>Stretch Workouts Generated: {userObj.StrWOGeneratedCt}</div>
+							{/if}
+							{#if userObj.WOStartedCt}
+								<div>Workouts Started: {userObj.WOStartedCt}</div>
+							{/if}
+							{#if userObj.StrWOStartedCt}
+								<div>Stretch Workouts Started: {userObj.StrWOStartedCt}</div>
+							{/if}
+							{#if userObj.Badges && userObj.Badges.length > 0}
+								<div>Achievements:</div>
+								<ul>
+									{#each userObj.Badges as badge}
+										<li>{badge}</li>
+									{/each}
+								</ul>
+							{/if}
+							<br />
+						{/if}
 						{#if recentWO}
 							<div>Your most recent workout details:</div>
 							<div>Name: {recentWO.name}</div>
@@ -323,8 +338,6 @@
 							<div>No workouts generated (yet)</div>
 						{/if}
 					</div>
-
-					
 				</div>
 				<div class="maingen">
 					<button class="gen" on:click={workoutGen}>Generate Workout</button>
