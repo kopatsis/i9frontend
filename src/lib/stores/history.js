@@ -71,10 +71,11 @@ export async function rename(token, id, name, type = 'exercise') {
  *
  * @param {string} token - The token
  * @param {string} id - The id
+ * @param {boolean} pin - T/F if it is to be pinned
  * @param {string} type - The type
  * @returns {Promise<string>} Success message or throws error
  */
-export async function pinWorkout(token, id, type = '') {
+export async function pinWorkout(token, id, pin = true, type = '') {
 	if (type !== '') {
 		type += '/';
 	}
@@ -83,8 +84,9 @@ export async function pinWorkout(token, id, type = '') {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
-		},
+			Authorization: `Bearer ${token}`,
+			body: JSON.stringify({ pinned: pin })
+		}
 	};
 
 	try {

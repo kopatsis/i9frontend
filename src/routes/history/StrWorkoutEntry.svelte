@@ -13,6 +13,9 @@
 	import { unravelstretchWO } from '$lib/jshelp/unravelwo';
 
 	export let entry = null;
+	export let pinnable = true;
+	let pinnerr = '';
+
 	let expanded = false;
 	let loading = false;
 	let error = '';
@@ -100,12 +103,17 @@
 	}
 
 	async function pin() {
-		try {
-			const token = await getLoginToken();
-			await pinWorkout(token, entry.ID, "stretch");
-			await getHistory(token);
-		} catch (err) {
-			error = err;
+		if (!entry.IsPinned && !pinnable) {
+			pinnerr = 'A maximum of 3 stretch workouts can be pinned. Please unpin another one first.';
+		} else {
+			try {
+				let pinned = !entry.IsPinned;
+				const token = await getLoginToken();
+				await pinWorkout(token, entry.ID, pinned, 'stretch');
+				await getHistory(token);
+			} catch (err) {
+				error = err;
+			}
 		}
 	}
 </script>
@@ -116,7 +124,14 @@
 	{:else if error !== ''}
 		<div>F: {error}</div>
 	{:else}
-		<div><b>Stretch Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
+		<div>
+			<b>Stretch Workout&nbsp;</b><button on:click={pin}
+				>{#if entry.IsPinned}Unpin{:else}Pin{/if}</button
+			>
+		</div>
+		{#if pinnerr}
+			{pinnerr}
+		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
 		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
 		<div>Started: {entry.StartedCount} times</div>

@@ -6,12 +6,25 @@
 	import StrWorkoutEntry from './StrWorkoutEntry.svelte';
 
 	export let history = null;
+	let pinnable = true;
 
 	function startOne() {
 		isCreateForm.set(true);
 		creationType.set('Stretch');
 		goto('./');
 	}
+
+	onMount(() => {
+		let ct = 0;
+		if (history && history.length < 1) {
+			for (const entry of history) {
+				if (entry.IsPinned) ct++;
+			}
+		}
+		if (ct > 2) {
+			pinnable = false;
+		}
+	});
 </script>
 
 {#if !history || history.length < 1}
@@ -21,7 +34,7 @@
 	</div>
 {:else}
 	{#each history as entry (entry.ID)}
-		<StrWorkoutEntry {entry} />
+		<StrWorkoutEntry {entry} {pinnable} />
 	{/each}
 {/if}
 

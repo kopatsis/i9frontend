@@ -2,15 +2,29 @@
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
 	import { creationType, isCreateForm } from '$lib/stores/creation';
+	import { onMount } from 'svelte';
 
 	import WorkoutEntry from './WorkoutEntry.svelte';
 
 	export let history = null;
+	let pinnable = true;
 
 	function startOne() {
 		isCreateForm.set(true);
 		goto('./');
 	}
+
+	onMount(() => {
+		let ct = 0;
+		if (history && history.length < 1) {
+			for (const entry of history) {
+				if (entry.IsPinned) ct++;
+			}
+		}
+		if (ct > 2) {
+			pinnable = false;
+		}
+	});
 </script>
 
 {#if !history || history.length < 1}
@@ -20,7 +34,7 @@
 	</div>
 {:else}
 	{#each history as entry (entry.ID)}
-		<WorkoutEntry {entry} />
+		<WorkoutEntry {entry} {pinnable} />
 	{/each}
 {/if}
 
@@ -37,7 +51,7 @@
 		margin-bottom: 8px;
 		margin-top: 8px;
 	}
-	
+
 	button {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;

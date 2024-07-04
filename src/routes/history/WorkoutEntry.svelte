@@ -15,6 +15,9 @@
 	import { getHistory, pinWorkout, rename, workouts } from '$lib/stores/history';
 
 	export let entry = null;
+	export let pinnable = true;
+	let pinnerr = '';
+
 	let loading = false;
 	let error = '';
 	let expanded = false;
@@ -155,12 +158,17 @@
 	}
 
 	async function pin() {
-		try {
-			const token = await getLoginToken();
-			await pinWorkout(token, entry.ID);
-			await getHistory(token);
-		} catch (err) {
-			error = err;
+		if (!entry.IsPinned && !pinnable) {
+			pinnerr = 'A maximum of 3 workouts can be pinned. Please unpin another one first.'
+		} else {
+			try {
+				let pinned = !entry.IsPinned;
+				const token = await getLoginToken();
+				await pinWorkout(token, entry.ID, pinned);
+				await getHistory(token);
+			} catch (err) {
+				error = err;
+			}
 		}
 	}
 
@@ -183,9 +191,20 @@
 		<div>F: {error}</div>
 	{:else}
 		{#if entry.IsIntro}
-			<div><b>Assessment Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
+			<div>
+				<b>Assessment Workout &nbsp;</b><button on:click={pin}
+					>{#if entry.IsPinned}Unpin{:else}Pin{/if}</button
+				>
+			</div>
 		{:else}
-			<div><b>Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
+			<div>
+				<b>Workout &nbsp;</b><button on:click={pin}
+					>{#if entry.IsPinned}Unpin{:else}Pin{/if}</button
+				>
+			</div>
+		{/if}
+		{#if pinnerr}
+			{pinnerr}
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
 		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
