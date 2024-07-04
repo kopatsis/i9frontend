@@ -3,7 +3,13 @@
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader.js';
 	import { unravelWO } from '$lib/jshelp/unravelwo';
-	import { cloneWorkoutById, extractImageList, getWorkoutById, restartIntroWorkoutByID, restartWorkoutByID } from '$lib/jshelp/fetchwo';
+	import {
+		cloneWorkoutById,
+		extractImageList,
+		getWorkoutById,
+		restartIntroWorkoutByID,
+		restartWorkoutByID
+	} from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
 	import { rename, workouts } from '$lib/stores/history';
@@ -171,10 +177,12 @@
 		{:else}
 			<div><b>Workout</b></div>
 		{/if}
-		<div>Date: {formatDateString(entry.Created)}</div>
+		<div>Created On: {formatDateString(entry.Created)}</div>
+		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		<div>Started: {entry.StartedCount} times || Finished: {entry.RatedCount} times</div>
 		<div>
 			{#if !editing}
-				Name: {entry.Name}&nbsp; 
+				Name: {entry.Name}&nbsp;
 				<button
 					on:click={() => {
 						newname = entry.Name;
@@ -194,17 +202,22 @@
 				</div>
 			{/if}
 		</div>
-		<div>Status: {entry.Status}</div>
+		<div>
+			Status: {#if entry.Status === 'Progressing'}Paused{:else}{entry.Status}{/if}
+		</div>
 		<div>Difficulty: {options[entry.Difficulty + 1]}</div>
 		<div>
 			Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
 					entry.Minutes
 				)}{/if} / {timeString(entry.Minutes)}
 		</div>
+		{#if entry.AvgRating > 0}
+			<div>- Rating: {Math.round(entry.AvgRating * 10) / 10}</div>
+		{/if}
+		{#if entry.AvgFaves > 0}
+			<div>- Favoritism: {Math.round(entry.AvgFaves * 10) / 10}</div>
+		{/if}
 		{#if !expanded}
-			{#if entry.Status === 'Rated' && averageRating() > 0}
-				<div>Average Rating: {averageRating()}</div>
-			{/if}
 			<div>Dynamic Stretches: {getFirst3(entry.Dynamics)}</div>
 			<div>Exercises: {getFirstExers()}</div>
 			<div>Static Stretches: {getFirst3(entry.Statics)}</div>
@@ -226,8 +239,11 @@
 				<div>
 					- {round.ExerciseIDs.join(', ')}
 				</div>
-				{#if round.Rating > 0}
-					<div>- Rating: {Math.round(round.Rating)}</div>
+				{#if round.AvgRating > 0}
+					<div>- Rating: {Math.round(round.AvgRating * 10) / 10}</div>
+				{/if}
+				{#if round.AvgFaves > 0}
+					<div>- Favoritism: {Math.round(round.AvgFaves * 10) / 10}</div>
 				{/if}
 			{/each}
 

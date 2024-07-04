@@ -110,7 +110,9 @@
 		<div>F: {error}</div>
 	{:else}
 		<div><b>Stretch Workout</b></div>
-		<div>Date: {formatDateString(entry.Created)}</div>
+		<div>Created On: {formatDateString(entry.Created)}</div>
+		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		<div>Started: {entry.StartedCount} times</div>
 		<div>
 			{#if !editing}
 				Name: {entry.Name}&nbsp; 
@@ -133,7 +135,9 @@
 				</div>
 			{/if}
 		</div>
-		<div>Status: {entry.Status}</div>
+		<div>
+			Status: {#if entry.Status === 'Progressing'}Paused{:else}{entry.Status}{/if}
+		</div>
 		<div>
 			Time: {#if entry.Status !== 'Rated'}{timeString(entry.PausedTime)}{:else}{timeString(
 					entry.Minutes
