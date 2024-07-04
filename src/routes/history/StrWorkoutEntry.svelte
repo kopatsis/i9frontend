@@ -10,6 +10,7 @@
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader';
 	import { unravelstretchWO } from '$lib/jshelp/unravelwo';
+	import { getHistory, pinWorkout } from '$lib/stores/history';
 
 	export let entry = null;
 	export let pinnable = true;
