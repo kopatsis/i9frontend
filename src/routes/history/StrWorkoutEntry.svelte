@@ -209,6 +209,10 @@
 		border: 1px solid rgb(137, 151, 155);
 	}
 
+	.entry.pinned {
+		border: 3px solid rgb(72, 77, 79);
+	}
+
 	button {
 		margin-top: 8px;
 		border-radius: 0px;
