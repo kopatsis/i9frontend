@@ -12,7 +12,7 @@
 	} from '$lib/jshelp/fetchwo';
 	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import { goto } from '$app/navigation';
-	import { rename, workouts } from '$lib/stores/history';
+	import { getHistory, pinWorkout, rename, workouts } from '$lib/stores/history';
 
 	export let entry = null;
 	let loading = false;
@@ -154,6 +154,16 @@
 		editing = false;
 	}
 
+	async function pin() {
+		try {
+			const token = await getLoginToken();
+			await pinWorkout(token, entry.ID);
+			await getHistory(token);
+		} catch (err) {
+			error = err;
+		}
+	}
+
 	const options = [
 		'Intro',
 		'Stretch',
@@ -173,9 +183,9 @@
 		<div>F: {error}</div>
 	{:else}
 		{#if entry.IsIntro}
-			<div><b>Assessment Workout</b></div>
+			<div><b>Assessment Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
 		{:else}
-			<div><b>Workout</b></div>
+			<div><b>Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
 		<div>Last Started: {formatDateString(entry.LastStarted)}</div>

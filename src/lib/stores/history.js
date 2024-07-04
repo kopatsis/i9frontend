@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const workouts = writable([]);
 export const strworkouts = writable([]);
@@ -16,19 +16,19 @@ export async function getHistory(token) {
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
-		},
+		}
 	};
 
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
 		const respJSON = await response.json();
-        workouts.set(respJSON.Workout);
-        strworkouts.set(respJSON.Stretch);
-        return "Success";
+		workouts.set(respJSON.Workout);
+		strworkouts.set(respJSON.Stretch);
+		return 'Success';
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
 	}
@@ -43,7 +43,7 @@ export async function getHistory(token) {
  * @param {string} type - The type
  * @returns {Promise<string>} Success message or throws error
  */
-export async function rename(token, id, name, type="exercise") {
+export async function rename(token, id, name, type = 'exercise') {
 	const url = import.meta.env.VITE_BACKEND_URL + '/rename/' + id;
 	const options = {
 		method: 'PATCH',
@@ -57,10 +57,43 @@ export async function rename(token, id, name, type="exercise") {
 	try {
 		const response = await fetch(url, options);
 		if (!response.ok) {
-			const resp = await response.json()
-			throw new Error(`HTTP error! status: ${response.status}, `+ JSON.stringify(resp));
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
 		}
-        return "Success";
+		return 'Success';
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
+
+/**
+ * Pins to top
+ *
+ * @param {string} token - The token
+ * @param {string} id - The id
+ * @param {string} type - The type
+ * @returns {Promise<string>} Success message or throws error
+ */
+export async function pinWorkout(token, id, type = '') {
+	if (type !== '') {
+		type += '/';
+	}
+	const url = import.meta.env.VITE_BACKEND_URL + '/workout/' + type + id;
+	const options = {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
+		}
+		return 'Success';
 	} catch (error) {
 		throw new Error('Error fetching the response: ' + error);
 	}

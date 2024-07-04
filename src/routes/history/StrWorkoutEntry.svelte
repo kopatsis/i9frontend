@@ -98,6 +98,16 @@
 		}
 		editing = false;
 	}
+
+	async function pin() {
+		try {
+			const token = await getLoginToken();
+			await pinWorkout(token, entry.ID, "stretch");
+			await getHistory(token);
+		} catch (err) {
+			error = err;
+		}
+	}
 </script>
 
 <div class="entry">
@@ -106,7 +116,7 @@
 	{:else if error !== ''}
 		<div>F: {error}</div>
 	{:else}
-		<div><b>Stretch Workout</b></div>
+		<div><b>Stretch Workout&nbsp;</b><button on:click={pin}>Pin</button></div>
 		<div>Created On: {formatDateString(entry.Created)}</div>
 		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
 		<div>Started: {entry.StartedCount} times</div>
