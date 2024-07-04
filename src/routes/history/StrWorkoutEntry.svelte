@@ -129,7 +129,7 @@
 				>{#if entry.IsPinned}Unpin{:else}Pin{/if}</button
 			>
 		</div>
-		{#if pinnerr}
+		{#if pinnerr && !entry.IsPinned}
 			{pinnerr}
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>

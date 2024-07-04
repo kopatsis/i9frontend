@@ -173,7 +173,7 @@
 				>
 			</div>
 		{/if}
-		{#if pinnerr}
+		{#if pinnerr && !entry.IsPinned}
 			{pinnerr}
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
