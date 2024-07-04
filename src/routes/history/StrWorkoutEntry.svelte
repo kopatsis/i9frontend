@@ -6,9 +6,7 @@
 		cloneStretchWorkoutById,
 		extractImageList,
 		getStretchWorkoutById,
-
 		restartStretchWorkoutByID
-
 	} from '$lib/jshelp/fetchwo';
 	import { getLoginToken } from '$lib/jshelp/localtoken';
 	import { preloadImages } from '$lib/jshelp/preloader';
@@ -20,7 +18,7 @@
 	let error = '';
 
 	let editing = false;
-	let newname = "";
+	let newname = '';
 
 	function formatDateString(isoDateString) {
 		const date = new Date(isoDateString);
@@ -100,7 +98,6 @@
 		}
 		editing = false;
 	}
-
 </script>
 
 <div class="entry">
@@ -115,7 +112,7 @@
 		<div>Started: {entry.StartedCount} times</div>
 		<div>
 			{#if !editing}
-				Name: {entry.Name}&nbsp; 
+				Name: {entry.Name}&nbsp;
 				<button
 					on:click={() => {
 						newname = entry.Name;
@@ -123,7 +120,7 @@
 					}}>Edit</button
 				>
 			{:else}
-				New Name:&nbsp;<input type="text" length="100" bind:value={newname}/>
+				New Name:&nbsp;<input type="text" length="100" bind:value={newname} />
 				<div>
 					<button
 						on:click={() => {
@@ -152,12 +149,17 @@
 			<div>Dynamic Warmup:</div>
 			{#each entry.Dynamics as name, i (i)}
 				<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
+				{#if (i + 1) % entry.CycleLength === 0}
+					<br />
+				{/if}
 			{/each}
 
-			<br />
 			<div>Static Cooldown:</div>
 			{#each entry.Statics as name, i (i)}
 				<div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
+				{#if (i + 1) % entry.CycleLength === 0}
+					<br />
+				{/if}
 			{/each}
 			<button on:click={() => (expanded = false)}>Collapse</button>
 		{/if}
@@ -174,7 +176,7 @@
 </div>
 
 <style>
-	.entry{
+	.entry {
 		margin: 10px;
 		margin-top: 20px;
 		padding: 10px;
