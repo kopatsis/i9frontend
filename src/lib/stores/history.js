@@ -84,9 +84,9 @@ export async function pinWorkout(token, id, pin = true, type = '') {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`,
-			body: JSON.stringify({ pinned: pin })
-		}
+			Authorization: `Bearer ${token}`
+		},
+		body: JSON.stringify({ pinned: pin })
 	};
 
 	try {
