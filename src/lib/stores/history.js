@@ -79,7 +79,7 @@ export async function pinWorkout(token, id, pin = true, type = '') {
 	if (type !== '') {
 		type += '/';
 	}
-	const url = import.meta.env.VITE_BACKEND_URL + '/workout/' + type + 'pin/' + id;
+	const url = import.meta.env.VITE_BACKEND_URL + '/workouts/' + type + 'pin/' + id;
 	const options = {
 		method: 'PATCH',
 		headers: {
