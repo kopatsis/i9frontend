@@ -68,3 +68,37 @@ export async function mergeLocalUser(token, local, name, refresh) {
 		throw new Error('Error fetching the response: ' + error);
 	}
 }
+
+/**
+ * Makes a POST request for a finished quiz
+ *
+ * @param {string} token - The actual token
+ * @param {Object} body
+ * @returns {Promise<Object>} A promise that resolves with the full response object.
+ */
+export async function postQuiz(token, body) {
+	// @ts-ignore
+	const url = import.meta.env.VITE_BACKEND_URL + '/users/quiz';
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		},
+		body: JSON.stringify(body)
+	};
+
+	try {
+		const response = await fetch(url, options);
+		if (response.status === 204) {
+			return {};
+		}
+		if (!response.ok) {
+			const resp = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ` + JSON.stringify(resp));
+		}
+		return await response.json();
+	} catch (error) {
+		throw new Error('Error fetching the response: ' + error);
+	}
+}
