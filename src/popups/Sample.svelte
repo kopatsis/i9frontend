@@ -3,7 +3,7 @@
 
 	import { fetchSampleByExt, fetchSample } from '$lib/jshelp/fetchsample';
 	import { preloadSampleImages } from '$lib/jshelp/preloader';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Modal from '../templates/Modal.svelte';
 
 	export let backendID = '';
@@ -15,6 +15,8 @@
 
 	let interval = null;
 	let time = 0;
+	let startTime;
+
 	let loading = true;
 	let error = false;
 
@@ -29,11 +31,19 @@
 	let angle = '02';
 	let realTimes = [];
 
+	function step() {
+		let now = performance.now();
+		let dt = now - startTime;
+
+		time = dt / 1000;
+
+		interval = setTimeout(step, Math.max(0, 10 - (dt % 10)));
+	}
+
 	function startStopwatch() {
 		if (interval === null) {
-			interval = setInterval(() => {
-				time += 0.05;
-			}, 50);
+			startTime = performance.now() - time * 1000;
+			interval = setTimeout(step, 10);
 		}
 	}
 
@@ -75,6 +85,11 @@
 		}
 	}
 
+	onDestroy(() => {
+		clearInterval(interval);
+		interval = null;
+	})
+
 	onMount(async () => {
 		try {
 			if (sampleID === '') {
@@ -97,8 +112,12 @@
 
 	$: if (time > fullTime) {
 		time = 0;
+		startTime = null;
+		clearInterval(interval);
+		interval = null;
 		i = -1;
 		setImg();
+		startStopwatch();
 	} else if (time > nextTime && sampleObj) {
 		setImg();
 	}
