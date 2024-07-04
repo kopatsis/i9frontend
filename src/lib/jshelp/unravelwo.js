@@ -36,8 +36,8 @@ export function unravelstretchWO(response) {
 		throw new Error('No existing static or dynamic samples');
 	}
 	const strRounds = {
-		static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [] },
-		dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [] }
+		static: { samples: workout.StaticSamples, titles: workout.StaticNames, times: [], cycleends: [] },
+		dynamic: { samples: workout.DynamicSamples, titles: workout.DynamicNames, times: [], cycleends: []  }
 	};
 	const genTimes = { dynamic: 0, static: 0, end: 0 };
 	const script = [];
@@ -46,8 +46,14 @@ export function unravelstretchWO(response) {
 	for (let i = 0; i < dynamicSlice.length; i++) {
 		const set = dynamicSlice[i];
 
+		let endcycle = false;
+		if ((i+1) % response.workout.CycleLength === 0) {
+			endcycle = true;
+		}
+
 		timescript.push({ time: runningtime, isrest: false });
 		strRounds.dynamic.times.push(set.FullTime);
+		strRounds.dynamic.cycleends.push(endcycle);
 
 		for (let j = 0; j < set.RepCount; j++) {
 			const rep = set.RepSlice[set.RepSequence[j]];
@@ -79,8 +85,14 @@ export function unravelstretchWO(response) {
 	for (let i = 0; i < staticSlice.length; i++) {
 		const set = staticSlice[i];
 
+		let endcycle = false;
+		if ((i+1) % response.workout.CycleLength === 0) {
+			endcycle = true;
+		}
+
 		timescript.push({ time: runningtime, isrest: false });
 		strRounds.static.times.push(set.FullTime);
+		strRounds.static.cycleends.push(endcycle);
 
 		for (let j = 0; j < set.RepCount; j++) {
 			const rep = set.RepSlice[set.RepSequence[j]];

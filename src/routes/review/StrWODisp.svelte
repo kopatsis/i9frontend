@@ -29,6 +29,9 @@
 								}}>&#x2139;</button
 							>
 						</div>
+						{#if strRounds.dynamic.cycleends[i]}
+							<div class="spacer"></div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -46,6 +49,9 @@
 								}}>&#x2139;</button
 							>
 						</div>
+						{#if strRounds.static.cycleends[i]}
+							<div class="spacer"></div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -84,5 +90,11 @@
 		overflow-y: auto;
 		flex: 1;
 		padding: 6px;
+	}
+
+	.spacer {
+		grid-column: 1 / -1;
+		height: 1.25em;
+		background: none;
 	}
 </style>
