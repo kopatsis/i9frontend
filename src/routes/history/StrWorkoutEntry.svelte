@@ -175,7 +175,7 @@
 			<button on:click={() => (expanded = true)}>Expand</button>
 		{:else}
 			<br />
-			<div>Dynamic Warmup:</div>
+			<div>Dynamic Stretches:</div>
 			{#each entry.Dynamics as name, i (i)}
 				<div>- {Math.round(entry.StretchTimes.DynamicPerSet[i])}s: {name}</div>
 				{#if (i + 1) % entry.CycleLength === 0}
@@ -183,7 +183,7 @@
 				{/if}
 			{/each}
 
-			<div>Static Cooldown:</div>
+			<div>Static Stretches:</div>
 			{#each entry.Statics as name, i (i)}
 				<div>- {Math.round(entry.StretchTimes.StaticPerSet[i])}s: {name}</div>
 				{#if (i + 1) % entry.CycleLength === 0}
