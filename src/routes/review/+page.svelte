@@ -9,7 +9,7 @@
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainHeader from '../../components/MainHeader.svelte';
 	import { getUser, user } from '$lib/stores/user';
-	import { fetchRetryIntroWorkout, fetchRetryWorkout } from '$lib/jshelp/discardretry';
+	import { fetchRetryIntroWorkout, fetchRetryStretchWorkout, fetchRetryWorkout } from '$lib/jshelp/discardretry';
 	import { get } from 'svelte/store';
 	import { unravelstretchWO, unravelWO } from '$lib/jshelp/unravelwo';
 	import { extractImageList } from '$lib/jshelp/fetchwo';
@@ -94,7 +94,7 @@
 						'Error properly fetching initial stretch workout request body in attempt to discard and retry'
 					);
 				}
-				workout = await fetchRetryIntroWorkout(token, body.time, oldID);
+				workout = await fetchRetryStretchWorkout(token, body.time, oldID);
 			} else {
 				const body = JSON.parse(sessionStorage.getItem('reqBody'));
 				if (!body || !body.time) {
