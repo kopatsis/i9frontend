@@ -81,6 +81,8 @@
 
 			preloadImages(extractImageList(workout));
 			loading = false;
+			sessionStorage.removeItem('reqType');
+			sessionStorage.removeItem('reqBody');
 			goto('./review');
 		} catch (err) {
 			loading = false;
@@ -104,6 +106,8 @@
 
 			preloadImages(extractImageList(workout));
 			loading = false;
+			sessionStorage.removeItem('reqType');
+			sessionStorage.removeItem('reqBody');
 			goto('./review');
 		} catch (err) {
 			loading = false;
