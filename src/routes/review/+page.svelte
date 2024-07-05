@@ -70,7 +70,7 @@
 
 		try {
 			let workout;
-			const token = getLoginToken();
+			const token = await getLoginToken();
 
 			let oldID = get(id);
 			if (!oldID) {
