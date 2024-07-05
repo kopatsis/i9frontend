@@ -11,6 +11,9 @@
 	import { getUser, user } from '$lib/stores/user';
 	import { fetchRetryIntroWorkout, fetchRetryWorkout } from '$lib/jshelp/discardretry';
 	import { get } from 'svelte/store';
+	import { unravelstretchWO, unravelWO } from '$lib/jshelp/unravelwo';
+	import { extractImageList } from '$lib/jshelp/fetchwo';
+	import { preloadImages } from '$lib/jshelp/preloader';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -67,6 +70,7 @@
 
 		try {
 			let workout;
+			const token = getLoginToken();
 
 			let oldID = get(id);
 			if (!oldID) {

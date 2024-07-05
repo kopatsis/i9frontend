@@ -157,5 +157,6 @@
 
 	.logheadtxt {
 		font-size: clamp(20px, 10dvw, 54px);
+		user-select: none;
 	}
 </style>
