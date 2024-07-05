@@ -31,10 +31,14 @@
 		userObj = user;
 	});
 
-	onDestroy(() => {
+	function cleanup() {
+		sessionStorage.removeItem('reqType');
+		sessionStorage.removeItem('reqBody');
 		unsubscribe();
 		unsubscribeUser();
-	});
+	}
+
+	onDestroy(cleanup);
 
 	async function mountCall() {
 		let check = workoutTypeSession();
@@ -48,7 +52,10 @@
 		status = userObj && userObj.Paying && userObj.Paying === true ? 'Paid' : 'Unpaid';
 
 		retryType = sessionStorage.getItem('reqType');
-		if ((retryType === 'Regular' || retryType === 'Intro' || retryType === 'Stretch') && sessionStorage.getItem('reqBody')) {
+		if (
+			(retryType === 'Regular' || retryType === 'Intro' || retryType === 'Stretch') &&
+			sessionStorage.getItem('reqBody')
+		) {
 			reversable = true;
 		}
 
@@ -61,27 +68,35 @@
 		try {
 			let workout;
 
-			let oldID = get(id)
+			let oldID = get(id);
 			if (!oldID) {
-				throw new Error('Error properly fetching initial workout id in attempt to discard and retry');
+				throw new Error(
+					'Error properly fetching initial workout id in attempt to discard and retry'
+				);
 			}
 
 			if (retryType === 'Regular') {
-				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				const body = JSON.parse(sessionStorage.getItem('reqBody'));
 				if (!body || !body.time || !body.diff) {
-					throw new Error('Error properly fetching initial workout request body in attempt to discard and retry');
+					throw new Error(
+						'Error properly fetching initial workout request body in attempt to discard and retry'
+					);
 				}
 				workout = await fetchRetryWorkout(token, body.time, body.diff, oldID);
 			} else if (retryType === 'Stretch') {
-				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				const body = JSON.parse(sessionStorage.getItem('reqBody'));
 				if (!body || !body.time) {
-					throw new Error('Error properly fetching initial stretch workout request body in attempt to discard and retry');
+					throw new Error(
+						'Error properly fetching initial stretch workout request body in attempt to discard and retry'
+					);
 				}
 				workout = await fetchRetryIntroWorkout(token, body.time, oldID);
 			} else {
-				body = JSON.parse(sessionStorage.getItem('reqBody'))
+				const body = JSON.parse(sessionStorage.getItem('reqBody'));
 				if (!body || !body.time) {
-					throw new Error('Error properly fetching initial intro workout request body in attempt to discard and retry');
+					throw new Error(
+						'Error properly fetching initial intro workout request body in attempt to discard and retry'
+					);
 				}
 				workout = await fetchRetryIntroWorkout(token, body.time, oldID);
 			}
@@ -98,7 +113,7 @@
 
 			preloadImages(extractImageList(workout));
 		} catch (err) {
-			error = err
+			error = err;
 		} finally {
 			loading = false;
 		}
@@ -151,7 +166,12 @@
 			{/if}
 			{#if !loading && !error}
 				<div class="submit">
-					<button on:click={() => goto('./')}>Exit</button>
+					<button
+						on:click={() => {
+							cleanup();
+							goto('./');
+						}}>Exit</button
+					>
 					{#if reversable}
 						<button on:click={retryRequest}>Discard & Try Again</button>
 					{/if}
