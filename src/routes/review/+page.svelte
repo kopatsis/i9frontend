@@ -41,8 +41,6 @@
 		unsubscribeUser();
 	}
 
-	onDestroy(cleanup);
-
 	async function mountCall() {
 		let check = workoutTypeSession();
 		if (check === null) {
@@ -145,6 +143,7 @@
 		});
 
 		return () => {
+			cleanup();
 			unsubLocalLogin();
 			unsubFirebase();
 		};
