@@ -5,7 +5,7 @@
 	import { postNewUser } from '$lib/jshelp/user';
 
 	import { auth } from '../../auth/firebase';
-	import { createUserWithEmailAndPassword } from 'firebase/auth';
+	import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 
 	export let signUp = true;
 	export let merging = false;
@@ -52,6 +52,7 @@
 					await postNewUser(token, name, user.refreshToken);
 				}
 				setLocalLogout();
+				await sendEmailVerification(user);
 				goto('./');
 			} catch (err) {
 				if (err.code === 'auth/email-already-in-use') {

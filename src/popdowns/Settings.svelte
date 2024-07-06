@@ -6,9 +6,10 @@
 	import { onDestroy, onMount } from 'svelte';
 	import Logout from '../components/Logout.svelte';
 	import Setting from '../components/Setting.svelte';
-	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import { localLogin, refreshUserData, userStore } from '$lib/jshelp/firebaseuser';
 	import { goto } from '$app/navigation';
 	import { logout } from '$lib/jshelp/localtoken';
+	import { sendEmailVerification } from 'firebase/auth';
 	// import SettingBackground from '../components/SettingBackground.svelte';
 
 	export let dispSettings = true;
@@ -16,10 +17,16 @@
 	let loading = true;
 	let error = '';
 	let retrievedSettings = null;
+	let verifEmail = false;
 
 	let localuser = false;
 	const unsubLocalLogin = localLogin.subscribe((value) => {
 		localuser = value;
+	});
+
+	let userVar;
+	const unsubUser = userStore.subscribe((user) => {
+		userVar = user;
 	});
 
 	function closerAny() {
@@ -101,13 +108,21 @@
 		goto('./login');
 	}
 
+	async function sendVerification() {
+		if (userVar) {
+			await sendEmailVerification(userVar);
+			verifEmail = true;
+		}
+	}
+
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
 		userData = value;
 	});
 	onDestroy(() => {
-		unsubscribe;
+		unsubscribe();
 		unsubLocalLogin();
+		unsubUser();
 	});
 
 	async function mountCall() {
@@ -155,6 +170,7 @@
 		try {
 			const token = await getLoginToken();
 			error = await getUser(token);
+			await refreshUserData();
 		} catch (err) {
 			error = err;
 		} finally {
@@ -215,13 +231,20 @@
 					<Setting key={'back'} bind:data={retrievedSettings} />
 				</div>
 
-				<!-- {#if userData.Paying} -->
-				<!-- <SettingBackground /> -->
-				<!-- {/if} -->
 				{#if !localuser}
 					<div class="plainbuttons">
 						<button on:click={adminPage} class="link-button">Account Admin Page</button>
 					</div>
+					{#if userVar && !userVar.emailVerified}
+						<div class="plainbuttons">
+							<button on:click={sendVerification} class="link-button"
+								>Send Email Verification</button
+							>
+						</div>
+						{#if verifEmail}	
+							<div>Nice, check your email and do what that thing says.</div>
+						{/if}
+					{/if}
 				{/if}
 
 				<div class="plainbuttons">
