@@ -76,13 +76,19 @@
 
 	async function postAndExit() {
 		loading = true;
-		const token = await getLoginToken();
-		const woID = get(id);
-		await postRating(token, woID, retVals, favVals, retWhole, favWhole, asWhole);
-		wipeWorkout();
-		await getLastWO(token);
-		afterWOMessage.set(true);
-		ratingFalse();
+		try {
+			const token = await getLoginToken();
+			const woID = get(id);
+			await postRating(token, woID, retVals, favVals, retWhole, favWhole, asWhole);
+			wipeWorkout();
+			await getLastWO(token);
+			afterWOMessage.set(true);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			loading = false;
+			ratingFalse();
+		}
 	}
 </script>
 
