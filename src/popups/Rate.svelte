@@ -74,6 +74,13 @@
 		mountCall();
 	});
 
+	function close() {
+		loading = true;
+		afterWOMessage.set(true);
+		loading = false;
+		ratingFalse();
+	}
+
 	async function postAndExit() {
 		loading = true;
 		try {
@@ -90,6 +97,7 @@
 			ratingFalse();
 		}
 	}
+
 </script>
 
 <Modal closerFunc={postAndExit}>
@@ -98,7 +106,7 @@
 	{:else if roundsComplete < 1}
 		<div on:load={countDown}>No rounds to display, routing to home page in {transitionTime}</div>
 	{:else if woRounds}
-		<button on:click={postAndExit}>Close</button>
+		<button on:click={close}>Close</button>
 		<h1>Nice Job :)</h1>
 		<img
 			src="https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-high.webp"
