@@ -81,7 +81,6 @@
 		{#if errorMessage}
 			<p style="color: red;">{errorMessage}</p>
 		{/if}
-		<div></div>
 		<div>
 			<label class="hide" for="email">Email:</label>
 			<input id="email" type="email" bind:value={email} placeholder="Email" required />

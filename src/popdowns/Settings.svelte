@@ -9,7 +9,8 @@
 	import { localLogin, refreshUserData, userStore } from '$lib/jshelp/firebaseuser';
 	import { goto } from '$app/navigation';
 	import { logout } from '$lib/jshelp/localtoken';
-	import { sendEmailVerification } from 'firebase/auth';
+	import { sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
+	import { auth } from '../auth/firebase';
 	// import SettingBackground from '../components/SettingBackground.svelte';
 
 	export let dispSettings = true;
@@ -18,6 +19,7 @@
 	let error = '';
 	let retrievedSettings = null;
 	let verifEmail = false;
+	let passReset = false;
 
 	let localuser = false;
 	const unsubLocalLogin = localLogin.subscribe((value) => {
@@ -110,8 +112,23 @@
 
 	async function sendVerification() {
 		if (userVar) {
-			await sendEmailVerification(userVar);
-			verifEmail = true;
+			try {
+				await sendEmailVerification(userVar);
+				verifEmail = true;
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	}
+
+	async function sendReset() {
+		if (userVar) {
+			try {
+				await sendPasswordResetEmail(auth, userVar.email);
+				passReset = true;
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	}
 
@@ -241,8 +258,16 @@
 								>Send Email Verification</button
 							>
 						</div>
-						{#if verifEmail}	
-							<div>Nice, check your email and do what that thing says.</div>
+						{#if verifEmail}
+							<div>Nice, check your email and follow the instructions to verify your email.</div>
+						{/if}
+					{/if}
+					{#if userVar}
+						<div class="plainbuttons">
+							<button on:click={sendReset} class="link-button">Reset Password</button>
+						</div>
+						{#if passReset}
+							<div>Nice, check your email and follow the instructions to reset your password.</div>
 						{/if}
 					{/if}
 				{/if}
