@@ -9,7 +9,11 @@
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainHeader from '../../components/MainHeader.svelte';
 	import { getUser, user } from '$lib/stores/user';
-	import { fetchRetryIntroWorkout, fetchRetryStretchWorkout, fetchRetryWorkout } from '$lib/jshelp/discardretry';
+	import {
+		fetchRetryIntroWorkout,
+		fetchRetryStretchWorkout,
+		fetchRetryWorkout
+	} from '$lib/jshelp/discardretry';
 	import { get } from 'svelte/store';
 	import { unravelstretchWO, unravelWO } from '$lib/jshelp/unravelwo';
 	import { extractImageList } from '$lib/jshelp/fetchwo';
@@ -176,7 +180,7 @@
 						}}>Exit</button
 					>
 					{#if reversable}
-						<button on:click={retryRequest}>Discard & Try Again</button>
+						<button on:click={retryRequest} class="textsmaller">Discard & Try Again</button>
 					{/if}
 					<button on:click={() => goto('./workout')}>Proceed</button>
 				</div>
@@ -185,20 +189,23 @@
 
 		{#if !loading && !error && status === 'Unpaid'}
 			<div class="ad">
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
-				AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+				<div class="innerad">
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD
+					AD AD AD AD AD AD AD AD AD
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -247,7 +254,14 @@
 
 	.ad {
 		width: 100dvw;
-		height: 50dvw;
+		height: min(37.5dvh, 56.25dvw);
+		overflow-y: auto;
+		background-color: rgb(46, 46, 46);
+	}
+
+	.innerad {
+		width: min(100%, 66.67dvh);
+		height: 100%;
 		overflow-y: auto;
 	}
 
@@ -267,5 +281,21 @@
 		color: inherit;
 		background-color: transparent;
 		font-weight: normal;
+	}
+
+	.textsmaller {
+		font-size: 16px;
+	}
+
+	@media (max-width: 390px) {
+		.textsmaller {
+			font-size: 11px;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.textsmaller {
+			font-size: 14px;
+		}
 	}
 </style>

@@ -88,7 +88,7 @@
 	onDestroy(() => {
 		clearInterval(interval);
 		interval = null;
-	})
+	});
 
 	onMount(async () => {
 		try {
@@ -122,7 +122,7 @@
 		setImg();
 	}
 
-	$: if (desc){
+	$: if (desc) {
 		desc = desc.replace(/<br>/g, '<br><br>');
 	}
 </script>
@@ -136,77 +136,84 @@
 	{:else if error}
 		<div>F: {error}</div>
 	{:else}
-		<h1>{title}</h1>
-		<img {src} alt={title} />
-		<br />
-		<div class="desc">
-			{@html desc}
-		</div>
-		<br />
-		<div>Viewing Angle:</div>
-		<div class="viewbuttons">
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('01');
-				}}
-			>
-				{#if angle === '01'}
-					<b>Left</b>
-				{:else}
-					Left
-				{/if}</button
-			>
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('02');
-				}}>{#if angle === '02'}
-					<b>Half Left</b>
-				{:else}
-					Half Left
-				{/if}</button
-			>
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('03');
-				}}>{#if angle === '03'}
-					<b>Front</b>
-				{:else}
-					Front
-				{/if}</button
-			>
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('04');
-				}}>{#if angle === '04'}
-					<b>Half Right</b>
-				{:else}
-					Half Right
-				{/if}</button
-			>
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('05');
-				}}>{#if angle === '05'}
-					<b>Right</b>
-				{:else}
-					Right
-				{/if}</button
-			>
-			<button
-				class="view"
-				on:click={() => {
-					changeAngle('06');
-				}}>{#if angle === '06'}
-					<b>Top</b>
-				{:else}
-					Top
-				{/if}</button
-			>
+		<div class="sampleouter">
+			<h1>{title}</h1>
+			<img {src} alt={title} />
+			<br />
+			<div class="desc">
+				{@html desc}
+			</div>
+			<br />
+			<div>Viewing Angle:</div>
+			<div class="viewbuttons">
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('01');
+					}}
+				>
+					{#if angle === '01'}
+						<b>Left</b>
+					{:else}
+						Left
+					{/if}</button
+				>
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('02');
+					}}
+					>{#if angle === '02'}
+						<b>Half Left</b>
+					{:else}
+						Half Left
+					{/if}</button
+				>
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('03');
+					}}
+					>{#if angle === '03'}
+						<b>Front</b>
+					{:else}
+						Front
+					{/if}</button
+				>
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('04');
+					}}
+					>{#if angle === '04'}
+						<b>Half Right</b>
+					{:else}
+						Half Right
+					{/if}</button
+				>
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('05');
+					}}
+					>{#if angle === '05'}
+						<b>Right</b>
+					{:else}
+						Right
+					{/if}</button
+				>
+				<button
+					class="view"
+					on:click={() => {
+						changeAngle('06');
+					}}
+					>{#if angle === '06'}
+						<b>Top</b>
+					{:else}
+						Top
+					{/if}</button
+				>
+			</div>
 		</div>
 	{/if}
 </Modal>
@@ -248,5 +255,8 @@
 		display: flex;
 		justify-content: right;
 		width: 100%;
+	}
+	.sampleouter {
+		max-width: min(100dvw, 960px);
 	}
 </style>
