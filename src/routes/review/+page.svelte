@@ -257,6 +257,10 @@
 		height: min(37.5dvh, 56.25dvw);
 		overflow-y: auto;
 		background-color: rgb(46, 46, 46);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
 	}
 
 	.innerad {
@@ -264,6 +268,7 @@
 		height: 100%;
 		overflow-y: auto;
 		background-color: white;
+		margin: 0;
 	}
 
 	button {
