@@ -263,6 +263,7 @@
 		width: min(100%, 66.67dvh);
 		height: 100%;
 		overflow-y: auto;
+		background-color: white;
 	}
 
 	button {
@@ -289,13 +290,15 @@
 
 	@media (max-width: 390px) {
 		.textsmaller {
-			font-size: 11px;
+			font-size: 12px;
+			line-height: 1;
 		}
 	}
 
 	@media (max-width: 500px) {
 		.textsmaller {
 			font-size: 14px;
+			line-height: 1;
 		}
 	}
 </style>
