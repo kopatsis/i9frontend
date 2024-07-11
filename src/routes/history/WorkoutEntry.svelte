@@ -35,6 +35,11 @@
 		});
 	}
 
+	function isUnixEpochZero(isoDateString) {
+		const date = new Date(isoDateString);
+		return date.getTime() === 0;
+	}
+
 	function timeString(time) {
 		const secs =
 			Math.floor((time % 1) * 60) < 10
@@ -133,7 +138,7 @@
 
 	async function pin() {
 		if (!entry.IsPinned && !pinnable) {
-			pinnerr = 'A maximum of 3 workouts can be pinned. Please unpin another one first.'
+			pinnerr = 'A maximum of 3 workouts can be pinned. Please unpin another one first.';
 		} else {
 			try {
 				let pinned = !entry.IsPinned;
@@ -181,7 +186,9 @@
 			{pinnerr}
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
-		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		{#if !isUnixEpochZero(entry.LastStarted)}
+			<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		{/if}
 		<div>Started: {entry.StartedCount} times || Finished: {entry.RatedCount} times</div>
 		<div>
 			{#if !editing}

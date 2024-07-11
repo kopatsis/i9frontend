@@ -35,6 +35,11 @@
 		});
 	}
 
+	function isUnixEpochZero(isoDateString) {
+		const date = new Date(isoDateString);
+		return date.getTime() === 0;
+	}
+
 	function timeString(time) {
 		const secs =
 			Math.floor((time % 1) * 60) < 10
@@ -137,7 +142,9 @@
 			{pinnerr}
 		{/if}
 		<div>Created On: {formatDateString(entry.Created)}</div>
-		<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		{#if !isUnixEpochZero(entry.LastStarted)}
+			<div>Last Started: {formatDateString(entry.LastStarted)}</div>
+		{/if}
 		<div>Started: {entry.StartedCount} times</div>
 		<div>
 			{#if !editing}
