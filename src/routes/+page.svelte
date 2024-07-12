@@ -220,7 +220,10 @@
 				innerContent.style.transition = '';
 				pulling = false;
 				pullDownDistance = 0;
-				reload();
+				if (willReload){
+					reload();
+				}
+				
 			}, 300);
 		}
 	}
