@@ -201,12 +201,8 @@
 		if (pullDownDistance > 0) {
 			pullDownDistance = Math.min(pullDownDistance, 200);
 			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
-			
-		}
-		if(currentY !== startY) {
 			event.preventDefault();
 		}
-		
 	}
 
 	function handleTouchEnd() {
