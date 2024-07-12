@@ -33,12 +33,19 @@
 	let local = false;
 	let firebaseUser = undefined;
 	let loading = true;
+	let willReload = false;
 
 	let uname = '';
 	let showForm = false;
 	let error = '';
 
 	let greeting = 'Welcome';
+
+	let innerContent;
+	let startY = 0;
+	let currentY = 0;
+	let pullDownDistance = 0;
+	let pulling = false;
 
 	let afterWOMTrue = false;
 	const unsubscribe = afterWOMessage.subscribe((afterWOMessage) => {
@@ -179,12 +186,42 @@
 		}
 	}
 
+	function handleTouchStart(event) {
+		if (event.touches.length !== 1) return;
+		startY = event.touches[0].pageY;
+		pulling = true;
+	}
+
+	function handleTouchMove(event) {
+		if (!pulling) return;
+
+		currentY = event.touches[0].pageY;
+		pullDownDistance = currentY - startY;
+
+		if (pullDownDistance > 0) {
+			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
+		}
+	}
+
+	function handleTouchEnd() {
+		if (pullDownDistance > 0) {
+			innerContent.style.transition = 'transform 0.3s ease';
+			innerContent.style.transform = 'translateY(0px)';
+
+			setTimeout(() => {
+				innerContent.style.transition = '';
+				pulling = false;
+				pullDownDistance = 0;
+			}, 300);
+		}
+	}
+
 	async function mountCall() {
+		loading = true;
+		willReload = false;
 		const token = await getLoginToken();
-		console.log(token);
 		await Promise.all([getUser(token, true), getLastWO(token)]);
 		uname = userObj && userObj.Name ? userObj.Name : '';
-		console.log(uname);
 		workoutTypeSession();
 		nameSession();
 		ratingSession();
@@ -251,7 +288,16 @@
 			{:else if error}
 				<div>F: {error}</div>
 			{:else}
-				<div class="innercontent">
+				<div
+					class="innercontent"
+					bind:this={innerContent}
+					on:touchstart={handleTouchStart}
+					on:touchmove={handleTouchMove}
+					on:touchend={handleTouchEnd}
+				>
+					{#if willReload}
+						<div>Will reload...</div>
+					{/if}
 					{#if afterWOMTrue}
 						<div class="greeting">
 							Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
