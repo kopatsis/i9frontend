@@ -193,16 +193,17 @@
 	}
 
 	function handleTouchMove(event) {
-        if (!pulling) return;
+		if (!pulling) return;
 
-        currentY = event.touches[0].pageY;
-        pullDownDistance = currentY - startY;
+		currentY = event.touches[0].pageY;
+		pullDownDistance = currentY - startY;
 
-        if (pullDownDistance > 0) {
-            pullDownDistance = Math.min(pullDownDistance, 200);
-            innerContent.style.transform = `translateY(${pullDownDistance}px)`;
-        }
-    }
+		if (pullDownDistance > 0) {
+			pullDownDistance = Math.min(pullDownDistance, 200);
+			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
+			event.preventDefault();
+		}
+	}
 
 	function handleTouchEnd() {
 		if (pullDownDistance > 0) {
@@ -289,6 +290,9 @@
 			{:else if error}
 				<div>F: {error}</div>
 			{:else}
+				{#if willReload}
+					<div>Will reload...</div>
+				{/if}
 				<div
 					class="innercontent"
 					bind:this={innerContent}
@@ -296,9 +300,6 @@
 					on:touchmove={handleTouchMove}
 					on:touchend={handleTouchEnd}
 				>
-					{#if willReload}
-						<div>Will reload...</div>
-					{/if}
 					{#if afterWOMTrue}
 						<div class="greeting">
 							Nice job{#if !uname || uname === 'local'}!{:else}, {uname}!{/if}
