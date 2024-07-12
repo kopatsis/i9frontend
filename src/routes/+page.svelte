@@ -203,6 +203,12 @@
 			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
 			event.preventDefault();
 		}
+
+		if (pullDownDistance > 50) {
+			willReload = true;
+		} else {
+			willReload = false;
+		}
 	}
 
 	function handleTouchEnd() {
@@ -214,13 +220,18 @@
 				innerContent.style.transition = '';
 				pulling = false;
 				pullDownDistance = 0;
+				reload();
 			}, 300);
 		}
 	}
 
-	async function mountCall() {
+	function reload() {
 		loading = true;
 		willReload = false;
+		mountCall();
+	}
+
+	async function mountCall() {
 		const token = await getLoginToken();
 		await Promise.all([getUser(token, true), getLastWO(token)]);
 		uname = userObj && userObj.Name ? userObj.Name : '';
