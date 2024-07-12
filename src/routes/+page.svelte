@@ -220,10 +220,9 @@
 				innerContent.style.transition = '';
 				pulling = false;
 				pullDownDistance = 0;
-				if (willReload){
+				if (willReload) {
 					reload();
 				}
-				
 			}, 300);
 		}
 	}
@@ -337,76 +336,80 @@
 						</div>
 					</div>
 
-					<div>
+					<div class="mainpage">
 						{#if userObj && userObj.ID}
-							<div>Quick User Information:</div>
-							{#if userObj.DisplayLevel}
-								<div>Progress Level: {userObj.DisplayLevel}</div>
-							{/if}
-							{#if userObj.WOGeneratedCt}
-								<div>Workouts Generated: {userObj.WOGeneratedCt}</div>
-							{/if}
-							{#if userObj.StrWOGeneratedCt}
-								<div>Stretch Workouts Generated: {userObj.StrWOGeneratedCt}</div>
-							{/if}
-							{#if userObj.WOStartedCt}
-								<div>Workouts Started: {userObj.WOStartedCt}</div>
-							{/if}
-							{#if userObj.StrWOStartedCt}
-								<div>Stretch Workouts Started: {userObj.StrWOStartedCt}</div>
-							{/if}
-							{#if userObj.Badges && userObj.Badges.length > 0}
-								<div>Achievements:</div>
-								<ul>
-									{#each userObj.Badges as badge}
-										<li>{badge}</li>
-									{/each}
-								</ul>
-							{/if}
-							<br />
+							<div>
+								<div>Quick User Information:</div>
+								{#if userObj.DisplayLevel}
+									<div>Progress Level: {userObj.DisplayLevel}</div>
+								{/if}
+								{#if userObj.WOGeneratedCt}
+									<div>Workouts Generated: {userObj.WOGeneratedCt}</div>
+								{/if}
+								{#if userObj.StrWOGeneratedCt}
+									<div>Stretch Workouts Generated: {userObj.StrWOGeneratedCt}</div>
+								{/if}
+								{#if userObj.WOStartedCt}
+									<div>Workouts Started: {userObj.WOStartedCt}</div>
+								{/if}
+								{#if userObj.StrWOStartedCt}
+									<div>Stretch Workouts Started: {userObj.StrWOStartedCt}</div>
+								{/if}
+								{#if userObj.Badges && userObj.Badges.length > 0}
+									<div>Achievements:</div>
+									<ul>
+										{#each userObj.Badges as badge}
+											<li>{badge}</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
 						{/if}
-						{#if recentWO}
-							<div>Your most recent workout details:</div>
-							<div>Name: {recentWO.name}</div>
-							<div>Type: {recentWO.type} workout</div>
-							<div>Date: {formatDateString(recentWO.date)}</div>
-							<div>Status: {recentWO.status}</div>
-							{#if recentWO.stored === true}
-								<div class="recentb">
-									<button class="recentbutton" on:click={() => goto('./review')}>Resume</button>
-								</div>
-							{:else if recentWO.type === 'Stretch'}
-								<div class="recentb">
-									{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
-										<button class="recentbutton" on:click={toReviewSt}>Start</button>
-									{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-										<button class="recentbutton" on:click={toReviewSt}>Resume</button>
-										<button class="recentbutton" on:click={toRestartSt}>Restart</button>
-									{:else}
-										<button class="recentbutton" on:click={toRestartSt}>Restart</button>
-									{/if}
-								</div>
-							{:else}
-								<div class="recentb">
-									{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
-										<button class="recentbutton" on:click={toReview}>Start</button>
-									{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
-										<button class="recentbutton" on:click={toReview}>Resume</button>
-										<button class="recentbutton" on:click={toRestart}>Restart</button>
-									{:else if recentWO.type !== 'Intro'}
-										<button class="recentbutton" on:click={toRestart}>Restart</button>
-										<!-- <button class="recentbutton" on:click={toAdapt}>Adapt*</button>
+
+						<div>
+							{#if recentWO}
+								<div>Your most recent workout details:</div>
+								<div>Name: {recentWO.name}</div>
+								<div>Type: {recentWO.type} workout</div>
+								<div>Date: {formatDateString(recentWO.date)}</div>
+								<div>Status: {recentWO.status}</div>
+								{#if recentWO.stored === true}
+									<div class="recentb">
+										<button class="recentbutton" on:click={() => goto('./review')}>Resume</button>
+									</div>
+								{:else if recentWO.type === 'Stretch'}
+									<div class="recentb">
+										{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
+											<button class="recentbutton" on:click={toReviewSt}>Start</button>
+										{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+											<button class="recentbutton" on:click={toReviewSt}>Resume</button>
+											<button class="recentbutton" on:click={toRestartSt}>Restart</button>
+										{:else}
+											<button class="recentbutton" on:click={toRestartSt}>Restart</button>
+										{/if}
+									</div>
+								{:else}
+									<div class="recentb">
+										{#if recentWO.status === 'Unstarted' || recentWO.status === 'Not Started'}
+											<button class="recentbutton" on:click={toReview}>Start</button>
+										{:else if recentWO.status === 'Progressing' || recentWO.status === 'Paused'}
+											<button class="recentbutton" on:click={toReview}>Resume</button>
+											<button class="recentbutton" on:click={toRestart}>Restart</button>
+										{:else if recentWO.type !== 'Intro'}
+											<button class="recentbutton" on:click={toRestart}>Restart</button>
+											<!-- <button class="recentbutton" on:click={toAdapt}>Adapt*</button>
 										<div>
 											*Adapt means the times and exercises/stretches will be the same, but the reps
 											will be re-calculated to your current level.
 										</div> -->
-									{/if}
-								</div>
+										{/if}
+									</div>
+								{/if}
+							{:else}
+								<div>Your most recent workout details:</div>
+								<div>No workouts generated (yet)</div>
 							{/if}
-						{:else}
-							<div>Your most recent workout details:</div>
-							<div>No workouts generated (yet)</div>
-						{/if}
+						</div>
 					</div>
 				</div>
 				<div class="maingen">
@@ -555,5 +558,22 @@
 		top: 10px;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+
+	.mainpage {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.mainpage > div {
+		margin: 15px;
+	}
+
+	@media (min-width: 725px) {
+		.mainpage {
+			flex-direction: row;
+		}
 	}
 </style>
