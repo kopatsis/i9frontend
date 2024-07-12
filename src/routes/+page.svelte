@@ -199,12 +199,12 @@
 		pullDownDistance = currentY - startY;
 
 		if (pullDownDistance > 0) {
-			pullDownDistance = Math.min(pullDownDistance, 200);
+			pullDownDistance = Math.min(pullDownDistance, 75);
 			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
 			event.preventDefault();
 		}
 
-		if (pullDownDistance > 50) {
+		if (pullDownDistance > 35) {
 			willReload = true;
 		} else {
 			willReload = false;
