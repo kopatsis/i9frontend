@@ -203,7 +203,10 @@
 			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
 			
 		}
-		event.preventDefault();
+		if(currentY !== startY) {
+			event.preventDefault();
+		}
+		
 	}
 
 	function handleTouchEnd() {
