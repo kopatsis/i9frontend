@@ -187,21 +187,22 @@
 	}
 
 	function handleTouchStart(event) {
-		if (event.touches.length !== 1) return;
+		if (event.touches.length !== 1 || innerContent.scrollTop > 0) return;
 		startY = event.touches[0].pageY;
 		pulling = true;
 	}
 
 	function handleTouchMove(event) {
-		if (!pulling) return;
+        if (!pulling) return;
 
-		currentY = event.touches[0].pageY;
-		pullDownDistance = currentY - startY;
+        currentY = event.touches[0].pageY;
+        pullDownDistance = currentY - startY;
 
-		if (pullDownDistance > 0) {
-			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
-		}
-	}
+        if (pullDownDistance > 0) {
+            pullDownDistance = Math.min(pullDownDistance, 200);
+            innerContent.style.transform = `translateY(${pullDownDistance}px)`;
+        }
+    }
 
 	function handleTouchEnd() {
 		if (pullDownDistance > 0) {
