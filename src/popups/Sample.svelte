@@ -257,6 +257,10 @@
 		width: 100%;
 	}
 	.sampleouter {
-		max-width: min(100dvw, 960px);
+		max-width: min(100dvw, 920px);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 </style>
