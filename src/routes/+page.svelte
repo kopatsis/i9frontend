@@ -201,8 +201,9 @@
 		if (pullDownDistance > 0) {
 			pullDownDistance = Math.min(pullDownDistance, 200);
 			innerContent.style.transform = `translateY(${pullDownDistance}px)`;
-			event.preventDefault();
+			
 		}
+		event.preventDefault();
 	}
 
 	function handleTouchEnd() {
@@ -291,7 +292,7 @@
 				<div>F: {error}</div>
 			{:else}
 				{#if willReload}
-					<div>Will reload...</div>
+					<div class="willReload">Will reload...</div>
 				{/if}
 				<div
 					class="innercontent"
@@ -533,5 +534,13 @@
 		align-items: center;
 		margin-bottom: -20px;
 		padding-bottom: 25px;
+	}
+
+	.willReload {
+		margin-top: 10px;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 </style>
