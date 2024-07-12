@@ -646,10 +646,10 @@
 		display: grid;
 		grid-template-columns: max-content 1fr max-content;
 		gap: 1px;
-		background-color: rgb(228, 228, 228);
+		/* background-color: rgb(228, 228, 228); */
 	}
 	.grid > div {
 		padding: 6px;
-		background: white;
+		/* background: white; */
 	}
 </style>

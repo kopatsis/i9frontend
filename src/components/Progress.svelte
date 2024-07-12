@@ -17,11 +17,11 @@
 
 <style>
     .innerbar.reverse{
-        background-color: #ff4242;
+        background-color: #d15dff;
     }
 
     .innerbar{
-        background-color: #32de84;
+        background-color: #6ee4c6;
     }
 
     .outerbar{
