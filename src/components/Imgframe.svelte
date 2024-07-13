@@ -52,24 +52,23 @@
 		{:else}
 			<img class="centerimg" {src} {alt} />
 		{/if}
-
-		<div class="timepres">{Math.floor(endTime - time)}</div>
 	</div>
+	<div class="timepres">{Math.floor(endTime - time)}</div>
 </div>
 
 <style>
 	.centerimg {
-		width: calc(100dvw - 12px);
-		height: calc(100dvw - 12px);
+		width: calc(100% - 12px);
+		height: calc(100% - 12px);
 	}
 
 	.parent-container {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		aspect-ratio: 1/1;
 		position: relative;
-		width: 100dvw;
-		height: 100dvw;
+		height: 100%;
 		color: aliceblue;
 	}
 
@@ -86,5 +85,15 @@
 		position: absolute;
 		top: 6px;
 		right: 6px;
+	}
+
+	.outermost {
+		height: min(100dvw, calc(70dvh - clamp(30px, 10dvw, 60px)));
+		width: 100%;
+		background-color: rgb(97, 97, 97);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
 	}
 </style>

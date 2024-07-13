@@ -29,9 +29,9 @@
 		border-top-right-radius: 12px;
 		background: linear-gradient(
 			to bottom,
-			rgba(50, 222, 132, 0.2) 0%,
-			rgba(54, 243, 79, 0.75) 50px,
-			rgba(54, 243, 79, 0.75) 100%
+			rgba(50, 222, 132, 0.1) 0%,
+			rgba(54, 243, 79, 0.4) 50px,
+			rgba(54, 243, 79, 0.4) 100%
 		);
 		z-index: -9;
 	}
