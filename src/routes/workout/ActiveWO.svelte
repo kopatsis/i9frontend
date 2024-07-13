@@ -924,5 +924,30 @@
 
 	.pauseModal > div {
 		flex: 1;
+		border: 1px solid grey;
+		box-sizing: border-box;
+	}
+
+	@media (min-aspect-ratio: 1.2/1) {
+		.pauseModal {
+			flex-direction: row;
+		}
+		.page {
+			flex-direction: row;
+		}
+
+		.infobar {
+			min-height: auto;
+			width: auto;
+			min-width: 30dvw;
+			height: 100%;
+		}
+
+		.anglerow {
+			height: 100%;
+			width: clamp(30px, 10dvh, 55px);
+			border-top: none;
+			border-left: 1px solid rgb(137, 151, 155);
+		}
 	}
 </style>

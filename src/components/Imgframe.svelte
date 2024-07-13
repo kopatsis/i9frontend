@@ -96,4 +96,17 @@
 		align-items: center;
 		position: relative;
 	}
+
+	@media (min-aspect-ratio: 1.2/1) {
+		.outermost {
+			width: min(100dvh, calc(70dvw - clamp(30px, 10dvh, 60px)));
+			height: 100%;
+		}
+
+		.parent-container {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 1/1;
+		}
+	}
 </style>
