@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import Progress from './Progress.svelte';
 
 	export let time = 0;
@@ -8,6 +10,13 @@
 	export let src =
 		'https://i9imgs.sfo3.cdn.digitaloceanspaces.com/standing-thumbs-up-wink03-mid.webp';
 	export let alt = 'Congrats';
+	export let pauseStopwatch = () => {};
+
+	function handleKeyDown(event) {
+		if (event.key === ' ' || event.key === 'Enter') {
+			pauseStopwatch();
+		}
+	}
 
 	let progress1 = 0;
 	let progress2 = 0;
@@ -31,7 +40,14 @@
 	}
 </script>
 
-<div class="outermost">
+<div
+	class="outermost"
+	on:click={pauseStopwatch}
+	on:touchstart={pauseStopwatch}
+	on:keydown={handleKeyDown}
+	tabindex="0"
+	role="button"
+>
 	<div class="parent-container">
 		{#if !reversed}
 			<Progress progress={progress1} reverse={reversed} order={1} />

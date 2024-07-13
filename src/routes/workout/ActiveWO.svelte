@@ -512,9 +512,7 @@
 			<div class="transition">
 				<div>{transitionTime}</div>
 			</div>
-		{/if}
-
-		{#if paused}
+		{:else if paused}
 			<Modal>
 				<div class="pauseModal">
 					<div class="options">
@@ -747,6 +745,7 @@
 			reversed={scriptRest}
 			{src}
 			alt={activeTitle}
+			{pauseStopwatch}
 		/>
 
 		<div class="anglerow full">
@@ -911,6 +910,10 @@
 		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
+	}
+
+	.inner > div {
+		margin: 5px;
 	}
 
 	.pauseModal {
