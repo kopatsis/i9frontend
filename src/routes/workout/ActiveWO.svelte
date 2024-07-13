@@ -225,6 +225,25 @@
 		goto('./');
 	}
 
+	// Sizing functions
+	function changeSize() {
+		const smallest = Math.min(window.innerWidth, window.innerHeight);
+		let newsize;
+		if (smallest < 250) {
+			newsize = 'low';
+		} else if (smallest < 750) {
+			newsize = 'mid';
+		} else if (smallest < 1750) {
+			newsize = 'high';
+		} else {
+			newsize = 'OG';
+		}
+		if (size !== newsize) {
+			size = newsize;
+			src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
+		}
+	}
+
 	// Other interactive functions
 	function changeAngle(newAngle) {
 		if (angle !== newAngle) {
@@ -318,6 +337,8 @@
 		}
 
 		woIdSession();
+		changeSize();
+		window.addEventListener('resize', changeSize);
 
 		if (!error && oldTime > 0 && genTimes && genTimes.end && oldTime < genTimes.end) {
 			timeMessage = true;
@@ -612,37 +633,49 @@
 				on:click={() => {
 					changeAngle('01');
 				}}
-				>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
-			>
+				><img src={angle === '01' ? '/small/Image1T.png' : '/small/Image1.png'} alt="Left" />
+			</button>
 			<button
 				on:click={() => {
 					changeAngle('02');
 				}}
-				>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
+				><img
+					src={angle === '02' ? '/small/Image2T.png' : '/small/Image2.png'}
+					alt="Half Left"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
 				}}
-				>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
+				><img
+					src={angle === '03' ? '/small/Image3T.png' : '/small/Image3.png'}
+					alt="Center"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
 				}}
-				>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
+				><img
+					src={angle === '04' ? '/small/Image4T.png' : '/small/Image4.png'}
+					alt="Half Right"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
 				}}
-				>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
+				><img
+					src={angle === '05' ? '/small/Image5T.png' : '/small/Image5.png'}
+					alt="Right"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
 				}}
-				>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
+				><img src={angle === '06' ? '/small/Image6T.png' : '/small/Image6.png'} alt="Top" /></button
 			>
 		</div>
 
@@ -658,12 +691,26 @@
 	.anglerow {
 		display: flex;
 		width: 100%;
+		height: clamp(30px, 10dvw, 55px);
+		border-top: 1px solid rgb(137, 151, 155);
+		box-sizing: border-box;
+		padding: 0;
 	}
 
 	.anglerow button {
 		flex: 1;
-		margin-left: 3px;
-		margin-right: 3px;
+		padding: 2px;
+		border: none;
+		border-top: 1px solid rgb(137, 151, 155);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+	}
+
+	.anglerow button img {
+		height: calc(100% - 5px);
+		width: calc(100% - 5px);
 	}
 
 	.controls > button {

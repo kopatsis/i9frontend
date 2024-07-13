@@ -21,7 +21,7 @@
     }
 
     .innerbar{
-        background-color: #6ee4c6;
+        background-color: #25dfd4;
     }
 
     .outerbar{
