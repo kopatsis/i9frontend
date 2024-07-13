@@ -91,7 +91,7 @@
 		max-height: 90%;
 		overflow-y: auto;
 		cursor: default;
-		max-height: 80dvh;
-		max-width: 87.5dvw;
+		max-height: 85dvh;
+		max-width: min(100dvw, 960px);
 	}
 </style>
