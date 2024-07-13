@@ -31,28 +31,30 @@
 	}
 </script>
 
-<div class="parent-container">
-	{#if !reversed}
-		<Progress progress={progress1} reverse={reversed} order={1} />
-		<Progress progress={progress2} reverse={reversed} order={2} />
-		<Progress progress={progress3} reverse={reversed} order={3} />
-		<Progress progress={progress4} reverse={reversed} order={4} />
-		<Progress progress={progress5} reverse={reversed} order={5} />
-	{:else}
-		<Progress progress={progress5} reverse={reversed} order={1} />
-		<Progress progress={progress4} reverse={reversed} order={2} />
-		<Progress progress={progress3} reverse={reversed} order={3} />
-		<Progress progress={progress2} reverse={reversed} order={4} />
-		<Progress progress={progress1} reverse={reversed} order={5} />
-	{/if}
+<div class="outermost">
+	<div class="parent-container">
+		{#if !reversed}
+			<Progress progress={progress1} reverse={reversed} order={1} />
+			<Progress progress={progress2} reverse={reversed} order={2} />
+			<Progress progress={progress3} reverse={reversed} order={3} />
+			<Progress progress={progress4} reverse={reversed} order={4} />
+			<Progress progress={progress5} reverse={reversed} order={5} />
+		{:else}
+			<Progress progress={progress5} reverse={reversed} order={1} />
+			<Progress progress={progress4} reverse={reversed} order={2} />
+			<Progress progress={progress3} reverse={reversed} order={3} />
+			<Progress progress={progress2} reverse={reversed} order={4} />
+			<Progress progress={progress1} reverse={reversed} order={5} />
+		{/if}
 
-	{#if src === ''}
-		<div class="centerimg"></div>
-	{:else}
-		<img class="centerimg" src="{src}" alt="{alt}" />
-	{/if}
+		{#if src === ''}
+			<div class="centerimg"></div>
+		{:else}
+			<img class="centerimg" {src} {alt} />
+		{/if}
 
-	<div class="timepres">{Math.floor(endTime - time)}</div>
+		<div class="timepres">{Math.floor(endTime - time)}</div>
+	</div>
 </div>
 
 <style>
