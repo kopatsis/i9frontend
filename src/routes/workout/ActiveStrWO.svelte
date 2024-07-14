@@ -215,6 +215,44 @@
 		goto('./');
 	}
 
+	// Sizing functions
+	function changeSize() {
+		const smallest = Math.min(window.innerWidth, window.innerHeight);
+		let newsize;
+		if (smallest < 250) {
+			newsize = 'low';
+		} else if (smallest < 750) {
+			newsize = 'mid';
+		} else if (smallest < 1750) {
+			newsize = 'high';
+		} else {
+			newsize = 'OG';
+		}
+		if (size !== newsize) {
+			size = newsize;
+			src = cdn + '/' + script[picIter].position + angle + '-' + size + '.webp';
+		}
+	}
+
+	let parentDiv;
+	let fontSize = '16px';
+
+	function updateFontSize() {
+		if (parentDiv) {
+			const font = Math.round(Math.min(parentDiv.clientWidth, parentDiv.clientHeight) * 0.9) / 10;
+			parentDiv.style.fontSize = `${font}px`;
+		}
+	}
+
+	function formatTime(time) {
+		const minutes = Math.floor(Math.round(time) / 60);
+		let seconds = Math.floor(Math.round(time) % 60);
+		if (seconds < 10) {
+			seconds = `0${seconds}`;
+		}
+		return `${minutes}:${seconds}`;
+	}
+
 	// Other interactive functions
 	function changeAngle(newAngle) {
 		if (angle !== newAngle) {
@@ -435,54 +473,97 @@
 			<div class="transition">
 				<div>{transitionTime}</div>
 			</div>
-		{/if}
-		<div class="head full">
-			{truncateString(nameWO)}:&nbsp;
-			{#if status === 'Dynamic'}
-				Dynamic Stretches
-			{:else}
-				Static Stretches
-			{/if}
-		</div>
-		{#if exitMessage}
-			<div class="full">Are you sure you want to exit?</div>
-			<div class="anglerow controls full">
-				<button on:click={returnNoExit}>Back to Workout</button>
-				<button on:click={() => quit('Paused')}>Exit</button>
-			</div>
-		{:else if resetMessage}
-			<div class="full">Are you sure you want restart?</div>
-			<div class="anglerow controls full">
-				<button on:click={returnNoReset}>No, go back</button>
-				<button on:click={resetStopwatch}>Yes, restart</button>
-			</div>
-		{:else}
-			<div class="anglerow controls full">
-				{#if paused}
-					<button on:click={startStopwatch}>Start</button>
-				{:else}
-					<button on:click={pauseStopwatch}>Pause</button>
-				{/if}
-				<button on:click={resetQuestion}>Restart</button>
-				<button on:click={exitQuestion}>Quit</button>
-				<button on:click={audioDisplay}>Show music</button>
-			</div>
-		{/if}
-
-		<div class="full">
-			<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
-		</div>
-
-		<div class="varied">
-			{#if status === 'Dynamic'}
-				{#if activeTitle}
-					<div class="inner">
-						<div class="grid">
-							<div>
-								{activeTitle === 'Round Rest'
-									? Math.round(strRounds.rest)
-									: Math.round(strRounds.dynamic.times[set - 1])}s
+		{:else if paused}
+			<Modal>
+				<div class="pauseModal">
+					<div class="options">
+						{#if exitMessage}
+							<div class="full">Are you sure you want to exit?</div>
+							<div class="pausequests">
+								<button on:click={returnNoExit}>Back to Workout</button>
+								<button on:click={() => quit('Paused')}>Exit</button>
 							</div>
+						{:else if resetMessage}
+							<div class="full">Are you sure you want restart?</div>
+							<div class="pausequests">
+								<button on:click={returnNoReset}>No, go back</button>
+								<button on:click={resetStopwatch}>Yes, restart</button>
+							</div>
+						{:else}
+							<div class="pausequests">
+								<button on:click={startStopwatch}>Resume</button>
+								<button on:click={resetQuestion}>Restart</button>
+								<button on:click={exitQuestion}>Quit</button>
+								<button on:click={audioDisplay}>Show music</button>
+							</div>
+						{/if}
+					</div>
+					<div class="wodata">
+						<div>Data for this workout</div>
+						<div>
+							<div>
+								Current Time: <pre>{formatTime(time)}</pre>
+							</div>
+							<div>
+								Total Time: <pre>{formatTime(genTimes ? genTimes.end : 1)}</pre>
+							</div>
+						</div>
+						<div>
+							<div>WO Name: {truncateString(nameWO)}</div>
+						</div>
+						{#if status === 'Dynamic'}
+							{#if activeTitle}
+								<div class="inner first">
+									<div>This Round: Dynamic Stretches</div>
+								</div>
+								<div class="inner second">
+									<div>{activeTitle}</div>
+									<div>
+										<button
+											on:click={() => {
+												showCurrentSample(strRounds.dynamic.samples[set - 1]);
+											}}>&#x2139;</button
+										>
+									</div>
+								</div>
+								<div class="inner third">
+									<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
+									<div>{Math.round(strRounds.dynamic.times[set - 1])} seconds</div>
+								</div>
+							{/if}
+						{:else}
+							<div class="inner first">
+								<div>This Round: Static Stretches</div>
+							</div>
+							<div class="inner second">
+								<div>{activeTitle}</div>
+								<div>
+									<button
+										on:click={() => {
+											showCurrentSample(strRounds.static.samples[set - 1]);
+										}}>&#x2139;</button
+									>
+								</div>
+							</div>
+							<div class="inner third">
+								<div>Stretch Set {set} / {strRounds.static.times.length}</div>
+								<div>&nbsp;{Math.round(strRounds.static.times[set - 1])} seconds</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+			</Modal>
+		{/if}
+
+		<div class="infobar" bind:this={parentDiv}>
+			<div>
+				{#if status === 'Dynamic'}
+					{#if activeTitle}
+						<div class="inner first">
+							<pre>{formatTime(time)}</pre>
+							<div>Dynamic Stretches</div>
+						</div>
+						<div class="inner second">
 							<div>{activeTitle}</div>
 							<div>
 								<button
@@ -492,13 +573,17 @@
 								>
 							</div>
 						</div>
-						<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
+						<div class="inner third">
+							<div>Stretch Set {set} / {strRounds.dynamic.times.length}</div>
+							<div>{Math.round(strRounds.dynamic.times[set - 1])} seconds</div>
+						</div>
+					{/if}
+				{:else}
+					<div class="inner first">
+						<pre>{formatTime(time)}</pre>
+						<div>Static Stretches</div>
 					</div>
-				{/if}
-			{:else if status === 'Static'}
-				<div class="inner">
-					<div class="grid">
-						<div>{Math.round(strRounds.static.times[set - 1])}s</div>
+					<div class="inner second">
 						<div>{activeTitle}</div>
 						<div>
 							<button
@@ -508,66 +593,82 @@
 							>
 						</div>
 					</div>
-					<div>Stretch Set {set} / {strRounds.static.times.length}</div>
-				</div>
-			{/if}
+					<div class="inner third">
+						<div>Stretch Set {set} / {strRounds.static.times.length}</div>
+						<div>&nbsp;{Math.round(strRounds.static.times[set - 1])} seconds</div>
+					</div>
+				{/if}
+			</div>
 		</div>
 
-		<div class="full">
-			<Imgframe
-				{time}
-				endTime={scriptEndTime}
-				startTime={scriptStartTime}
-				reversed={scriptRest}
-				{src}
-				alt={activeTitle}
-			/>
-		</div>
+		<Imgframe
+			{time}
+			endTime={scriptEndTime}
+			startTime={scriptStartTime}
+			reversed={scriptRest}
+			{src}
+			alt={activeTitle}
+			{pauseStopwatch}
+		/>
 
 		<div class="anglerow full">
 			<button
 				on:click={() => {
 					changeAngle('01');
 				}}
-				>{#if angle === '01'}<b>Left</b>{:else}Left{/if}</button
-			>
+				><img src={angle === '01' ? '/small/Angle1T.png' : '/small/Angle1.png'} alt="Left" />
+			</button>
 			<button
 				on:click={() => {
 					changeAngle('02');
 				}}
-				>{#if angle === '02'}<b>Half Left</b>{:else}Half Left{/if}</button
+				><img
+					src={angle === '02' ? '/small/Angle2T.png' : '/small/Angle2.png'}
+					alt="Half Left"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('03');
 				}}
-				>{#if angle === '03'}<b>Front</b>{:else}Front{/if}</button
+				><img
+					src={angle === '03' ? '/small/Angle3T.png' : '/small/Angle3.png'}
+					alt="Center"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('04');
 				}}
-				>{#if angle === '04'}<b>Half Right</b>{:else}Half Right{/if}</button
+				><img
+					src={angle === '04' ? '/small/Angle4T.png' : '/small/Angle4.png'}
+					alt="Half Right"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('05');
 				}}
-				>{#if angle === '05'}<b>Right</b>{:else}Right{/if}</button
+				><img
+					src={angle === '05' ? '/small/Angle5T.png' : '/small/Angle5.png'}
+					alt="Right"
+				/></button
 			>
 			<button
 				on:click={() => {
 					changeAngle('06');
 				}}
-				>{#if angle === '06'}<b>Top</b>{:else}Top{/if}</button
+				><img src={angle === '06' ? '/small/Angle6T.png' : '/small/Angle6.png'} alt="Top" /></button
 			>
 		</div>
 
-		{#if sampleExists && activeTitle}
+		{#if sampleExists}
 			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 		{/if}
 
 		<Audio bind:display={audioDisp} closer={audioUndisplay} />
+
+		<TimeProgress current={time} end={genTimes ? genTimes.end : 1} />
 	{/if}
 </div>
 
@@ -575,12 +676,39 @@
 	.anglerow {
 		display: flex;
 		width: 100%;
+		height: clamp(30px, 10dvw, 55px);
+		border-top: 1px solid rgb(137, 151, 155);
+		box-sizing: border-box;
+		padding: 0;
 	}
 
 	.anglerow button {
+		padding: 2px;
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		cursor: pointer;
+		background-color: transparent;
+	}
+
+	.anglerow button img {
+		height: calc(100% - 5px);
+		aspect-ratio: 1/1;
+	}
+
+	.infobar {
 		flex: 1;
-		margin-left: 3px;
-		margin-right: 3px;
+		min-height: 30dvh;
+		width: 100%;
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+		overflow-y: auto;
+		overflow-x: auto;
 	}
 
 	.controls > button {
@@ -608,18 +736,6 @@
 		flex-shrink: 0;
 	}
 
-	.page > .varied {
-		flex-grow: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow-y: auto;
-	}
-
-	.varied > .inner {
-		max-height: 100%;
-		max-width: 100%;
-	}
 	.transition {
 		height: 100dvh;
 		width: 100dvw;
@@ -638,18 +754,79 @@
 		color: white;
 		z-index: 20;
 	}
-	.head {
+
+	pre {
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+	.inner {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-around;
+		flex-wrap: wrap;
 		width: 100%;
-		text-align: center;
 	}
-	.grid {
-		display: grid;
-		grid-template-columns: max-content 1fr max-content;
-		gap: 1px;
-		/* background-color: rgb(228, 228, 228); */
+
+	.inner > div {
+		margin: 5px;
 	}
-	.grid > div {
-		padding: 6px;
-		/* background: white; */
+
+	.pauseModal {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.pauseModal > div {
+		flex: 1;
+		border: 1px solid grey;
+		box-sizing: border-box;
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 8px;
+	}
+
+	.pausequests {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.pausequests > button {
+		flex: 1;
+		max-width: 500px;
+	}
+
+	@media (min-aspect-ratio: 1.2/1) {
+		.pauseModal {
+			flex-direction: row;
+		}
+		.page {
+			flex-direction: row;
+		}
+
+		.infobar {
+			min-height: auto;
+			width: auto;
+			min-width: 30dvw;
+			height: 100%;
+		}
+
+		.anglerow {
+			height: 100%;
+			width: clamp(30px, 10dvh, 55px);
+			border-top: none;
+			border-left: 1px solid rgb(137, 151, 155);
+		}
 	}
 </style>
