@@ -145,73 +145,57 @@
 			</div>
 			<br />
 			<div>Viewing Angle:</div>
-			<div class="viewbuttons">
+			<div class="anglerow">
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('01');
 					}}
-				>
-					{#if angle === '01'}
-						<b>Left</b>
-					{:else}
-						Left
-					{/if}</button
-				>
+					><img src={angle === '01' ? '/small/Angle1T.png' : '/small/Angle1.png'} alt="Left" />
+				</button>
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('02');
 					}}
-					>{#if angle === '02'}
-						<b>Half Left</b>
-					{:else}
-						Half Left
-					{/if}</button
+					><img
+						src={angle === '02' ? '/small/Angle2T.png' : '/small/Angle2.png'}
+						alt="Half Left"
+					/></button
 				>
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('03');
 					}}
-					>{#if angle === '03'}
-						<b>Front</b>
-					{:else}
-						Front
-					{/if}</button
+					><img
+						src={angle === '03' ? '/small/Angle3T.png' : '/small/Angle3.png'}
+						alt="Center"
+					/></button
 				>
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('04');
 					}}
-					>{#if angle === '04'}
-						<b>Half Right</b>
-					{:else}
-						Half Right
-					{/if}</button
+					><img
+						src={angle === '04' ? '/small/Angle4T.png' : '/small/Angle4.png'}
+						alt="Half Right"
+					/></button
 				>
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('05');
 					}}
-					>{#if angle === '05'}
-						<b>Right</b>
-					{:else}
-						Right
-					{/if}</button
+					><img
+						src={angle === '05' ? '/small/Angle5T.png' : '/small/Angle5.png'}
+						alt="Right"
+					/></button
 				>
 				<button
-					class="view"
 					on:click={() => {
 						changeAngle('06');
 					}}
-					>{#if angle === '06'}
-						<b>Top</b>
-					{:else}
-						Top
-					{/if}</button
+					><img
+						src={angle === '06' ? '/small/Angle6T.png' : '/small/Angle6.png'}
+						alt="Top"
+					/></button
 				>
 			</div>
 		</div>
@@ -219,23 +203,33 @@
 </Modal>
 
 <style>
-	img {
+	.sampleouter img {
 		max-width: 100%;
 	}
-	.viewbuttons {
+	.anglerow {
 		display: flex;
 		width: 100%;
+		height: clamp(30px, 10dvw, 55px);
+		border-top: 1px solid rgb(137, 151, 155);
+		box-sizing: border-box;
+		padding: 0;
+		justify-content: space-between;
 	}
-	.view {
-		flex: 1;
-		border-radius: 0px;
-		transition: border-color 150ms ease-in-out 0s;
-		outline: none;
-		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
+
+	.anglerow button {
+		padding: 2px;
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		cursor: pointer;
 		background-color: transparent;
-		font-weight: normal;
-		margin: 4px;
+	}
+
+	.anglerow button img {
+		height: calc(100% - 5px);
+		aspect-ratio: 1/1;
 	}
 	h1 {
 		margin-bottom: 0px;

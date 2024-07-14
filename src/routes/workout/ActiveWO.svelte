@@ -198,6 +198,8 @@
 		unsubscribeName();
 		clearInterval(interval);
 		document.removeEventListener('visibilitychange', handleVisibilityChange);
+		window.removeEventListener('resize', changeSize);
+		window.removeEventListener('resize', updateFontSize);
 		if (worker) {
 			worker.terminate();
 		}
@@ -518,19 +520,19 @@
 					<div class="options">
 						{#if exitMessage}
 							<div class="full">Are you sure you want to exit?</div>
-							<div class="anglerow controls full">
+							<div class="pausequests">
 								<button on:click={returnNoExit}>Back to Workout</button>
 								<button on:click={() => quit(true)}>Exit and Rate</button>
 								<button on:click={() => quit(false)}>Exit and Don't Rate</button>
 							</div>
 						{:else if resetMessage}
 							<div class="full">Are you sure you want restart?</div>
-							<div class="anglerow controls full">
+							<div class="pausequests">
 								<button on:click={returnNoReset}>No, go back</button>
 								<button on:click={resetStopwatch}>Yes, restart</button>
 							</div>
 						{:else}
-							<div class="anglerow controls full">
+							<div class="pausequests">
 								<button on:click={startStopwatch}>Resume</button>
 								<button on:click={resetQuestion}>Restart</button>
 								<button on:click={exitQuestion}>Quit</button>
@@ -753,14 +755,14 @@
 				on:click={() => {
 					changeAngle('01');
 				}}
-				><img src={angle === '01' ? '/small/Image1T.png' : '/small/Image1.png'} alt="Left" />
+				><img src={angle === '01' ? '/small/Angle1T.png' : '/small/Angle1.png'} alt="Left" />
 			</button>
 			<button
 				on:click={() => {
 					changeAngle('02');
 				}}
 				><img
-					src={angle === '02' ? '/small/Image2T.png' : '/small/Image2.png'}
+					src={angle === '02' ? '/small/Angle2T.png' : '/small/Angle2.png'}
 					alt="Half Left"
 				/></button
 			>
@@ -769,7 +771,7 @@
 					changeAngle('03');
 				}}
 				><img
-					src={angle === '03' ? '/small/Image3T.png' : '/small/Image3.png'}
+					src={angle === '03' ? '/small/Angle3T.png' : '/small/Angle3.png'}
 					alt="Center"
 				/></button
 			>
@@ -778,7 +780,7 @@
 					changeAngle('04');
 				}}
 				><img
-					src={angle === '04' ? '/small/Image4T.png' : '/small/Image4.png'}
+					src={angle === '04' ? '/small/Angle4T.png' : '/small/Angle4.png'}
 					alt="Half Right"
 				/></button
 			>
@@ -787,7 +789,7 @@
 					changeAngle('05');
 				}}
 				><img
-					src={angle === '05' ? '/small/Image5T.png' : '/small/Image5.png'}
+					src={angle === '05' ? '/small/Angle5T.png' : '/small/Angle5.png'}
 					alt="Right"
 				/></button
 			>
@@ -795,7 +797,7 @@
 				on:click={() => {
 					changeAngle('06');
 				}}
-				><img src={angle === '06' ? '/small/Image6T.png' : '/small/Image6.png'} alt="Top" /></button
+				><img src={angle === '06' ? '/small/Angle6T.png' : '/small/Angle6.png'} alt="Top" /></button
 			>
 		</div>
 
@@ -820,19 +822,19 @@
 	}
 
 	.anglerow button {
-		flex: 1;
 		padding: 2px;
 		border: none;
-		border-top: 1px solid rgb(137, 151, 155);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		margin: 0;
+		cursor: pointer;
+		background-color: transparent;
 	}
 
 	.anglerow button img {
 		height: calc(100% - 5px);
-		width: calc(100% - 5px);
+		aspect-ratio: 1/1;
 	}
 
 	.infobar {
@@ -908,8 +910,9 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-around;
 		flex-wrap: wrap;
+		width: 100%;
 	}
 
 	.inner > div {
@@ -929,6 +932,26 @@
 		flex: 1;
 		border: 1px solid grey;
 		box-sizing: border-box;
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 8px;
+	}
+
+	.pausequests {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.pausequests > button {
+		flex: 1;
+		max-width: 500px;
 	}
 
 	@media (min-aspect-ratio: 1.2/1) {
