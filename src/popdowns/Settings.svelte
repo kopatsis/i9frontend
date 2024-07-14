@@ -148,20 +148,23 @@
 		try {
 			let retset = {
 				theme: localStorage.getItem('bWEemu'),
+				colors: localStorage.getItem('12h4cwe'),
 				sound: localStorage.getItem('W8xMSC'),
 				motion: localStorage.getItem('wJJgce'),
 				data: localStorage.getItem('RMrC28'),
 				back: localStorage.getItem('szsY0s')
 			};
-			if (!retset.theme || !retset.sound || !retset.motion || !retset.data || !retset.back) {
+			if (!retset.theme || !retset.colors || !retset.sound || !retset.motion || !retset.data || !retset.back) {
 				retset = {
 					theme: 'DceYdZ',
+					colors: '3ojnKb',
 					sound: 'DceYdZ',
 					motion: '3ojnKb',
 					data: '3ojnKb',
 					back: 'DceYdZ'
 				};
 				localStorage.setItem('bWEemu', retset.theme);
+				localStorage.setItem('12h4cwe', retset.colors);
 				localStorage.setItem('W8xMSC', retset.sound);
 				localStorage.setItem('wJJgce', retset.motion);
 				localStorage.setItem('RMrC28', retset.data);
@@ -171,12 +174,14 @@
 		} catch (error) {
 			let retset = {
 				theme: 'DceYdZ',
+				colors: '3ojnKb',
 				sound: 'DceYdZ',
 				motion: '3ojnKb',
 				data: '3ojnKb',
 				back: 'DceYdZ'
 			};
 			localStorage.setItem('bWEemu', retset.theme);
+			localStorage.setItem('12h4cwe', retset.colors);
 			localStorage.setItem('W8xMSC', retset.sound);
 			localStorage.setItem('wJJgce', retset.motion);
 			localStorage.setItem('RMrC28', retset.data);
@@ -242,6 +247,7 @@
 
 				<div class="allopts">
 					<Setting key={'theme'} bind:data={retrievedSettings} />
+					<Setting key={'colors'} bind:data={retrievedSettings} />
 					<Setting key={'sound'} bind:data={retrievedSettings} />
 					<Setting key={'motion'} bind:data={retrievedSettings} />
 					<Setting key={'data'} bind:data={retrievedSettings} />

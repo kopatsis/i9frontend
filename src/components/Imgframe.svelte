@@ -48,6 +48,7 @@
 	tabindex="0"
 	role="button"
 >
+	<div class="buffer"></div>
 	<div class="parent-container">
 		{#if !reversed}
 			<Progress progress={progress1} reverse={reversed} order={1} />
@@ -69,6 +70,7 @@
 			<img class="centerimg" {src} {alt} />
 		{/if}
 	</div>
+	<div class="buffer"></div>
 	<div class="timepres">{Math.floor(endTime - time)}</div>
 </div>
 
@@ -86,6 +88,8 @@
 		position: relative;
 		height: 100%;
 		color: aliceblue;
+		flex-shrink: 0;
+		background-color: transparent;
 	}
 
 	.timepres {
@@ -106,17 +110,24 @@
 	.outermost {
 		height: min(100dvw, calc(70dvh - clamp(30px, 10dvw, 60px)));
 		width: 100%;
-		background-color: rgb(97, 97, 97);
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: relative;
+		flex-direction: row;
+		background-color: transparent;
+	}
+
+	.buffer {
+		flex: 1;
+		background-color: rgb(97, 97, 97);
 	}
 
 	@media (min-aspect-ratio: 1.2/1) {
 		.outermost {
 			width: min(100dvh, calc(70dvw - clamp(30px, 10dvh, 60px)));
 			height: 100%;
+			flex-direction: column;
 		}
 
 		.parent-container {

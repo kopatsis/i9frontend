@@ -4,6 +4,7 @@
 	export let key = 'theme';
 	export let data = {
 		theme: 'DceYdZ',
+		colors: '3ojnKb',
 		sound: 'DceYdZ',
 		motion: '3ojnKb',
 		data: '3ojnKb',
@@ -12,6 +13,7 @@
 
 	let labelMap = {
 		theme: 'Dark Mode Theme',
+		colors: 'Alternate Color Scheme',
 		sound: 'In-App Sounds',
 		motion: 'Motion Reduction',
 		data: 'Data Saver Mode',
@@ -20,6 +22,7 @@
 
 	let keyMap = {
 		theme: 'bWEemu',
+		colors: '12h4cwe',
 		sound: 'W8xMSC',
 		motion: 'wJJgce',
 		data: 'RMrC28',
