@@ -547,7 +547,7 @@
 							</div>
 							<div class="inner third">
 								<div>Stretch Set {set} / {strRounds.static.times.length}</div>
-								<div>&nbsp;{Math.round(strRounds.static.times[set - 1])} seconds</div>
+								<div>{Math.round(strRounds.static.times[set - 1])} seconds</div>
 							</div>
 						{/if}
 					</div>
@@ -595,7 +595,7 @@
 					</div>
 					<div class="inner third">
 						<div>Stretch Set {set} / {strRounds.static.times.length}</div>
-						<div>&nbsp;{Math.round(strRounds.static.times[set - 1])} seconds</div>
+						<div>{Math.round(strRounds.static.times[set - 1])} seconds</div>
 					</div>
 				{/if}
 			</div>
