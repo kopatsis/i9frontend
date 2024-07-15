@@ -327,7 +327,6 @@
 
 	const audioUndisplay = () => {
 		audioDisp = false;
-		startStopwatch();
 	};
 
 	function goHome() {
@@ -619,24 +618,24 @@
 							<div class="pausequests">
 								<button on:click={returnNoExit}>Back to Workout</button>
 								{#if status === 'Static'}
-									<button on:click={quit}>Exit</button>
+									<button class="submit" on:click={quit}>Exit</button>
 								{:else}
-									<button on:click={() => quit(true)}>Pause and Exit</button>
-									<button on:click={moveToStatics}>Finish Assessment</button>
+									<button class="submit" on:click={() => quit(true)}>Pause and Exit</button>
+									<button class="submit" on:click={moveToStatics}>Finish Assessment</button>
 								{/if}
 							</div>
 						{:else if resetMessage}
 							<div class="full">Are you sure you want restart?</div>
 							<div class="pausequests">
-								<button on:click={returnNoReset}>No, go back</button>
-								<button on:click={resetStopwatch}>Yes, restart</button>
+								<button class="submit" on:click={returnNoReset}>No, go back</button>
+								<button class="submit" on:click={resetStopwatch}>Yes, restart</button>
 							</div>
 						{:else}
 							<div class="pausequests">
-								<button on:click={startStopwatch}>Resume</button>
-								<button on:click={resetQuestion}>Restart</button>
-								<button on:click={exitQuestion}>Quit</button>
-								<button on:click={audioDisplay}>Show music</button>
+								<button class="submit" on:click={startStopwatch}>Resume</button>
+								<button class="submit" on:click={resetQuestion}>Restart</button>
+								<button class="submit" on:click={exitQuestion}>Quit</button>
+								<button class="submit" on:click={audioDisplay}>Show music</button>
 							</div>
 						{/if}
 					</div>
@@ -1053,6 +1052,31 @@
 		flex: 1;
 		max-width: 500px;
 	}
+
+	.submit {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		margin: 10px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	.submit:hover {
+		background-color: aliceblue;
+	}
+
+	button {
+		cursor: pointer;
+	}
+
 
 	@media (min-aspect-ratio: 1.2/1) {
 		.pauseModal {
