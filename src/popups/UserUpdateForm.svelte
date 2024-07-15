@@ -361,6 +361,7 @@
 		clip-path: inset(50%);
 		overflow: hidden;
 		white-space: nowrap;
+		caret-color: transparent;
 	}
 
 	.lengthin > .timedisp {
