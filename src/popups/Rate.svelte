@@ -18,6 +18,7 @@
 	import { get } from 'svelte/store';
 	import Modal from '../templates/Modal.svelte';
 	import { getLastWO } from '$lib/stores/user';
+	import RateSlider from '../components/RateSlider.svelte';
 
 	let loading = true;
 	let asWhole = true;
@@ -124,13 +125,11 @@
 		<div>
 			<div>
 				<div>How HARD was it, on a scale of 0 to 10 (0 easiest, 10 hardest):</div>
-				<input type="range" min="0" max="10" bind:value={retWhole} />
-				<input type="number" min="0" max="10" step="1" bind:value={retWhole} />
+				<RateSlider bind:number={retWhole} />
 			</div>
 			<div>
 				<div>How FUN was it, on a scale of 0 to 10 (0 most fun, 10 least):</div>
-				<input type="range" min="0" max="10" bind:value={favWhole} />
-				<input type="number" min="0" max="10" step="1" bind:value={favWhole} />
+				<RateSlider bind:number={favWhole} />
 			</div>
 		</div>
 		{#if !asWhole}
@@ -157,13 +156,11 @@
 				</div>
 				<div>
 					<div>How HARD was it, on a scale of 0 to 10 (0 easiest, 10 hardest):</div>
-					<input type="range" min="0" max="10" bind:value={retVals[i]} />
-					<input type="number" min="0" max="10" step="1" bind:value={retVals[i]} />
+					<RateSlider bind:number={retVals[i]} />
 				</div>
 				<div>
 					<div>How FUN was it, on a scale of 0 to 10 (0 most fun, 10 least):</div>
-					<input type="range" min="0" max="10" bind:value={favVals[i]} />
-					<input type="number" min="0" max="10" step="1" bind:value={favVals[i]} />
+					<RateSlider bind:number={favVals[i]} />
 				</div>
 			{/each}
 		{/if}
