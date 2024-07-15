@@ -10,8 +10,8 @@
 
 	export let exists = true;
 
-	let strplyo = "";
-	let strdiff = "";
+	let strplyo = '';
+	let strdiff = '';
 
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
@@ -29,13 +29,28 @@
 
 	let loading = true;
 
+	let timeMin = 8;
+	let timeMax = 240;
+	let displayTime;
+	let inputTime;
+
+	let inputHTML;
+	let displayHrs;
+	let displayMins;
+	let displaySecs;
+
+	let updated = false;
+
 	onMount(async () => {
 		const token = await getLoginToken();
 		error = await getUser(token);
 		loading = false;
 
 		if (userData) {
+			console.log(displayHrs, displayMins, displaySecs);
 			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100, 8), 240);
+			minuteUpdate();
+
 			diff = Math.max(1, userData.LastDifficulty);
 			strdiff = String(diff);
 			plyo = userData.PlyoTolerance;
@@ -46,20 +61,12 @@
 	});
 
 	const anyChanges = (plyo, pushup, diff, minutes, bannedParts) => {
-		console.log(plyo, pushup, diff, minutes, bannedParts);
-		console.log(userData.PlyoTolerance, userData.PushupSetting, Math.max(1, userData.LastDifficulty), Math.round(100 * userData.LastMinutes) / 100, userData.BannedParts);
-		console.log(plyo !== userData.PlyoTolerance)
-		console.log(pushup !== userData.PushupSetting)
-		console.log(diff !== Math.max(1, userData.LastDifficulty))
-		console.log(minutes !== Math.round(100 * userData.LastMinutes) / 100)
-		console.log(arraysHaveSameItems(bannedParts, userData.BannedParts))
-
 		return (
 			plyo !== userData.PlyoTolerance ||
 			pushup !== userData.PushupSetting ||
 			diff !== Math.max(1, userData.LastDifficulty) ||
 			minutes !== Math.round(100 * userData.LastMinutes) / 100 ||
-			!(arraysHaveSameItems(bannedParts, userData.BannedParts))
+			!arraysHaveSameItems(bannedParts, userData.BannedParts)
 		);
 	};
 
@@ -72,6 +79,104 @@
 		const sortedArr2 = [...arr2].sort();
 
 		return sortedArr1.every((value, index) => value === sortedArr2[index]);
+	};
+
+	const onInputFunc = () => {
+		console.log('retard', inputTime);
+
+		if (!inputTime) {
+			inputTime = 0;
+		}
+		if (inputTime > 99999) {
+			inputTime = Math.floor(inputTime / 10);
+		} else {
+			inputTime = Math.floor(inputTime);
+		}
+
+		console.log('retard2', inputTime);
+
+		displayTime = inputTime.toString().padStart(5, '0');
+
+		let hours = displayTime.slice(0, 1) + 'H';
+		let mins = displayTime.slice(1, 3) + 'M';
+		let secs = displayTime.slice(3, 5) + 'S';
+
+		let unAdjMinutes =
+			Math.floor(inputTime / 10000) * 60 +
+			Math.floor((inputTime % 10000) / 100) +
+			Math.floor(inputTime % 100) / 60;
+		minutes = Math.min(Math.max(8, unAdjMinutes), 240);
+		console.log('hmmm', minutes);
+
+		displayHrs.textContent = hours;
+		if (hours === '0H') {
+			displayHrs.classList.add('greyed');
+		} else {
+			displayHrs.classList.remove('greyed');
+		}
+
+		displayMins.textContent = mins;
+		if (mins === '00M' && hours === '0H') {
+			displayMins.classList.add('greyed');
+		} else {
+			displayMins.classList.remove('greyed');
+		}
+
+		displaySecs.textContent = secs;
+	};
+
+	const minuteUpdate = () => {
+		console.log('ugh', minutes);
+
+		if (!displayHrs) {
+			return;
+		}
+		const totalSeconds = Math.round(minutes * 60);
+
+		const tempHours = Math.floor(totalSeconds / 3600);
+		const tempMinutes = Math.floor((totalSeconds % 3600) / 60);
+		const tempSeconds = totalSeconds % 60;
+
+		inputTime = tempHours * 10000 + tempMinutes * 100 + tempSeconds;
+
+		displayTime = inputTime.toString().padStart(5, '0');
+
+		let hours = displayTime.slice(0, 1) + 'H';
+		let mins = displayTime.slice(1, 3) + 'M';
+		let secs = displayTime.slice(3, 5) + 'S';
+
+		displayHrs.textContent = hours;
+		if (hours === '0H') {
+			displayHrs.classList.add('greyed');
+		} else {
+			displayHrs.classList.remove('greyed');
+		}
+
+		displayMins.textContent = mins;
+		if (mins === '00M' && hours === '0H') {
+			displayMins.classList.add('greyed');
+		} else {
+			displayMins.classList.remove('greyed');
+		}
+
+		displaySecs.textContent = secs;
+	};
+
+	let isFocused = false;
+	const onUnfocus = () => {
+		isFocused = false;
+		let unAdjMinutes =
+			Math.floor(inputTime / 10000) * 60 +
+			Math.floor((inputTime % 10000) / 100) +
+			Math.floor(inputTime % 100) / 60;
+		minutes = Math.min(Math.max(8, unAdjMinutes), 240);
+
+		minuteUpdate();
+	};
+
+	const doneButton = () => {
+		inputHTML.blur();
+		onUnfocus();
 	};
 
 	const submitWO = async () => {
@@ -102,18 +207,19 @@
 			exists = false;
 		} catch (err) {
 			error = err;
-			console.log(err);
+			console.error(err);
 		}
 	};
 
-	$: validTime = minutes >= 8 && minutes <= 240;
-	$: if(strplyo){
-		plyo = Number(strplyo)
-		console.log(plyo)
+	$: if (strplyo) {
+		plyo = Number(strplyo);
 	}
-	$: if(strdiff){
-		diff = Number(strdiff)
-		console.log(diff)
+	$: if (strdiff) {
+		diff = Number(strdiff);
+	}
+	$: if (displayHrs && displayMins && displaySecs && !fuckingRetarded) {
+		minuteUpdate();
+		updated = true;
 	}
 </script>
 
@@ -140,18 +246,33 @@
 					<label for="length">Length in minutes (8-240):</label>
 				</div>
 				<div class="lengthin">
-					<input type="range" min="8" max="240" bind:value={minutes} />
 					<input
-					type="number"
-					id="length"
-					name="length input"
-					min="0.0"
-					max="1000.0"
-					step="0.01"
-					bind:value={minutes}
-				/>
+						bind:this={inputHTML}
+						type="number"
+						id="length"
+						name="length input"
+						min="0"
+						max="99999"
+						step="1"
+						bind:value={inputTime}
+						on:blur={onUnfocus}
+						on:input={onInputFunc}
+						on:focus={() => (isFocused = true)}
+					/>
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="timedisp" class:active={isFocused} on:click={() => inputHTML.focus()}>
+						<pre class="hours greyed" bind:this={displayHrs}>0H</pre>
+						<pre class="minutes greyed" bind:this={displayMins}>08M</pre>
+						<pre class="seconds" bind:this={displaySecs}>00S</pre>
+						{#if isFocused}
+							<span class="blinking-cursor"></span>
+						{/if}
+					</div>
+					{#if isFocused}
+						<button type="button" on:click={doneButton}>&#x2713;</button>
+					{/if}
 				</div>
-				
 			</div>
 
 			<div class="editline row">
@@ -199,24 +320,19 @@
 				<BodyPInput bind:finalList={bannedParts} />
 			</div>
 
-			<div class="verif" class:invis={validTime}>Please enter a time in the range of 8-240 minutes</div>
-
 			<div class="submit">
 				{#if anyChanges(plyo, pushup, diff, minutes, bannedParts)}
 					<button type="submit">Submit Changes</button>
 				{:else}
 					<button class="nochange" type="submit">Submit Changes</button>
 				{/if}
-				
 			</div>
-			
 		</form>
 	{/if}
 </Modal>
 
 <style>
-
-	.nochange{
+	.nochange {
 		cursor: default;
 		background-color: rgb(211, 211, 211);
 	}
@@ -233,14 +349,75 @@
 		width: 100%;
 	}
 
-	.lengthin input[type="number"] {
-		margin-left: 6px;
+	.lengthin > input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+		width: 0;
+		height: 0;
+		margin: 0;
+		padding: 0;
+		border: none;
+		clip: rect(0, 0, 0, 0);
+		clip-path: inset(50%);
+		overflow: hidden;
+		white-space: nowrap;
 	}
 
-	.lengthin input[type="range"] {
-		flex: 1;
+	.lengthin > .timedisp {
+		display: flex;
+		border: 1px solid #ccc;
+		padding: 0.5em;
+		font-family: monospace;
+		cursor: text;
+		width: fit-content;
+		user-select: none;
 	}
 
+	.lengthin > .timedisp > pre {
+		margin: 0;
+		padding: 0 0.2em;
+	}
+
+	.lengthin > .timedisp:focus-within {
+		border-color: blue;
+		outline: none;
+	}
+
+	pre {
+		font-size: 1.25em;
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+	.active {
+		background-color: aliceblue;
+	}
+
+	.greyed {
+		color: #737373;
+	}
+
+	.blinking-cursor {
+		display: inline-block;
+		width: 2px;
+		height: 100%;
+		background-color: black;
+		animation: blink 1.5s steps(1) infinite;
+		vertical-align: bottom;
+	}
+
+	@keyframes blink {
+		0% {
+			visibility: visible;
+		}
+		50% {
+			visibility: hidden;
+		}
+		100% {
+			visibility: visible;
+		}
+	}
+	/* 
 	.verif.invis {
 		visibility: hidden;
 	}
@@ -249,13 +426,13 @@
 		color: red;
 		margin-bottom: 6px;
 		font-size: 14px;
-	}
+	} */
 
 	.editline {
 		margin-top: 8px;
 	}
 
-	.editline.row{
+	.editline.row {
 		display: flex;
 		justify-content: space-between;
 	}

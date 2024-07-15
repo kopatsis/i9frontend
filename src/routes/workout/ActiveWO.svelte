@@ -819,6 +819,8 @@
 		border-top: 1px solid rgb(137, 151, 155);
 		box-sizing: border-box;
 		padding: 0;
+		align-items: center;
+		justify-content: space-between;
 	}
 
 	.anglerow button {
