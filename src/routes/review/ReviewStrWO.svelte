@@ -6,6 +6,8 @@
 	import { goto } from '$app/navigation';
 	import StrWoDisp from './StrWODisp.svelte';
 
+	export let status = 'Unpaid';
+
 	let error = '';
 	let loading = true;
 	let disp = 'Dynamic';
@@ -45,7 +47,7 @@
 		<button class="back arr" on:click={() => (disp = 'Dynamic')}>
 			{#if disp === 'Dynamic'}&nbsp;{:else}&lt;{/if}
 		</button>
-		<StrWoDisp strRounds={workout} {disp} />
+		<StrWoDisp strRounds={workout} {disp} {status} />
 		<button class="forw arr" on:click={() => (disp = 'Static')}>
 			{#if disp === 'Static'}&nbsp;{:else}&gt;{/if}
 		</button>

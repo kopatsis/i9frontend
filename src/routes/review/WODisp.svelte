@@ -1,6 +1,7 @@
 <script>
 	// @ts-nocheck
 	import Sample from '../../popups/Sample.svelte';
+	import SampleSpecial from '../../popups/SampleSpecial.svelte';
 
 	export let strRounds = null;
 	export let woRounds = null;
@@ -157,7 +158,11 @@
 		{/if}
 
 		{#if sampleExists}
-			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+			{#if status !== 'Paid'}
+				<SampleSpecial sampleID={currentSampleID} bind:exists={sampleExists} />
+			{:else}
+				<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+			{/if}
 		{/if}
 	{/if}
 </div>

@@ -167,7 +167,7 @@
 				<div>F: {error}</div>
 				<button on:click={() => goto('./')}>Go Home</button>
 			{:else if type === 'Stretch'}
-				<ReviewStrWo />
+				<ReviewStrWo {status} />
 			{:else}
 				<ReviewWo {status} />
 			{/if}
