@@ -335,6 +335,7 @@
 						type="number"
 						id="length"
 						name="length input"
+						inputmode="numeric"
 						min="0"
 						max="99999"
 						step="1"
