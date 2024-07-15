@@ -48,7 +48,7 @@
 
 		if (userData) {
 			console.log(displayHrs, displayMins, displaySecs);
-			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100, 8), 240);
+			minutes = Math.min(Math.max(Math.round(100 * userData.LastMinutes) / 100, timeMin), timeMax);
 			minuteUpdate();
 
 			diff = Math.max(1, userData.LastDifficulty);
@@ -82,7 +82,6 @@
 	};
 
 	const onInputFunc = () => {
-		console.log('retard', inputTime);
 
 		if (!inputTime) {
 			inputTime = 0;
@@ -92,8 +91,6 @@
 		} else {
 			inputTime = Math.floor(inputTime);
 		}
-
-		console.log('retard2', inputTime);
 
 		displayTime = inputTime.toString().padStart(5, '0');
 
@@ -105,8 +102,7 @@
 			Math.floor(inputTime / 10000) * 60 +
 			Math.floor((inputTime % 10000) / 100) +
 			Math.floor(inputTime % 100) / 60;
-		minutes = Math.min(Math.max(8, unAdjMinutes), 240);
-		console.log('hmmm', minutes);
+		minutes = Math.min(Math.max(timeMin, unAdjMinutes), timeMax);
 
 		displayHrs.textContent = hours;
 		if (hours === '0H') {
@@ -126,8 +122,6 @@
 	};
 
 	const minuteUpdate = () => {
-		console.log('ugh', minutes);
-
 		if (!displayHrs) {
 			return;
 		}
@@ -169,7 +163,7 @@
 			Math.floor(inputTime / 10000) * 60 +
 			Math.floor((inputTime % 10000) / 100) +
 			Math.floor(inputTime % 100) / 60;
-		minutes = Math.min(Math.max(8, unAdjMinutes), 240);
+		minutes = Math.min(Math.max(timeMin, unAdjMinutes), timeMax);
 
 		minuteUpdate();
 	};
@@ -184,6 +178,8 @@
 		let body = {};
 
 		const token = await getLoginToken();
+
+		minutes = Math.round(100 * minutes) / 100
 
 		if (plyo !== userData.PlyoTolerance) {
 			body['plyo'] = plyo;

@@ -38,6 +38,18 @@
 
 	let strplyo = '';
 
+	let timeMin = 8;
+	let timeMax = 240;
+	let displayTime;
+	let inputTime;
+
+	let inputHTML;
+	let displayHrs;
+	let displayMins;
+	let displaySecs;
+
+	let updated = false;
+
 	onMount(async () => {
 		if (!userData) {
 			const token = await getLoginToken();
@@ -45,14 +57,8 @@
 		}
 
 		if (userData) {
-			minutes = Math.round(100 * userData.LastMinutes) / 100;
-			if (formType === 'Regular') {
-				minutes = Math.max(minutes, 8);
-			} else if (formType === 'Stretch') {
-				minutes = Math.max(minutes, 1);
-			} else if (formType === 'Intro') {
-				minutes = Math.max(minutes, 20);
-			}
+			formMinutesUpd();
+
 			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
 
 			plyo = userData.PlyoTolerance;
@@ -82,15 +88,28 @@
 		);
 	};
 
-	$: if (formType !== oldFormType) {
+	const formMinutesUpd = () => {
 		oldFormType = formType;
 		if (formType === 'Regular') {
-			minutes = Math.min(Math.max(minutes, 8), 240);
+			timeMin = 8;
+			timeMax = 240;
+			minutes = userData ? userData.LastMinutes : 35;
+			minuteUpdate();
 		} else if (formType === 'Stretch') {
-			minutes = Math.min(Math.max(minutes, 1), 240);
+			timeMin = 1;
+			timeMax = 240;
+			minutes = userData ? userData.LastMinutes : 25;
+			minuteUpdate();
 		} else if (formType === 'Intro') {
-			minutes = Math.min(Math.max(minutes, 20), 60);
+			timeMin = 20;
+			timeMax = 60;
+			minutes = userData ? userData.LastMinutes : 45;
+			minuteUpdate();
 		}
+	};
+
+	$: if (formType !== oldFormType) {
+		formMinutesUpd();
 	}
 
 	$: validTime = validateTime(minutes);
@@ -105,6 +124,97 @@
 		const sortedArr2 = [...arr2].sort();
 
 		return sortedArr1.every((value, index) => value === sortedArr2[index]);
+	};
+
+	const onInputFunc = () => {
+		if (!inputTime) {
+			inputTime = 0;
+		}
+		if (inputTime > 99999) {
+			inputTime = Math.floor(inputTime / 10);
+		} else {
+			inputTime = Math.floor(inputTime);
+		}
+
+		displayTime = inputTime.toString().padStart(5, '0');
+
+		let hours = displayTime.slice(0, 1) + 'H';
+		let mins = displayTime.slice(1, 3) + 'M';
+		let secs = displayTime.slice(3, 5) + 'S';
+
+		let unAdjMinutes =
+			Math.floor(inputTime / 10000) * 60 +
+			Math.floor((inputTime % 10000) / 100) +
+			Math.floor(inputTime % 100) / 60;
+		minutes = Math.min(Math.max(timeMin, unAdjMinutes), timeMax);
+
+		displayHrs.textContent = hours;
+		if (hours === '0H') {
+			displayHrs.classList.add('greyed');
+		} else {
+			displayHrs.classList.remove('greyed');
+		}
+
+		displayMins.textContent = mins;
+		if (mins === '00M' && hours === '0H') {
+			displayMins.classList.add('greyed');
+		} else {
+			displayMins.classList.remove('greyed');
+		}
+
+		displaySecs.textContent = secs;
+	};
+
+	const minuteUpdate = () => {
+		if (!displayHrs) {
+			return;
+		}
+		const totalSeconds = Math.round(minutes * 60);
+
+		const tempHours = Math.floor(totalSeconds / 3600);
+		const tempMinutes = Math.floor((totalSeconds % 3600) / 60);
+		const tempSeconds = totalSeconds % 60;
+
+		inputTime = tempHours * 10000 + tempMinutes * 100 + tempSeconds;
+
+		displayTime = inputTime.toString().padStart(5, '0');
+
+		let hours = displayTime.slice(0, 1) + 'H';
+		let mins = displayTime.slice(1, 3) + 'M';
+		let secs = displayTime.slice(3, 5) + 'S';
+
+		displayHrs.textContent = hours;
+		if (hours === '0H') {
+			displayHrs.classList.add('greyed');
+		} else {
+			displayHrs.classList.remove('greyed');
+		}
+
+		displayMins.textContent = mins;
+		if (mins === '00M' && hours === '0H') {
+			displayMins.classList.add('greyed');
+		} else {
+			displayMins.classList.remove('greyed');
+		}
+
+		displaySecs.textContent = secs;
+	};
+
+	let isFocused = false;
+	const onUnfocus = () => {
+		isFocused = false;
+		let unAdjMinutes =
+			Math.floor(inputTime / 10000) * 60 +
+			Math.floor((inputTime % 10000) / 100) +
+			Math.floor(inputTime % 100) / 60;
+		minutes = Math.min(Math.max(timeMin, unAdjMinutes), timeMax);
+
+		minuteUpdate();
+	};
+
+	const doneButton = () => {
+		inputHTML.blur();
+		onUnfocus();
 	};
 
 	const submitWO = async () => {
@@ -138,6 +248,8 @@
 		try {
 			let workout;
 
+			minutes = Math.round(100 * minutes) / 100;
+
 			if (formType === 'Regular') {
 				workout = await fetchWorkout(token, minutes, Number(diff));
 				unravelWO(workout);
@@ -169,6 +281,11 @@
 		plyo = Number(strplyo);
 		console.log(plyo);
 	}
+
+	$: if (displayHrs && displayMins && displaySecs && !fuckingRetarded) {
+		minuteUpdate();
+		updated = true;
+	}
 </script>
 
 {#if loading}
@@ -199,20 +316,31 @@
 				</div>
 				<div class="lengthin">
 					<input
-						type="range"
-						min={formType === 'Regular' ? 8 : formType === 'Intro' ? 20 : 1}
-						max={formType === 'Intro' ? 60 : 240}
-						bind:value={minutes}
-					/>
-					<input
+						bind:this={inputHTML}
 						type="number"
 						id="length"
 						name="length input"
-						min="0.0"
-						max="1000.0"
-						step="0.01"
-						bind:value={minutes}
+						min="0"
+						max="99999"
+						step="1"
+						bind:value={inputTime}
+						on:blur={onUnfocus}
+						on:input={onInputFunc}
+						on:focus={() => (isFocused = true)}
 					/>
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="timedisp" class:active={isFocused} on:click={() => inputHTML.focus()}>
+						<pre class="hours greyed" bind:this={displayHrs}>0H</pre>
+						<pre class="minutes greyed" bind:this={displayMins}>08M</pre>
+						<pre class="seconds" bind:this={displaySecs}>00S</pre>
+						{#if isFocused}
+							<span class="blinking-cursor"></span>
+						{/if}
+					</div>
+					{#if isFocused}
+						<button type="button" on:click={doneButton}>&#x2713;</button>
+					{/if}
 				</div>
 			</div>
 
@@ -360,8 +488,78 @@
 		margin-left: 6px;
 	}
 
-	.lengthin input[type='range'] {
-		flex: 1;
+	.lengthin {
+		display: flex;
+		width: 100%;
+	}
+
+	.lengthin > input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+		width: 0;
+		height: 0;
+		margin: 0;
+		padding: 0;
+		border: none;
+		clip: rect(0, 0, 0, 0);
+		clip-path: inset(50%);
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.lengthin > .timedisp {
+		display: flex;
+		border: 1px solid #ccc;
+		padding: 0.5em;
+		font-family: monospace;
+		cursor: text;
+		width: fit-content;
+		user-select: none;
+	}
+
+	.lengthin > .timedisp > pre {
+		margin: 0;
+		padding: 0 0.2em;
+	}
+
+	.lengthin > .timedisp:focus-within {
+		border-color: blue;
+		outline: none;
+	}
+
+	pre {
+		font-size: 1.25em;
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+	.active {
+		background-color: aliceblue;
+	}
+
+	.greyed {
+		color: #737373;
+	}
+
+	.blinking-cursor {
+		display: inline-block;
+		width: 2px;
+		height: 100%;
+		background-color: black;
+		animation: blink 1.5s steps(1) infinite;
+		vertical-align: bottom;
+	}
+
+	@keyframes blink {
+		0% {
+			visibility: visible;
+		}
+		50% {
+			visibility: hidden;
+		}
+		100% {
+			visibility: visible;
+		}
 	}
 
 	.editline {
