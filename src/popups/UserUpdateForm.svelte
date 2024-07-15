@@ -125,6 +125,9 @@
 		if (!displayHrs) {
 			return;
 		}
+
+		minutes = Math.min(Math.max(timeMin, minutes), timeMax);
+
 		const totalSeconds = Math.round(minutes * 60);
 
 		const tempHours = Math.floor(totalSeconds / 3600);
@@ -213,7 +216,7 @@
 	$: if (strdiff) {
 		diff = Number(strdiff);
 	}
-	$: if (displayHrs && displayMins && displaySecs && !fuckingRetarded) {
+	$: if (displayHrs && displayMins && displaySecs && !updated) {
 		minuteUpdate();
 		updated = true;
 	}

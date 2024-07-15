@@ -25,7 +25,7 @@
 	let oldFormType = formType;
 
 	let error = '';
-	let minutes;
+	let minutes = 8;
 	let diff;
 	let plyo;
 	let pushup;
@@ -49,6 +49,7 @@
 	let displaySecs;
 
 	let updated = false;
+	let effectiveTime;
 
 	onMount(async () => {
 		if (!userData) {
@@ -57,6 +58,7 @@
 		}
 
 		if (userData) {
+			console.log("1", minutes);
 			formMinutesUpd();
 
 			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
@@ -66,10 +68,13 @@
 			pushup = userData.PushupSetting;
 			bannedParts = [...userData.BannedParts];
 		}
+
+		console.log("7", minutes, formType);
 		loading = false;
 	});
 
-	const validateTime = (minutes) => {
+	const validateTime = () => {
+		minutes = Math.min(Math.max(timeMin, minutes), timeMax);
 		if ((formType === 'Regular' && minutes < 8) || minutes > 240) {
 			return false;
 		} else if (formType === 'Stretch' && minutes < 1) {
@@ -80,7 +85,7 @@
 		return true;
 	};
 
-	const calcTime = (minutes) => {
+	const calcTime = () => {
 		return (
 			Math.round(
 				10 * (minutes - 2 * (minutes < 20 ? Math.max(1.5, minutes / 8) : Math.min(5, minutes / 12)))
@@ -89,6 +94,7 @@
 	};
 
 	const formMinutesUpd = () => {
+		console.log("2", minutes);
 		oldFormType = formType;
 		if (formType === 'Regular') {
 			timeMin = 8;
@@ -104,6 +110,7 @@
 			timeMin = 20;
 			timeMax = 60;
 			minutes = userData ? userData.LastMinutes : 45;
+			console.log("3", minutes);
 			minuteUpdate();
 		}
 	};
@@ -112,8 +119,10 @@
 		formMinutesUpd();
 	}
 
-	$: validTime = validateTime(minutes);
-	$: effectiveTime = calcTime(minutes);
+	$: if(minutes) {
+		validTime = validateTime();
+		effectiveTime = calcTime();
+	}
 
 	const arraysHaveSameItems = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) {
@@ -169,6 +178,11 @@
 		if (!displayHrs) {
 			return;
 		}
+
+		console.log("4", minutes);
+
+		minutes = Math.min(Math.max(timeMin, minutes), timeMax);
+
 		const totalSeconds = Math.round(minutes * 60);
 
 		const tempHours = Math.floor(totalSeconds / 3600);
@@ -198,6 +212,8 @@
 		}
 
 		displaySecs.textContent = secs;
+
+		console.log("5", minutes);
 	};
 
 	let isFocused = false;
@@ -279,10 +295,9 @@
 
 	$: if (strplyo) {
 		plyo = Number(strplyo);
-		console.log(plyo);
 	}
 
-	$: if (displayHrs && displayMins && displaySecs && !fuckingRetarded) {
+	$: if (displayHrs && displayMins && displaySecs && !updated) {
 		minuteUpdate();
 		updated = true;
 	}
@@ -346,27 +361,9 @@
 
 			{#if formType !== 'Stretch'}
 				<div>
-					{#if validTime}
-						Effective workout time: {Math.floor(effectiveTime)}m {Math.round(
-							(effectiveTime * 60) % 60
-						)}s
-					{:else}
-						<div class="verif">
-							Please enter a time in the range of {formType === 'Regular'
-								? 8
-								: formType === 'Intro'
-									? 20
-									: 1} - {formType === 'Intro' ? 60 : 240} minutes
-						</div>
-					{/if}
-				</div>
-			{:else}
-				<div class="verif" class:invis={validTime}>
-					Please enter a time in the range of {formType === 'Regular'
-						? 8
-						: formType === 'Intro'
-							? 20
-							: 1} - {formType === 'Intro' ? 60 : 240} minutes
+					Effective workout time: {Math.floor(effectiveTime)}m {Math.round(
+						(effectiveTime * 60) % 60
+					)}s
 				</div>
 			{/if}
 		{/if}
@@ -436,7 +433,7 @@
 {/if}
 
 <style>
-	.verif.invis {
+	/* .verif.invis {
 		visibility: hidden;
 	}
 
@@ -444,7 +441,7 @@
 		color: red;
 		margin-bottom: 6px;
 		font-size: 14px;
-	}
+	} */
 	select {
 		border-radius: 0;
 		color: inherit;
