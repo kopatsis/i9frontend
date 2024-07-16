@@ -814,7 +814,7 @@
 	.anglerow {
 		display: flex;
 		width: 100%;
-		height: clamp(30px, 10dvw, 55px);
+		height: clamp(25px, 8dvw, 55px);
 		border-top: 1px solid rgb(137, 151, 155);
 		box-sizing: border-box;
 		padding: 0;
@@ -831,10 +831,13 @@
 		margin: 0;
 		cursor: pointer;
 		background-color: transparent;
+		height: 100%;
+		width: auto;
 	}
 
 	.anglerow button img {
 		height: calc(100% - 5px);
+		width: auto;
 		aspect-ratio: 1/1;
 	}
 
@@ -997,9 +1000,19 @@
 
 		.anglerow {
 			height: 100%;
-			width: clamp(30px, 10dvh, 55px);
+			width: clamp(25px, 8dvh, 55px);
 			border-top: none;
 			border-left: 1px solid rgb(137, 151, 155);
+		}
+
+		.anglerow button {
+			width: 100%;
+			height: auto;
+		}
+
+		.anglerow button img {
+			width: calc(100% - 5px);
+			height: auto;
 		}
 	}
 </style>
