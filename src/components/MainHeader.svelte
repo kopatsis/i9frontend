@@ -15,9 +15,8 @@
 
 	onMount(() => {
 		updateSizes();
+		window.addEventListener('resize', updateSizes);
 	});
-
-	window.addEventListener('resize', updateSizes);
 </script>
 
 <div class="loghead" style="height: {headerHeight}px;">
