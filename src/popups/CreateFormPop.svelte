@@ -118,6 +118,8 @@
 
 	.choices {
 		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 100%;
 	}
 
@@ -125,6 +127,7 @@
 		flex: 1;
 		margin: 6px;
 		font-size: 16px;
+		max-width: 500px;
 	}
 
 	button {

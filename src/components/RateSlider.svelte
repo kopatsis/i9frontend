@@ -19,6 +19,15 @@
 		rangeInput.style.background = `linear-gradient(to right, #bada55 0%, #bada55 ${adjustedValue}%, #dedcdc ${adjustedValue}%, #dedcdc 100%)`;
 	}
 
+    function increment() {
+        number = Math.max(Math.min(number + 1, 10), 0);
+        updateBackground();
+    }
+
+    function decrement() {
+        number = Math.max(Math.min(number - 1, 10), 0);
+        updateBackground();
+    }
 </script>
 
 <div class="options">
@@ -31,30 +40,65 @@
 		on:input={updateBackground}
 	/>
 	<label for="range" class="sr-only">Toggle</label>
-    <div class="updater">
-        <button on:click={() => number = Math.max(Math.min(number+1, 10), 0)}>+</button>
-        <pre>{number}</pre>
-        <button on:click={() => number = Math.max(Math.min(number-1, 10), 0)}>-</button>
-    </div>
-    
+	<div class="updater">
+		<button on:click={increment}>-</button>
+		<pre>{number}</pre>
+		<button on:click={decrement}>+</button>
+	</div>
 </div>
 
 <style>
+	.updater {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 
-    .updater {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+	pre {
+		font-family: 'Courier New', Courier, monospace;
+		margin: 0;
+		font-size: 16px;
+		padding-left: 5px;
+		padding-right: 5px;
+		border-radius: 0px;
+		background: #dedcdc;
+		height: clamp(25px, min(5dvw, 5dvh), 35px);
+		text-align: center;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: clamp(20px, min(4dvw, 4dvh), 30px);
+	}
 
-    pre {
-        font-family: 'Courier New', Courier, monospace;
-    }
+	button {
+		border-radius: 0px;
+		transition: border-color 150ms ease-in-out 0s;
+		outline: none;
+		font-size: 16px;
+		padding-left: 5px;
+		padding-right: 5px;
+		border: 1px solid rgb(137, 151, 155);
+		color: inherit;
+		background-color: transparent;
+		font-weight: normal;
+		height: clamp(25px, min(5dvw, 5dvh), 35px);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: clamp(20px, min(4dvw, 4dvh), 30px);
+	}
+
+	button:hover {
+		background-color: aliceblue;
+	}
 
 	.options {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		margin: 6px 10px;
 	}
 
@@ -72,18 +116,20 @@
 	input[type='range'] {
 		-webkit-appearance: none;
 		appearance: none;
-		width: 90%;
-		height: 25px;
+		min-width: 200px;
+		max-width: 800px;
+		flex: 1;
+		height: clamp(25px, min(5dvw, 5dvh), 35px);
 		background: #dedcdc;
-		border-radius: 25px;
+		border-radius: clamp(25px, min(5dvw, 5dvh), 35px);
 		position: relative;
 	}
 
 	input[type='range']::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		appearance: none;
-		width: 25px;
-		height: 25px;
+		width: clamp(25px, min(5dvw, 5dvh), 35px);
+		height: clamp(25px, min(5dvw, 5dvh), 35px);
 		background: #fff;
 		cursor: pointer;
 		border-radius: 50%;
@@ -93,8 +139,8 @@
 	}
 
 	input[type='range']::-moz-range-thumb {
-		width: 25px;
-		height: 25px;
+		width: clamp(25px, min(5dvw, 5dvh), 35px);
+		height: clamp(25px, min(5dvw, 5dvh), 35px);
 		background: #fff;
 		cursor: pointer;
 		border-radius: 50%;
@@ -104,14 +150,14 @@
 
 	input[type='range']:active::-webkit-slider-thumb,
 	input[type='range']:active::-moz-range-thumb {
-		width: 28px;
+		width: clamp(28px, min(5.5dvw, 5.5dvh), 39px);
 	}
 
 	input[type='range']:active::-webkit-slider-thumb {
-		width: 29px;
+		width: clamp(28px, min(5.5dvw, 5.5dvh), 39px);
 	}
 
 	input[type='range']:active::-moz-range-thumb {
-		width: 29px;
+		width: clamp(28px, min(5.5dvw, 5.5dvh), 39px);
 	}
 </style>
