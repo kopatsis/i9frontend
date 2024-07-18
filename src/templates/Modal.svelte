@@ -2,6 +2,7 @@
 	// @ts-nocheck
 
 	import { onMount } from 'svelte';
+	import { scale } from 'svelte/transition';
 
 	export let open = true;
 	export let closeable = true;
@@ -54,7 +55,7 @@
 	role="button"
 	aria-label="Close modal"
 >
-	<div class="modal" on:click|stopPropagation aria-hidden="true">
+	<div class="modal" on:click|stopPropagation aria-hidden="true" transition:scale={{ start: 0.5, duration: 300 }}>
 		<slot />
 	</div>
 </div>
