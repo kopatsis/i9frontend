@@ -132,6 +132,13 @@
 		}
 	}
 
+	let headerHeight = 26;
+
+	function updateSizes() {
+		const size = Math.min(window.innerWidth, window.innerHeight);
+		headerHeight = Math.max(26, Math.min(66, size * 0.12));
+	}
+
 	let userData;
 	const unsubscribe = user.subscribe((value) => {
 		userData = value;
@@ -140,6 +147,7 @@
 		unsubscribe();
 		unsubLocalLogin();
 		unsubUser();
+		window.removeEventListener('resize', updateSizes);
 	});
 
 	async function mountCall() {
@@ -205,6 +213,8 @@
 
 	onMount(async () => {
 		mountCall();
+		updateSizes();
+		window.addEventListener('resize', updateSizes);
 	});
 </script>
 
@@ -216,7 +226,7 @@
 	role="button"
 	aria-label="Close modal"
 >
-	<div class="modal" on:click|stopPropagation aria-hidden="true">
+	<div class="modal" on:click|stopPropagation aria-hidden="true" style="margin-top: {headerHeight}px;">
 		<div class="innercontent">
 			{#if loading}
 				<div>loading...</div>
