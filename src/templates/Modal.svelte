@@ -87,11 +87,10 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		max-width: 90%;
-		max-height: 90%;
 		overflow-y: auto;
 		cursor: default;
-		max-height: 85dvh;
+		max-height: 90dvh;
 		max-width: min(100dvw, 960px);
+		min-width: max(30vw, 300px);
 	}
 </style>

@@ -62,6 +62,7 @@
 				<div class="choices">
 					{#if userData.Assessed}
 						<button
+							class:adjust-small-screen={userData.Assessed}
 							on:click={() => {
 								if (type !== 'Regular') {
 									creationType.set('Regular');
@@ -71,6 +72,7 @@
 						>
 					{/if}
 					<button
+						class:adjust-small-screen={userData.Assessed}
 						on:click={() => {
 							if (type !== 'Stretch') {
 								creationType.set('Stretch');
@@ -79,6 +81,7 @@
 						>{#if type === 'Stretch'}<b>Stretch</b>{:else}Stretch{/if}</button
 					>
 					<button
+						class:adjust-small-screen={userData.Assessed}
 						on:click={() => {
 							if (type !== 'Intro') {
 								creationType.set('Intro');
@@ -101,8 +104,7 @@
 </Modal>
 
 <style>
-	
-.bouncer {
+	.bouncer {
 		padding: 10px;
 		padding-top: 20px;
 	}
@@ -187,6 +189,8 @@
 
 	.choices {
 		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 100%;
 	}
 
@@ -194,6 +198,7 @@
 		flex: 1;
 		margin: 6px;
 		font-size: 16px;
+		max-width: 500px;
 	}
 
 	button {
@@ -206,8 +211,22 @@
 		font-weight: normal;
 	}
 
-	.whole {
-		width: 80dvw;
-		/* min-height: 35dvh; */
+	/* .whole  {
+		min-width: 75dvw;
+		min-height: 35dvh;
+	} */
+
+	@media (max-width: 500px) {
+		.adjust-small-screen {
+			margin: 3px;
+			font-size: 14px;
+		}
+	}
+
+	@media (max-width: 350px) {
+		.adjust-small-screen {
+			margin: 0;
+			font-size: 12px;
+		}
 	}
 </style>
