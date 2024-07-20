@@ -82,7 +82,6 @@
 	};
 
 	const onInputFunc = () => {
-
 		if (!inputTime) {
 			inputTime = 0;
 		}
@@ -182,7 +181,7 @@
 
 		const token = await getLoginToken();
 
-		minutes = Math.round(100 * minutes) / 100
+		minutes = Math.round(100 * minutes) / 100;
 
 		if (plyo !== userData.PlyoTolerance) {
 			body['plyo'] = plyo;
@@ -227,7 +226,12 @@
 		<button class="link-button" on:click={() => (exists = false)}>&times;</button>
 	</div>
 	{#if loading}
-		<div>loading...</div>
+		<div class="loading" id="loader" style="display: none">
+			<div class="bouncer">
+				<img src="/images/i9logotsp.png" alt="sdafa" />
+			</div>
+			<div class="loader2"></div>
+		</div>
 	{:else if error || !userData}
 		<div>F</div>
 		<div>{error}</div>

@@ -20,13 +20,13 @@
 
 	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
 		strRounds = strRoundsSt;
-		console.log(strRounds)
+		console.log(strRounds);
 	});
 
 	let woRounds;
 	const unsubscribeWO = workoutRoundsSt.subscribe((workoutRoundsSt) => {
 		woRounds = workoutRoundsSt;
-		console.log(woRounds)
+		console.log(woRounds);
 	});
 
 	let woName = '';
@@ -34,7 +34,6 @@
 		woName = name;
 	});
 
-	
 	let iterator = 0;
 
 	function contentAdj(plus = true) {
@@ -70,7 +69,12 @@
 </script>
 
 {#if loading}
-	<div>loading...</div>
+	<div class="loading" id="loader" style="display: none">
+		<div class="bouncer">
+			<img src="/images/i9logotsp.png" alt="sdafa" />
+		</div>
+		<div class="loader2"></div>
+	</div>
 {:else if error}
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>

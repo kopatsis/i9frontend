@@ -98,12 +98,16 @@
 			ratingFalse();
 		}
 	}
-
 </script>
 
 <Modal closerFunc={postAndExit}>
 	{#if loading}
-		<div>loading...</div>
+		<div class="loading" id="loader" style="display: none">
+			<div class="bouncer">
+				<img src="/images/i9logotsp.png" alt="sdafa" />
+			</div>
+			<div class="loader2"></div>
+		</div>
 	{:else if roundsComplete < 1}
 		<div on:load={countDown}>No rounds to display, routing to home page in {transitionTime}</div>
 	{:else if woRounds}

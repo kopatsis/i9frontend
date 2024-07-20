@@ -154,7 +154,14 @@
 				data: localStorage.getItem('RMrC28'),
 				back: localStorage.getItem('szsY0s')
 			};
-			if (!retset.theme || !retset.colors || !retset.sound || !retset.motion || !retset.data || !retset.back) {
+			if (
+				!retset.theme ||
+				!retset.colors ||
+				!retset.sound ||
+				!retset.motion ||
+				!retset.data ||
+				!retset.back
+			) {
 				retset = {
 					theme: 'DceYdZ',
 					colors: '3ojnKb',
@@ -219,7 +226,12 @@
 	<div class="modal" on:click|stopPropagation aria-hidden="true">
 		<div class="innercontent">
 			{#if loading}
-				<div>loading...</div>
+				<div class="loading" id="loader" style="display: none">
+					<div class="bouncer">
+						<img src="/images/i9logotsp.png" alt="sdafa" />
+					</div>
+					<div class="loader2"></div>
+				</div>
 			{:else if error}
 				<div>F: {error}</div>
 			{:else if !userData}

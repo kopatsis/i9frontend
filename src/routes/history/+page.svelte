@@ -86,7 +86,12 @@
 		</div>
 		<div class="headerstupid">
 			{#if loading}
-				<div>loading...</div>
+				<div class="loading" id="loader" style="display: none">
+					<div class="bouncer">
+						<img src="/images/i9logotsp.png" alt="sdafa" />
+					</div>
+					<div class="loader2"></div>
+				</div>
 			{:else if error}
 				<div>F: {error}</div>
 			{:else}
@@ -157,7 +162,7 @@
 		flex: 1;
 		overflow-y: auto;
 	}
-	
+
 	button {
 		border-radius: 0px;
 		transition: border-color 150ms ease-in-out 0s;

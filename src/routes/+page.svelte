@@ -299,12 +299,17 @@
 
 		<div class="headerstupid">
 			{#if loading}
-				<div>loading...</div>
-			{:else if error}
+				<div class="loading" id="loader" style="display: none">
+					<div class="bouncer">
+						<img src="/images/i9logotsp.png" alt="sdafa" />
+					</div>
+					<div class="loader2"></div>
+				</div>
+			{:else if  error}
 				<div>F: {error}</div>
 			{:else}
 				{#if willReload}
-					<div class="willReload">Will reload...</div>
+					<div class="willReload"><div class="loader2"></div></div>
 				{/if}
 				<div
 					class="innercontent"

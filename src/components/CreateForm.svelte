@@ -58,7 +58,7 @@
 		}
 
 		if (userData) {
-			console.log("1", minutes);
+			console.log('1', minutes);
 			formMinutesUpd();
 
 			diff = String(Math.min(Math.max(1, userData.LastDifficulty), 6));
@@ -69,7 +69,7 @@
 			bannedParts = [...userData.BannedParts];
 		}
 
-		console.log("7", minutes, formType);
+		console.log('7', minutes, formType);
 		loading = false;
 	});
 
@@ -94,7 +94,7 @@
 	};
 
 	const formMinutesUpd = () => {
-		console.log("2", minutes);
+		console.log('2', minutes);
 		oldFormType = formType;
 		if (formType === 'Regular') {
 			timeMin = 8;
@@ -110,7 +110,7 @@
 			timeMin = 20;
 			timeMax = 60;
 			minutes = userData ? userData.LastMinutes : 45;
-			console.log("3", minutes);
+			console.log('3', minutes);
 			minuteUpdate();
 		}
 	};
@@ -119,7 +119,7 @@
 		formMinutesUpd();
 	}
 
-	$: if(minutes) {
+	$: if (minutes) {
 		validTime = validateTime();
 		effectiveTime = calcTime();
 	}
@@ -179,7 +179,7 @@
 			return;
 		}
 
-		console.log("4", minutes);
+		console.log('4', minutes);
 
 		minutes = Math.min(Math.max(timeMin, minutes), timeMax);
 
@@ -213,7 +213,7 @@
 
 		displaySecs.textContent = secs;
 
-		console.log("5", minutes);
+		console.log('5', minutes);
 	};
 
 	let isFocused = false;
@@ -304,7 +304,12 @@
 </script>
 
 {#if loading}
-	<div>loading...</div>
+	<div class="loading" id="loader" style="display: none">
+		<div class="bouncer">
+			<img src="/images/i9logotsp.png" alt="sdafa" />
+		</div>
+		<div class="loader2"></div>
+	</div>
 {:else if error || !userData}
 	<div>F: {error}</div>
 {:else}
