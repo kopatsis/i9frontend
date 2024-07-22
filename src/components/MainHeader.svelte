@@ -1,5 +1,5 @@
 <script>
-	import { fly } from 'svelte/transition';
+	// import { fly } from 'svelte/transition';
 	import Settings from '../popdowns/Settings.svelte';
 	import { onMount } from 'svelte';
 
@@ -34,9 +34,9 @@
 </div>
 
 {#if dispSettings}
-	<div transition:fly={{ y: -200, duration: 300 }}>
+		<!-- <div class="settingsHolder" transition:fly={{ y: -300, duration: 300 }}> -->
 		<Settings bind:dispSettings />
-	</div>
+	<!-- </div> -->
 {/if}
 
 <style>
@@ -73,4 +73,12 @@
 		font-weight: bold;
 		z-index: 1001;
 	}
+
+	/* .settingsHolder {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 14;
+	} */
 </style>
