@@ -165,7 +165,7 @@
 
 <div class="entry" class:pinned={entry.IsPinned}>
 	{#if loading}
-		<div class="loading" id="loader" style="display: none">
+		<div class="loading" >
 			<div class="bouncer">
 				<img src="/images/i9logotsp.png" alt="sdafa" />
 			</div>

@@ -294,7 +294,7 @@
 <div class="centerpage">
 	<div class="wholepage">
 		{#if loading}
-			<div class="loading" id="loader" style="display: none">
+			<div class="loading">
 				<div class="bouncer">
 					<img src="/images/i9logotsp.png" alt="sdafa" />
 				</div>
@@ -566,13 +566,14 @@
 	}
 
 	.maingen {
-		width: 100%;
+		width: calc(100% + 10px);
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		z-index: 5;
-		margin-top: 0px;
-		padding-top: 20px;
+		margin: -5px;
+		padding-top: 30px;
+		padding-bottom: 5px;
 		background: linear-gradient(to top, rgba(236, 241, 243, 0.85) 77.5%, transparent);
 	}
 
@@ -635,10 +636,7 @@
 	}
 
 	.headerstupid {
-		margin-top: 5px;
-		margin-bottom: 5px;
-		margin-left: 5px;
-		margin-right: 5px;
+		padding: 5px;
 		height: 100%;
 		box-sizing: border-box;
 		overflow-y: auto;

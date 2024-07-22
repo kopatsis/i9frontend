@@ -202,6 +202,7 @@
 		transition: border-color 150ms ease-in-out 0s;
 		border: 1px solid rgb(137, 151, 155);
 		overflow-y: auto;
+		width: calc(100% - 10px);
 		flex: 1;
 		padding: 6px;
 	}

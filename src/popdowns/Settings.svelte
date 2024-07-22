@@ -237,7 +237,7 @@
 	<div class="modal" on:click|stopPropagation aria-hidden="true" style="margin-top: {headerHeight}px;" transition:fly={{ y: -300, duration: 300 }}>
 		<div class="innercontent">
 			{#if loading}
-				<div class="loading" id="loader" style="display: none">
+				<div class="loading">
 					<div class="bouncer">
 						<img src="/images/i9logotsp.png" alt="sdafa" />
 					</div>

@@ -95,6 +95,7 @@ import SampleSpecial from '../../popups/SampleSpecial.svelte';
 		border: 1px solid rgb(137, 151, 155);
 		overflow-y: auto;
 		flex: 1;
+		width: calc(100% - 10px);
 		padding: 6px;
 	}
 
