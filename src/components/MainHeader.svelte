@@ -52,6 +52,7 @@
 	}
 
 	.logheadtxt {
+		font-family: 'Fira Code', Courier, monospace;
 		z-index: 1001;
 		user-select: none;
 		position: absolute;
