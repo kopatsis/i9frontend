@@ -168,7 +168,7 @@
 		padding-right: 8px;
 		border: 1px solid rgb(137, 151, 155);
 		color: inherit;
-		background-color: transparent;
+		background-color: white;
 		font-weight: normal;
 	}
 

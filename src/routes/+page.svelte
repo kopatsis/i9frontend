@@ -571,7 +571,13 @@
 		z-index: 5;
 		margin-top: 0px;
 		padding-top: 20px;
-		background: linear-gradient(to top, white 77.5%, transparent);
+		background: linear-gradient(to top, rgba(236, 241, 243, 0.85) 77.5%, transparent);
+	}
+
+	@media (max-width: 960px) {
+		.maingen {
+			background: linear-gradient(to top, rgba(236, 241, 243, 0.85) 77.5%, transparent);
+		}
 	}
 
 	.gen {
@@ -587,7 +593,7 @@
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
 		color: inherit;
-		background-color: transparent;
+		background-color: white;
 		font-weight: normal;
 		z-index: 6;
 		background: white;
@@ -605,7 +611,7 @@
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
 		color: inherit;
-		background-color: transparent;
+		background-color: white;
 		font-weight: normal;
 	}
 
@@ -621,7 +627,7 @@
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
 		color: inherit;
-		background-color: transparent;
+		background-color: white;
 		font-weight: normal;
 		margin-bottom: 30px;
 	}
