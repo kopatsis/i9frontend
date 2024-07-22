@@ -219,8 +219,7 @@
 </div>
 
 <style>
-	
-.bouncer {
+	.bouncer {
 		padding: 10px;
 		padding-top: 20px;
 	}

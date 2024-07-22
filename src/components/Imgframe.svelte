@@ -123,6 +123,35 @@
 		background-color: rgb(97, 97, 97);
 	}
 
+	.buffer::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			rgb(36, 4, 48) 0%,
+			rgba(0, 0, 0, 1) 50%,
+			rgb(1, 26, 24) 100%
+		);
+	}
+
+	.buffer::after {
+		content: '';
+		position: absolute;
+		top: -300%;
+		left: -300%;
+		width: 600%;
+		height: 600%;
+		background-image: url('/images/bgminitr2.png');
+		background-repeat: repeat;
+		background-size: 121px 51px;
+		transform: rotate(45deg);
+		transform-origin: center;
+	}
+
 	@media (min-aspect-ratio: 1.2/1) {
 		.outermost {
 			width: min(100dvh, calc(70dvw - clamp(30px, 10dvh, 60px)));
