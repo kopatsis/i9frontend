@@ -88,9 +88,9 @@
 			{/if}
 
 			{#if adaptID}
-				<CreateForm formType={type} {userData} />
+				<CreateForm formType={type} {userData} bind:loading />
 			{:else}
-				<CreateForm formType={type} {userData} workoutID={adaptID} />
+				<CreateForm formType={type} {userData} workoutID={adaptID} bind:loading />
 			{/if}
 		{/if}
 	</div>

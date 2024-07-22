@@ -33,7 +33,7 @@
 
 	let asnew = true;
 	let showAdvanced = false;
-	let loading = true;
+	export let loading = true;
 	let validTime;
 
 	let strplyo = '';
