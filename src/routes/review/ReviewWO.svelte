@@ -16,7 +16,7 @@
 
 	let error;
 	let strRounds;
-	export let loading = true;
+	export let loading = false;
 
 	const unsubscribeSt = strRoundsSt.subscribe((strRoundsSt) => {
 		strRounds = strRoundsSt;
@@ -77,7 +77,7 @@
 		<button class="back arr" on:click={() => contentAdj(false)}>
 			{#if iterator === 0}&nbsp;{:else}&lt;{/if}
 		</button>
-		<WoDisp {woRounds} {strRounds} {status} {iterator} />
+		<WoDisp {woRounds} {strRounds} {status} {iterator} bind:loading />
 		<button class="forw arr" on:click={contentAdj}>
 			{#if (iterator === 4 && status === 'Paid') || iterator === 10}&nbsp;{:else}&gt;{/if}
 		</button>

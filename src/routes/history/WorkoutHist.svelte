@@ -6,6 +6,7 @@
 	import WorkoutEntry from './WorkoutEntry.svelte';
 
 	export let history = null;
+	export let loading = false;
 	let pinnable = true;
 
 	function startOne() {
@@ -29,7 +30,7 @@
 	</div>
 {:else}
 	{#each history as entry (entry.ID)}
-		<WorkoutEntry {entry} {pinnable} />
+		<WorkoutEntry {entry} {pinnable} bind:loading />
 	{/each}
 {/if}
 

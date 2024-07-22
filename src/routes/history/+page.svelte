@@ -115,9 +115,9 @@
 				</div>
 
 				{#if current === 'Workout'}
-					<WorkoutHist history={wos} />
+					<WorkoutHist history={wos} bind:loading />
 				{:else}
-					<StrWorkoutHist history={strwos} />
+					<StrWorkoutHist history={strwos} bind:loading/>
 				{/if}
 			{/if}
 		</div>

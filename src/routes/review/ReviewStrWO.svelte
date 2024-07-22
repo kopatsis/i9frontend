@@ -9,7 +9,7 @@
 	export let status = 'Unpaid';
 
 	let error = '';
-	export let loading = true;
+	export let loading = false;
 	let disp = 'Dynamic';
 
 	let workout;
@@ -45,7 +45,7 @@
 		<button class="back arr" on:click={() => (disp = 'Dynamic')}>
 			{#if disp === 'Dynamic'}&nbsp;{:else}&lt;{/if}
 		</button>
-		<StrWoDisp strRounds={workout} {disp} {status} />
+		<StrWoDisp strRounds={workout} {disp} {status} bind:loading />
 		<button class="forw arr" on:click={() => (disp = 'Static')}>
 			{#if disp === 'Static'}&nbsp;{:else}&gt;{/if}
 		</button>

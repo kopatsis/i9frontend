@@ -36,7 +36,7 @@
 	let interval = null;
 	let time = 0;
 	let startTime;
-	export let loading = true;
+	export let loading = false;
 	let error = false;
 
 	let status = 'Dynamic';
@@ -305,6 +305,7 @@
 
 	// Start funcs
 	onMount(() => {
+		loading = true;
 		currenttimeSession();
 		const oldTime = get(currenttime);
 		console.log(oldTime);
@@ -660,7 +661,7 @@
 		</div>
 
 		{#if sampleExists}
-			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+			<Sample sampleID={currentSampleID} bind:exists={sampleExists} bind:loading />
 		{/if}
 
 		<Audio bind:display={audioDisp} closer={audioUndisplay} />

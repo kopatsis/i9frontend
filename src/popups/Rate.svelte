@@ -20,7 +20,7 @@
 	import { getLastWO } from '$lib/stores/user';
 	import RateSlider from '../components/RateSlider.svelte';
 
-	export let loading = true;
+	export let loading = false;
 	let asWhole = true;
 	let retWhole = 5;
 	let favWhole = 3;

@@ -288,7 +288,7 @@
 {:else if createPop}
 	<CreateFormPop bind:loading />
 {:else if showForm}
-	<UserUpdateForm bind:exists={showForm} />
+	<UserUpdateForm bind:exists={showForm} bind:loading />
 {/if}
 
 <div class="centerpage">

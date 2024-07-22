@@ -11,7 +11,7 @@
 	export let signUp = true;
 	export let merging = false;
 	export let localToken = '';
-	export let loading = true;
+	export let loading = false;
 
 	let password = '';
 	let confirmPassword = '';

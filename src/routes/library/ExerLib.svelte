@@ -6,6 +6,8 @@
 
 	export let library = null;
 	export let current = 'Exercise';
+	export let loading = false;
+
 	let sampleID = '';
 	let filter = '';
 	let sampleExists = false;
@@ -78,11 +80,11 @@
 
 <div class="grid">
 	{#each library.filter((entry) => filter === '' || entry.Parent === filter) as entry (entry.ID)}
-		<ExerEntry {entry} bind:sampleID bind:sampleEx={sampleExists} />
+		<ExerEntry {entry} bind:sampleID bind:sampleEx={sampleExists} bind:loading  />
 	{/each}
 
 	{#if sampleExists}
-		<Sample backendID={sampleID} bind:exists={sampleExists} />
+		<Sample backendID={sampleID} bind:exists={sampleExists} bind:loading  />
 	{/if}
 </div>
 

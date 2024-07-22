@@ -16,7 +16,7 @@
 	export let pinnable = true;
 	let pinnerr = '';
 
-	let loading = false;
+	export let loading = false;
 	let error = '';
 	let expanded = false;
 

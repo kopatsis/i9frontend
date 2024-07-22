@@ -96,9 +96,9 @@
 				</h1>
 				<div class="maincontent">
 					{#if current === 'Exercise'}
-						<ExerLib library={exers} bind:current />
+						<ExerLib library={exers} bind:current bind:loading />
 					{:else}
-						<StrLib library={strs} bind:current />
+						<StrLib library={strs} bind:current bind:loading />
 					{/if}
 				</div>
 			{/if}

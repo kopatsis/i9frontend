@@ -8,7 +8,7 @@
 	import { adaptID, creationType, isCreateForm } from '$lib/stores/creation';
 	import Modal from '../templates/Modal.svelte';
 
-	export let loading = true;
+	export let loading = false;
 	let error = '';
 
 	let type = 'Regular';

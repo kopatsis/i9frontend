@@ -6,6 +6,7 @@ import SampleSpecial from '../../popups/SampleSpecial.svelte';
 	export let strRounds = null;
 	export let disp = 'Dynamic';
 	export let status = 'Unpaid';
+	export let loading = false;
 
 	let sampleExists = false;
 	let currentSampleID = '';
@@ -61,9 +62,9 @@ import SampleSpecial from '../../popups/SampleSpecial.svelte';
 
 		{#if sampleExists}
 			{#if status !== 'Paid'}
-				<SampleSpecial sampleID={currentSampleID} bind:exists={sampleExists} />
+				<SampleSpecial sampleID={currentSampleID} bind:exists={sampleExists} bind:loading />
 			{:else}
-				<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
+				<Sample sampleID={currentSampleID} bind:exists={sampleExists} bind:loading />
 			{/if}
 		{/if}
 	{/if}

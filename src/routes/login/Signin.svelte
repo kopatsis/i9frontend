@@ -11,7 +11,7 @@
 	import ForgotPass from '../../popups/ForgotPass.svelte';
 
 	export let signUp = false;
-	export let loading = true;
+	export let loading = false;
 	let email = '';
 	let password = '';
 	let errorMessage = '';
