@@ -81,18 +81,20 @@
 
 <div class="centerpage">
 	<div class="wholepage">
+		{#if loading}
+			<div class="loading" id="loader" style="display: none">
+				<div class="bouncer">
+					<img src="/images/i9logotsp.png" alt="sdafa" />
+				</div>
+				<div class="loader2"></div>
+			</div>
+		{/if}
+
 		<div class="header">
 			<MainHeader />
 		</div>
 		<div class="headerstupid">
-			{#if loading}
-				<div class="loading" id="loader" style="display: none">
-					<div class="bouncer">
-						<img src="/images/i9logotsp.png" alt="sdafa" />
-					</div>
-					<div class="loader2"></div>
-				</div>
-			{:else if error}
+			{#if error}
 				<div>F: {error}</div>
 			{:else}
 				<div class="tabs">

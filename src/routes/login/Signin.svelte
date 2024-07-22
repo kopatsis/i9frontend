@@ -11,6 +11,7 @@
 	import ForgotPass from '../../popups/ForgotPass.svelte';
 
 	export let signUp = false;
+	export let loading = true;
 	let email = '';
 	let password = '';
 	let errorMessage = '';
@@ -50,6 +51,7 @@
 				isUserLoggedIn = false;
 			}
 		});
+		loading = false;
 	});
 
 	function proceed() {

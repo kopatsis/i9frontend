@@ -156,25 +156,27 @@
 
 <div class="centerpage">
 	<div class="wholepage">
+		{#if loading}
+			<div class="loading" id="loader" style="display: none">
+				<div class="bouncer">
+					<img src="/images/i9logotsp.png" alt="sdafa" />
+				</div>
+				<div class="loader2"></div>
+			</div>
+		{/if}
+
 		<div div class="header">
 			<MainHeader />
 		</div>
 
 		<div class="headerstupid">
-			{#if loading}
-				<div class="loading" id="loader" style="display: none">
-					<div class="bouncer">
-						<img src="/images/i9logotsp.png" alt="sdafa" />
-					</div>
-					<div class="loader2"></div>
-				</div>
-			{:else if error}
+			{#if error}
 				<div>F: {error}</div>
 				<button on:click={() => goto('./')}>Go Home</button>
 			{:else if type === 'Stretch'}
-				<ReviewStrWo {status} />
+				<ReviewStrWo bind:loading {status} />
 			{:else}
-				<ReviewWo {status} />
+				<ReviewWo bind:loading {status} />
 			{/if}
 			{#if !loading && !error}
 				<div class="submit">

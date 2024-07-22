@@ -67,15 +67,16 @@
 		</div>
 		<div class="loader2"></div>
 	</div>
-{:else if error}
+{/if}
+{#if error}
 	<div>F: {error}</div>
 	<button on:click={() => goto('./')}>Go Home</button>
 {:else if type === 'Stretch'}
-	<ActiveStrWo />
+	<ActiveStrWo bind:loading />
 {:else if type === 'Intro'}
-	<ActiveIntroWo />
+	<ActiveIntroWo bind:loading />
 {:else}
-	<ActiveWo />
+	<ActiveWo bind:loading />
 {/if}
 
 <style>

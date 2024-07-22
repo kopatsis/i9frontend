@@ -74,19 +74,21 @@
 
 <div class="centerpage">
 	<div class="wholepage">
+		{#if loading}
+			<div class="loading" id="loader" style="display: none">
+				<div class="bouncer">
+					<img src="/images/i9logotsp.png" alt="sdafa" />
+				</div>
+				<div class="loader2"></div>
+			</div>
+		{/if}
+
 		<div class="header">
 			<MainHeader />
 		</div>
 
 		<div class="headerstupid">
-			{#if loading}
-				<div class="loading" id="loader" style="display: none">
-					<div class="bouncer">
-						<img src="/images/i9logotsp.png" alt="sdafa" />
-					</div>
-					<div class="loader2"></div>
-				</div>
-			{:else if error}
+			{#if error}
 				<div>F: {error}</div>
 			{:else}
 				<h1>
@@ -180,16 +182,6 @@
 		place-items: center;
 	}
 
-	.centerpage {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: fixed;
-		background-color: rgb(97, 97, 97);
-		width: 100dvw;
-		height: 100dvh;
-	}
-
 	.wholepage {
 		height: 100dvh;
 		width: min(100dvw, 960px);
@@ -206,7 +198,7 @@
 			rgba(0, 0, 0, 0.09) 0px -3px 5px;
 	}
 
-	@media (max-width: 960px) {
+	@media (max-width: 900px) {
 		.wholepage {
 			background: rgba(236, 241, 243, 0.8);
 		}

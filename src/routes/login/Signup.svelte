@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { setLocalLogout } from '$lib/jshelp/localtoken';
 	import { postNewUser } from '$lib/jshelp/user';
+	import { onMount } from 'svelte';
 
 	import { auth } from '../../auth/firebase';
 	import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
@@ -10,6 +11,7 @@
 	export let signUp = true;
 	export let merging = false;
 	export let localToken = '';
+	export let loading = true;
 
 	let password = '';
 	let confirmPassword = '';
@@ -63,6 +65,10 @@
 			}
 		}
 	}
+
+	onMount(() => {
+		loading = false;
+	})
 </script>
 
 {#if error}
