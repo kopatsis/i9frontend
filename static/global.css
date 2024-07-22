@@ -9,3 +9,10 @@ body {
   margin: 0;
   padding: 0;
 }
+
+:root {
+  --main-color: #25dfd4;
+  --alt-color: #d15dff;
+  --main-lite: #b7eeea;
+  --alt-lite: #deb8ec;
+}

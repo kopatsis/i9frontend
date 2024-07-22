@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 	import MainFooter from '../../components/MainFooter.svelte';
 	import MainHeader from '../../components/MainHeader.svelte';
+	import { colorCheckers } from '$lib/jshelp/colors';
 
 	let current = 'Exercise';
 
@@ -45,6 +46,7 @@
 	}
 
 	onMount(() => {
+		colorCheckers();
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {

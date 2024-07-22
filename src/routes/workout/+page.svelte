@@ -8,6 +8,7 @@
 	import { goto } from '$app/navigation';
 	import { setLocalLoginState } from '$lib/jshelp/localtoken';
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
+	import { colorCheckers } from '$lib/jshelp/colors';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -33,6 +34,7 @@
 	}
 
 	onMount(() => {
+		colorCheckers();
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {

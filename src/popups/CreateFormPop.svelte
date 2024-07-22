@@ -134,8 +134,8 @@
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
 		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
-		background-color: transparent;
+		background-color: var(--main-color);
+		color: white;
 		font-weight: normal;
 	}
 

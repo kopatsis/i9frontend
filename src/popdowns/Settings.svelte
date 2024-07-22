@@ -16,6 +16,8 @@
 
 	export let dispSettings = true;
 
+	let loading = true;
+
 	let error = '';
 	let retrievedSettings = null;
 	let verifEmail = false;
@@ -211,6 +213,7 @@
 		} catch (err) {
 			error = err;
 		} finally {
+			loading = false;
 			return () => {
 				window.removeEventListener('keydown', handleKeydown);
 			};
@@ -239,73 +242,77 @@
 		style="margin-top: {headerHeight}px;"
 		transition:fly={{ y: -300, duration: 300 }}
 	>
-		<div class="innercontent">
-			{#if error}
-				<div>F: {error}</div>
-			{:else if !userData}
-				<div>Error fetching user data, please try again</div>
-			{:else}
-				<div class="head">Device Settings</div>
+		{#if !loading}
+			<div class="innercontent">
+				{#if error}
+					<div>F: {error}</div>
+				{:else if !userData}
+					<div>Error fetching user data, please try again</div>
+				{:else}
+					<div class="head">Device Settings</div>
 
-				<div class="plainbuttons">
-					{#if !localuser}
-						{#if userData.Paying}
-							<button class="actionbutton" on:click={() => adminPage('pay')}
-								>Cancel Giga Subscription</button
-							>
-						{:else}
-							<button class="actionbutton bigger" on:click={() => adminPage('pay')}
-								>Start Giga Subscription</button
-							>
-						{/if}
-					{:else}
-						<button class="actionbutton" on:click={localMerge}
-							>Create Account w/ Existing History</button
-						>
-					{/if}
-				</div>
-
-				<div class="allopts">
-					<Setting key={'theme'} bind:data={retrievedSettings} />
-					<Setting key={'colors'} bind:data={retrievedSettings} />
-					<Setting key={'sound'} bind:data={retrievedSettings} />
-					<Setting key={'motion'} bind:data={retrievedSettings} />
-					<Setting key={'data'} bind:data={retrievedSettings} />
-					<Setting key={'back'} bind:data={retrievedSettings} />
-				</div>
-
-				{#if !localuser}
 					<div class="plainbuttons">
-						<button on:click={adminPage} class="link-button">Account Admin Page</button>
-					</div>
-					{#if userVar && !userVar.emailVerified}
-						<div class="plainbuttons">
-							<button on:click={sendVerification} class="link-button"
-								>Send Email Verification</button
+						{#if !localuser}
+							{#if userData.Paying}
+								<button class="actionbutton" on:click={() => adminPage('pay')}
+									>Cancel Giga Subscription</button
+								>
+							{:else}
+								<button class="actionbutton bigger" on:click={() => adminPage('pay')}
+									>Start Giga Subscription</button
+								>
+							{/if}
+						{:else}
+							<button class="actionbutton" on:click={localMerge}
+								>Create Account w/ Existing History</button
 							>
-						</div>
-						{#if verifEmail}
-							<div>Nice, check your email and follow the instructions to verify your email.</div>
 						{/if}
-					{/if}
-					{#if userVar}
-						<div class="plainbuttons">
-							<button on:click={sendReset} class="link-button">Reset Password</button>
-						</div>
-						{#if passReset}
-							<div>Nice, check your email and follow the instructions to reset your password.</div>
-						{/if}
-					{/if}
-				{/if}
+					</div>
 
-				<div class="plainbuttons">
-					<Logout />
-				</div>
-			{/if}
-		</div>
-		<div class="plainbuttons bottom">
-			<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
-		</div>
+					<div class="allopts">
+						<Setting key={'theme'} bind:data={retrievedSettings} />
+						<Setting key={'colors'} bind:data={retrievedSettings} />
+						<Setting key={'sound'} bind:data={retrievedSettings} />
+						<Setting key={'motion'} bind:data={retrievedSettings} />
+						<Setting key={'data'} bind:data={retrievedSettings} />
+						<Setting key={'back'} bind:data={retrievedSettings} />
+					</div>
+
+					{#if !localuser}
+						<div class="plainbuttons">
+							<button on:click={adminPage} class="link-button">Account Admin Page</button>
+						</div>
+						{#if userVar && !userVar.emailVerified}
+							<div class="plainbuttons">
+								<button on:click={sendVerification} class="link-button"
+									>Send Email Verification</button
+								>
+							</div>
+							{#if verifEmail}
+								<div>Nice, check your email and follow the instructions to verify your email.</div>
+							{/if}
+						{/if}
+						{#if userVar}
+							<div class="plainbuttons">
+								<button on:click={sendReset} class="link-button">Reset Password</button>
+							</div>
+							{#if passReset}
+								<div>
+									Nice, check your email and follow the instructions to reset your password.
+								</div>
+							{/if}
+						{/if}
+					{/if}
+
+					<div class="plainbuttons">
+						<Logout />
+					</div>
+				{/if}
+			</div>
+			<div class="plainbuttons bottom">
+				<button class="closebutton" on:click={() => (dispSettings = false)}>^</button>
+			</div>
+		{/if}
 	</div>
 </div>
 

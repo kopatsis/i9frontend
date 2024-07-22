@@ -18,6 +18,7 @@
 	import { unravelstretchWO, unravelWO } from '$lib/jshelp/unravelwo';
 	import { extractImageList } from '$lib/jshelp/fetchwo';
 	import { preloadImages } from '$lib/jshelp/preloader';
+	import { colorCheckers } from '$lib/jshelp/colors';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -126,6 +127,7 @@
 	}
 
 	onMount(() => {
+		colorCheckers();
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {
@@ -398,8 +400,8 @@
 		padding-left: 12px;
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
-		background-color: white;
+		background-color: var(--main-color);
+		color: white;
 		font-weight: normal;
 	}
 

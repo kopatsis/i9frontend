@@ -915,8 +915,8 @@
 		align-items: center;
 		justify-content: center;
 		margin: 0;
-		cursor: pointer;
-		background-color: transparent;
+		background-color: var(--main-color);
+		color: white;
 		height: 100%;
 		width: auto;
 	}
@@ -949,8 +949,8 @@
 		transition: border-color 150ms ease-in-out 0s;
 		outline: none;
 		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
-		background-color: transparent;
+		background-color: var(--main-color);
+		color: white;
 		font-weight: normal;
 	}
 
@@ -1055,8 +1055,8 @@
 		padding-left: 12px;
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
-		color: inherit;
-		background-color: transparent;
+		background-color: var(--main-color);
+		color: white;
 		font-weight: normal;
 	}
 

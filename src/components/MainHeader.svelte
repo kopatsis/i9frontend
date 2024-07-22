@@ -47,7 +47,7 @@
 		align-items: center;
 		justify-content: space-between;
 		z-index: 1000;
-		background: white;
+		background: var(--main-lite);
 		position: relative;
 	}
 

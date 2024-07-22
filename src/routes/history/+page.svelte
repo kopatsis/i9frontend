@@ -10,6 +10,7 @@
 	import { localLogin, userStore } from '$lib/jshelp/firebaseuser';
 	import MainFooter from '../../components/MainFooter.svelte';
 	import MainHeader from '../../components/MainHeader.svelte';
+	import { colorCheckers } from '$lib/jshelp/colors';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -52,6 +53,7 @@
 	}
 
 	onMount(() => {
+		colorCheckers();
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {
@@ -286,7 +288,8 @@
 		padding-right: 12px;
 		border: 1px solid rgb(137, 151, 155);
 		color: inherit;
-		background-color: white;
+		background-color: var(--main-color);
+		color: white;
 		font-weight: normal;
 	}
 </style>

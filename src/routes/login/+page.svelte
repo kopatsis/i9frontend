@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import Signin from './Signin.svelte';
 	import Signup from './Signup.svelte';
+	import { colorCheckers } from '$lib/jshelp/colors';
 
 	let signUpForm = false;
 	let merging = false;
@@ -50,6 +51,7 @@
 	};
 
 	onMount(() => {
+		colorCheckers();
 		if (sessionStorage.getItem('merginglocal') === 'true' && getLocalToken() !== '') {
 			merging = true;
 			localToken = getLocalToken();
