@@ -137,7 +137,7 @@
 
 	function updateSizes() {
 		const size = Math.min(window.innerWidth, window.innerHeight);
-		headerHeight = Math.max(26, Math.min(66, size * 0.12));
+		headerHeight = Math.max(20, Math.min(50, size * 0.09)) + 6;
 	}
 
 	let userData;
