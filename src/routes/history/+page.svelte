@@ -126,8 +126,7 @@
 </div>
 
 <style>
-	
-.bouncer {
+	.bouncer {
 		padding: 10px;
 		padding-top: 20px;
 	}
@@ -193,6 +192,16 @@
 		}
 	}
 
+	.centerpage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
+	}
+
 	.wholepage {
 		height: 100dvh;
 		width: min(100dvw, 960px);
@@ -209,7 +218,7 @@
 			rgba(0, 0, 0, 0.09) 0px -3px 5px;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 960px) {
 		.wholepage {
 			background: rgba(236, 241, 243, 0.8);
 		}

@@ -305,7 +305,7 @@
 					</div>
 					<div class="loader2"></div>
 				</div>
-			{:else if  error}
+			{:else if error}
 				<div>F: {error}</div>
 			{:else}
 				{#if willReload}
@@ -429,8 +429,7 @@
 </div>
 
 <style>
-	
-.bouncer {
+	.bouncer {
 		padding: 10px;
 		padding-top: 20px;
 	}
@@ -522,7 +521,7 @@
 			rgba(0, 0, 0, 0.09) 0px -3px 5px;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 960px) {
 		.wholepage {
 			background: rgba(236, 241, 243, 0.8);
 		}
