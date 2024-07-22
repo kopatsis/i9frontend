@@ -9,8 +9,8 @@
 
 	function updateSizes() {
 		const size = Math.min(window.innerWidth, window.innerHeight);
-		fontSize = Math.max(20, Math.min(54, size * 0.1));
-		headerHeight = Math.max(26, Math.min(66, size * 0.12));
+		fontSize = Math.max(20, Math.min(50, size * 0.09));
+		headerHeight = fontSize + 6;
 	}
 
 	onMount(() => {
