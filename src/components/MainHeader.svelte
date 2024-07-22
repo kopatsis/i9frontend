@@ -23,7 +23,7 @@
 	<button on:click={() => alert('soon... ;)')} class="link-button" style="font-size: {fontSize}px;"
 		>&#9878;</button
 	>
-	<b class="logheadtxt" style="font-size: {fontSize}px;">i9 Fitness</b>
+	<div class="logheadtxt" style="font-size: {fontSize}px;">i9 Fitness</div>
 	<button
 		on:click={() => (dispSettings = !dispSettings)}
 		class="link-button"
@@ -58,6 +58,8 @@
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
+		white-space: nowrap;
+		font-weight: bold;
 	}
 
 	.link-button {
