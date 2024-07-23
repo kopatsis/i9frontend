@@ -45,7 +45,7 @@
 		<button class="back arr" on:click={() => (disp = 'Dynamic')}>
 			{#if disp === 'Dynamic'}&nbsp;{:else}&lt;{/if}
 		</button>
-		<StrWoDisp strRounds={workout} {disp} {status} bind:loading />
+		<StrWoDisp strRounds={workout} {disp} {status} />
 		<button class="forw arr" on:click={() => (disp = 'Static')}>
 			{#if disp === 'Static'}&nbsp;{:else}&gt;{/if}
 		</button>

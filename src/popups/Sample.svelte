@@ -17,7 +17,7 @@
 	let time = 0;
 	let startTime;
 
-	export let loading = false;
+	let loading = true;
 	let error = false;
 
 	let sampleObj = null;
@@ -132,7 +132,9 @@
 	<div class="closeline">
 		<button class="link-button" on:click={() => (exists = false)}>&times;</button>
 	</div>
-	{#if error}
+	{#if loading}
+		<div></div>
+	{:else if error}
 		<div>F: {error}</div>
 	{:else}
 		<div class="sampleouter">

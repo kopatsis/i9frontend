@@ -7,7 +7,6 @@
 	export let woRounds = null;
 	export let iterator = 0;
 	export let status = 'Unpaid';
-	export let loading = false;
 
 	let sampleExists = false;
 	let currentSampleID = '';
@@ -160,9 +159,9 @@
 
 		{#if sampleExists}
 			{#if status !== 'Paid'}
-				<SampleSpecial sampleID={currentSampleID} bind:exists={sampleExists} bind:loading />
+				<SampleSpecial sampleID={currentSampleID} bind:exists={sampleExists} />
 			{:else}
-				<Sample sampleID={currentSampleID} bind:exists={sampleExists} bind:loading  />
+				<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 			{/if}
 		{/if}
 	{/if}

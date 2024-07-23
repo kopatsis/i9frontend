@@ -35,7 +35,6 @@
 	async function mountCall() {
 		const token = await getLoginToken();
 		error = await getUser(token);
-		loading = false;
 	}
 
 	onMount(() => {

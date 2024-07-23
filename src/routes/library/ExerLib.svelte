@@ -84,7 +84,7 @@
 	{/each}
 
 	{#if sampleExists}
-		<Sample backendID={sampleID} bind:exists={sampleExists} bind:loading  />
+		<Sample backendID={sampleID} bind:exists={sampleExists}/>
 	{/if}
 </div>
 

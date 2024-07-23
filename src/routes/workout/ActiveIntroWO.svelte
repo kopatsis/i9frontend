@@ -889,7 +889,7 @@
 		</div>
 
 		{#if sampleExists}
-			<Sample sampleID={currentSampleID} bind:exists={sampleExists} bind:loading />
+			<Sample sampleID={currentSampleID} bind:exists={sampleExists} />
 		{/if}
 
 		<Audio bind:display={audioDisp} closer={audioUndisplay} />

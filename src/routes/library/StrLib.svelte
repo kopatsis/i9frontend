@@ -6,7 +6,6 @@
 
 	export let library = null;
 	export let current = 'Exercise';
-	export let loading = false;
 
 	let sampleExists = false;
 	let sampleID = '';
@@ -74,7 +73,7 @@
 	{/each}
 
 	{#if sampleExists}
-		<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} bind:loading />
+		<Sample backendID={sampleID} type={sampleType} bind:exists={sampleExists} />
 	{/if}
 </div>
 
