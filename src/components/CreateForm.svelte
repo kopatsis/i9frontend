@@ -51,6 +51,8 @@
 	let updated = false;
 	let effectiveTime;
 
+	let lowerOnly = false;
+
 	onMount(async () => {
 		if (!userData) {
 			const token = await getLoginToken();
@@ -267,7 +269,7 @@
 			minutes = Math.round(100 * minutes) / 100;
 
 			if (formType === 'Regular') {
-				workout = await fetchWorkout(token, minutes, Number(diff));
+				workout = await fetchWorkout(token, minutes, Number(diff), lowerOnly);
 				unravelWO(workout);
 			} else if (formType === 'Stretch') {
 				workout = await fetchStretchWorkout(token, minutes);
@@ -365,6 +367,18 @@
 					)}s
 				</div>
 			{/if}
+		{/if}
+
+		{#if formType == 'Regular'}
+			<div class="editline">
+				<div>Lower Body Only:</div>
+				<div class="options">
+					<input class="lowerbox" type="checkbox" id="loweronly" bind:checked={lowerOnly} /><label
+						class="lowerlabel"
+						for="loweronly">Toggle</label
+					>
+				</div>
+			</div>
 		{/if}
 
 		{#if formType == 'Adapt' || formType == 'Regular'}
@@ -570,5 +584,53 @@
 
 	.single {
 		justify-content: center;
+	}
+
+	.options {
+		display: flex;
+		margin: 6px;
+		margin-left: 10px;
+	}
+
+	input[type='checkbox'] {
+		height: 0;
+		width: 0;
+		visibility: hidden;
+	}
+
+	.lowerlabel {
+		cursor: pointer;
+		text-indent: -9999px;
+		width: 50px;
+		height: 25px;
+		background: #dedcdc;
+		display: block;
+		border-radius: 25px;
+		position: relative;
+	}
+
+	.lowerlabel:after {
+		content: '';
+		position: absolute;
+		top: 3px;
+		left: 3px;
+		width: 19px;
+		height: 19px;
+		background: #fff;
+		border-radius: 19px;
+		transition: 0.2s;
+	}
+
+	.lowerbox:checked + .lowerlabel {
+		background: var(--main-color);
+	}
+
+	.lowerbox:checked + .lowerlabel:after {
+		left: calc(100% - 3px);
+		transform: translateX(-100%);
+	}
+
+	.lowerlabel:active:after {
+		width: 28px;
 	}
 </style>

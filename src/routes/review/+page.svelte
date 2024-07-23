@@ -84,7 +84,7 @@
 
 			if (retryType === 'Regular') {
 				const body = JSON.parse(sessionStorage.getItem('reqBody'));
-				if (!body || !body.time || !body.diff) {
+				if (!body || !body.time || !body.diff || !body.lower) {
 					throw new Error(
 						'Error properly fetching initial workout request body in attempt to discard and retry'
 					);

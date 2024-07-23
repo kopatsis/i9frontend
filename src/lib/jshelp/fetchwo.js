@@ -4,9 +4,10 @@
  * @param {string} token - The token
  * @param {number} time - The time parameter, represented as a float.
  * @param {number} diff - The diff parameter, represented as an integer.
+ * @param {boolean} lower - If it's lower only
  * @returns {Promise<Object>} A promise that resolves with the full response object.
  */
-export async function fetchWorkout(token, time, diff) {
+export async function fetchWorkout(token, time, diff, lower = false) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
 	const url = baseUrl + '/workouts';
 	const options = {
@@ -15,7 +16,7 @@ export async function fetchWorkout(token, time, diff) {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
 		},
-		body: JSON.stringify({ time: time, diff: diff })
+		body: JSON.stringify({ time: time, diff: diff, lower: lower })
 	};
 
 	try {
@@ -29,7 +30,7 @@ export async function fetchWorkout(token, time, diff) {
 		throw new Error('Error fetching the response: ' + error);
 	} finally {
 		sessionStorage.setItem('reqType', 'Regular');
-		sessionStorage.setItem('reqBody', JSON.stringify({ time: time, diff: diff }));
+		sessionStorage.setItem('reqBody', JSON.stringify({ time: time, diff: diff, lower: lower }));
 	}
 }
 

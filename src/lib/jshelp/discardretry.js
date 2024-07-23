@@ -4,10 +4,11 @@
  * @param {string} token - The token
  * @param {number} time - The time parameter, represented as a float.
  * @param {number} diff - The diff parameter, represented as an integer.
+ * @param {boolean} lower - If it's lower only
  * @param {string} id - The workout's id
  * @returns {Promise<Object>} A promise that resolves with the full response object.
  */
-export async function fetchRetryWorkout(token, time, diff, id) {
+export async function fetchRetryWorkout(token, time, diff, lower, id) {
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
 	const url = baseUrl + '/workouts/retry/' + id;
 	const options = {
@@ -16,7 +17,7 @@ export async function fetchRetryWorkout(token, time, diff, id) {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
 		},
-		body: JSON.stringify({ time: time, diff: diff })
+		body: JSON.stringify({ time: time, diff: diff, lower: lower })
 	};
 
 	try {
