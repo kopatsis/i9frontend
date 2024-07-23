@@ -206,6 +206,16 @@
 		}
 	}
 
+	.centerpage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		background-color: rgb(97, 97, 97);
+		width: 100dvw;
+		height: 100dvh;
+	}
+
 	.centerpage::before {
 		content: '';
 		position: absolute;
