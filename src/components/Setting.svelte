@@ -1,6 +1,8 @@
 <script>
 	// @ts-nocheck
 
+	import { settingsChecker } from '$lib/jshelp/colors';
+
 	export let key = 'theme';
 	export let data = {
 		theme: 'DceYdZ',
@@ -34,17 +36,11 @@
 	$: if (isChecked) {
 		data = { ...data, [key]: 'DceYdZ' };
 		localStorage.setItem(keyMap[key], 'DceYdZ');
-		if(key === 'colors') {
-			document.documentElement.style.setProperty('--main-color', '#d15dff');
-			document.documentElement.style.setProperty('--main-lite', '#d5a4e9');
-		}
+		settingsChecker(key);
 	} else {
 		data = { ...data, [key]: '3ojnKb' };
 		localStorage.setItem(keyMap[key], '3ojnKb');
-		if(key === 'colors') {
-			document.documentElement.style.setProperty('--main-color', '#25dfd4');
-			document.documentElement.style.setProperty('--main-lite', '#98e4df');
-		}
+		settingsChecker(key);
 	}
 </script>
 

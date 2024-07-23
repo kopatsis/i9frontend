@@ -29,7 +29,7 @@
 		restartStretchWorkoutByID,
 		restartWorkoutByID
 	} from '$lib/jshelp/fetchwo';
-	import { colorCheckers } from '$lib/jshelp/colors';
+	import { settingsChecker } from '$lib/jshelp/colors';
 
 	let local = false;
 	let firebaseUser = undefined;
@@ -245,7 +245,7 @@
 	}
 
 	onMount(() => {
-		colorCheckers();
+		settingsChecker();
 		setLocalLoginState();
 
 		const unsubLocalLogin = localLogin.subscribe((value) => {
