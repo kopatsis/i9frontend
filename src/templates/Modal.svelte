@@ -92,6 +92,6 @@
 		cursor: default;
 		max-height: 90dvh;
 		max-width: min(100dvw, 960px);
-		min-width: max(30vw, 300px);
+		min-width: 300px;
 	}
 </style>
