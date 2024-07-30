@@ -6,8 +6,10 @@
  * @returns {Promise<Object>} A promise that resolves with the full response object.
  */
 export async function blockChange(token, id, method, type="exers") {
+
+	const urlType = type === "exers" ? "exercises" : "/stretches"
    
-    const url = `${import.meta.env.VITE_BACKEND_URL}/users/banned${type}`;
+    const url = `${import.meta.env.VITE_BACKEND_URL}/users/${urlType}/banned`;
 	const options = {
 		method: method,
 		headers: {
@@ -33,11 +35,14 @@ export async function blockChange(token, id, method, type="exers") {
  * @param {string} token - The token
  * @param {string} id - The ID
  * @param {Number} value - The actual fav val
+ * @param {string} type - exers or strs
  * @returns {Promise<Object>} A promise that resolves with the full response object.
  */
-export async function favChange(token, id, value) {
+export async function favChange(token, id, value, type="exers") {
    
-    const url = `${import.meta.env.VITE_BACKEND_URL}/users/favorites`;
+    const urlType = type === "exers" ? "exercises" : "/stretches"
+   
+    const url = `${import.meta.env.VITE_BACKEND_URL}/users/${urlType}/favorites`;
 	const options = {
 		method: "PATCH",
 		headers: {
