@@ -49,7 +49,7 @@ export async function favChange(token, id, value, type="exers") {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${token}`
 		},
-		body: JSON.stringify({exermap: {[id]: value}})
+		body: JSON.stringify({strmap: {[id]: value}})
 	};
 
 	try {
