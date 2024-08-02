@@ -278,12 +278,16 @@
 		sampleExists = true;
 	};
 
-	async function quit(rate = true) {
+	async function quit(rate = true, done=false) {
 		clearInterval(interval);
 		interval = null;
 		loading = true;
 		try {
-			await updateTime(time, '', 'Paused', true);
+			let status = 'Paused';
+			if (done) {
+				status = 'Completed';
+			}
+			await updateTime(time, '', status, true);
 		} catch (err) {
 			console.log(err);
 		} finally {
@@ -476,7 +480,7 @@
 	} else if (genTimes && status === 'Exercise' && time > genTimes.static) {
 		status = 'Static';
 	} else if (genTimes && status === 'Static' && time > genTimes.end) {
-		quit();
+		quit(true, true);
 	}
 
 	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {

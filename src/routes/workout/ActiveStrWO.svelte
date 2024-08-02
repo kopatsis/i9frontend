@@ -435,7 +435,7 @@
 	$: if (genTimes && status === 'Dynamic' && time > genTimes.static) {
 		status = 'Static';
 	} else if (genTimes && status === 'Static' && time > genTimes.end) {
-		quit('Finished');
+		quit('Completed');
 	}
 
 	$: if (Math.floor(time) !== lastCalled && Math.floor(time) !== lastCalled + 1 && !loading) {

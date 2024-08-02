@@ -267,10 +267,14 @@
 		sampleExists = true;
 	};
 
-	async function quit(saveTime = false) {
+	async function quit(saveTime = false, done=false) {
 		loading = true;
 		if (saveTime) {
-			await updateTime(time, '', 'Paused', true);
+			let status = 'Paused';
+			if (done) {
+				status = 'Completed';
+			}
+			await updateTime(time, '', status, true);
 		} else {
 			wipeWorkout();
 			afterWOMessage.set(true);
