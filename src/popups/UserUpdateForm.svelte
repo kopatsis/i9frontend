@@ -198,7 +198,7 @@
 			body['diff'] = diff;
 		}
 		if (minutes !== Math.round(100 * userData.LastMinutes) / 100) {
-			body['mins'] = minutes;
+			body['womins'] = minutes;
 		}
 
 		try {
@@ -241,7 +241,7 @@
 			</div>
 			<div class="editline">
 				<div>
-					<label for="length">Length in minutes (8-240):</label>
+					<label for="length">Workout default time in minutes (8-240):</label>
 				</div>
 				<div class="lengthin">
 					<input
